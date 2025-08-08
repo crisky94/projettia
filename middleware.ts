@@ -1,22 +1,29 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware((auth, req) => {
-    const url = req.nextUrl.pathname;
+export default authMiddleware({
+    afterAuth(auth, req) {
+        // Handle users who aren't authenticated
+        if (!auth.userId && !auth.isPublicRoute) {
+            return redirectToSignIn({ returnBackUrl: req.url });
+        }
 
-    // Definir las rutas protegidas y dinámicas
-    const protectedRoutes = [
-        '/dashboard',
-        '/chat',
-    ];
+        // If the user is logged in and trying to access a protected route, allow them to access route
+        if (auth.userId && !auth.isPublicRoute) {
+            return NextResponse.next();
+        }
 
+        // Allow users visiting public routes to access them
+        return NextResponse.next();
+    },
+    publicRoutes: [
+        "/",
+        "/sign-in",
+        "/sign-up",
+        "/api/webhooks/clerk",
+    ],
 });
 
 export const config = {
-    matcher: [
-        // Omitir internos de Next.js y todos los archivos estáticos, a menos que se encuentren en los parámetros de búsqueda
-        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-        // Siempre ejecutar para las rutas de API
-        '/(api|trpc)(.*)',
-        // Especificar rutas protegidas directamente en el matcher
-    ],
+    matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
