@@ -1,11 +1,7 @@
-// Importamos los módulos necesarios
 import next from 'next';
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
-import prisma from './src/lib/prismaClient.js';
-import { gameEvents } from './src/eventsServer/gameEvents.js';
-import { playerEvents } from './src/eventsServer/playerEvents.js';
-// Creamos una instancia del cliente de Prisma
+import prisma from '@/lib/prisma';
 
 // Definimos si estamos en modo desarrollo o producción
 const dev = process.env.NODE_ENV !== 'production';
@@ -29,18 +25,73 @@ app.prepare().then(() => {
         },
     });
 
-    const gamePlayerMap = {};
+    // Mapa para mantener registro de qué usuario está en qué proyecto
+    const userProjectMap = new Map();
 
     // Escuchamos cuando un cliente se conecta vía WebSocket
     io.on('connection', (socket) => {
-        console.log(`socket conectado con id:${socket.id}`);
+        console.log(`Cliente conectado: ${socket.id}`);
 
-        // aqui van los eventos del juego y jugadores
-        gameEvents(socket, io, prisma);
-        playerEvents(socket, io, prisma, gamePlayerMap);
+        // Unirse a un proyecto
+        socket.on('joinProject', (projectId) => {
+            socket.join(`project:${projectId}`);
+            userProjectMap.set(socket.id, projectId);
+            console.log(`Cliente ${socket.id} se unió al proyecto ${projectId}`);
+        });
 
+        // Crear/Actualizar tarea
+        socket.on('taskUpdate', async ({ projectId, task }) => {
+            try {
+                const updatedTask = await prisma.task.upsert({
+                    where: { id: task.id || '' },
+                    update: task,
+                    create: task,
+                    include: { assignee: true },
+                });
+                io.to(`project:${projectId}`).emit('taskUpdated', updatedTask);
+            } catch (error) {
+                console.error('Error al actualizar tarea:', error);
+                socket.emit('error', 'Error al actualizar tarea');
+            }
+        });
+
+        // Cambiar estado de tarea
+        socket.on('taskStatusChange', async ({ projectId, taskId, status }) => {
+            try {
+                const updatedTask = await prisma.task.update({
+                    where: { id: taskId },
+                    data: { status },
+                    include: { assignee: true },
+                });
+                io.to(`project:${projectId}`).emit('taskUpdated', updatedTask);
+            } catch (error) {
+                console.error('Error al cambiar estado de tarea:', error);
+                socket.emit('error', 'Error al cambiar estado de tarea');
+            }
+        });
+
+        // Nuevo mensaje en el chat
+        socket.on('message', async ({ projectId, message }) => {
+            try {
+                const newMessage = await prisma.message.create({
+                    data: message,
+                    include: { user: true },
+                });
+                io.to(`project:${projectId}`).emit('newMessage', newMessage);
+            } catch (error) {
+                console.error('Error al enviar mensaje:', error);
+                socket.emit('error', 'Error al enviar mensaje');
+            }
+        });
+
+        // Desconexión
         socket.on('disconnect', () => {
-            console.log('socket desconectado 😐');
+            const projectId = userProjectMap.get(socket.id);
+            if (projectId) {
+                socket.leave(`project:${projectId}`);
+                userProjectMap.delete(socket.id);
+            }
+            console.log(`Cliente desconectado: ${socket.id}`);
         });
     });
 
