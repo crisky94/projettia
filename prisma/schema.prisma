@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -16,13 +15,44 @@ datasource db {
 
 // Modelo para usuarios
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  name      String
-  messages  Message[]
-  tasks     Task[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            String        @id @default(uuid())
+  email         String        @unique
+  name          String
+  role          UserRole      @default(USER)
+  messages      Message[]
+  tasks         Task[]
+  ownedProjects Project[]     @relation("ProjectOwner")
+  projects      ProjectUser[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// Modelo para proyectos
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  ownerId     String
+  owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  tasks       Task[]
+  messages    Message[]
+  members     ProjectUser[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// Modelo para la relación entre proyectos y usuarios
+model ProjectUser {
+  id        String   @id @default(uuid())
+  userId    String
+  projectId String
+  role      UserRole @default(USER)
+  user      User     @relation(fields: [userId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, projectId])
 }
 
 // Modelo para mensajes
@@ -30,7 +60,9 @@ model Message {
   id        String   @id @default(uuid())
   content   String
   userId    String
+  projectId String
   user      User     @relation(fields: [userId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -40,9 +72,11 @@ model Task {
   id          String     @id @default(uuid())
   title       String
   description String?
-  status      TaskStatus
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
+  status      TaskStatus @default(PENDING)
+  projectId   String
+  assigneeId  String?
+  project     Project    @relation(fields: [projectId], references: [id])
+  assignee    User?      @relation(fields: [assigneeId], references: [id])
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -53,4 +87,10 @@ enum TaskStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+// Enum para roles de usuario
+enum UserRole {
+  ADMIN
+  USER
 }
