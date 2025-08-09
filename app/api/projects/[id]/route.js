@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 export async function GET(request, { params }) {
     try {
         const { userId } = auth();
-        
+
         if (!userId) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -84,7 +84,7 @@ export async function GET(request, { params }) {
     } catch (error) {
         console.error('Error fetching project:', error);
         return NextResponse.json(
-            { 
+            {
                 error: 'Error fetching project',
                 message: error.message || 'An unexpected error occurred'
             },

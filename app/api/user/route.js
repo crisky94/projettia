@@ -5,7 +5,7 @@ import prisma from '../../lib/prisma.ts';
 export async function GET() {
     try {
         const { userId } = auth();
-        
+
         if (!userId) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -47,7 +47,7 @@ export async function GET() {
     } catch (error) {
         console.error('Error fetching user:', error);
         return NextResponse.json(
-            { 
+            {
                 error: 'Error fetching user',
                 message: error.message || 'An unexpected error occurred'
             },

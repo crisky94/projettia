@@ -272,11 +272,10 @@ const TaskBoard = ({ projectId, tasks: initialTasks, isAdmin }) => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-4 py-2 rounded-lg text-white ${
-                                        isSubmitting
+                                    className={`px-4 py-2 rounded-lg text-white ${isSubmitting
                                             ? 'bg-blue-400 cursor-not-allowed'
                                             : 'bg-blue-500 hover:bg-blue-600'
-                                    }`}
+                                        }`}
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? 'Creating...' : 'Create Task'}
