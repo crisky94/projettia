@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import TaskBoard from '../../components/projects/TaskBoard';
 import Chat from '../../components/chat/Chat';
 
@@ -22,26 +21,38 @@ export default function ProjectPage({ params }) {
 
                 // Fetch project data
                 const projectRes = await fetch(`/api/projects/${params.id}`);
-                if (!projectRes.ok) throw new Error('Failed to load project');
                 const projectData = await projectRes.json();
+                if (!projectRes.ok) {
+                    throw new Error(projectData.message || projectData.error || 'Failed to load project');
+                }
+                console.log('Project data:', projectData);
                 setProject(projectData);
 
                 // Fetch tasks
                 const tasksRes = await fetch(`/api/projects/${params.id}/tasks`);
-                if (!tasksRes.ok) throw new Error('Failed to load tasks');
                 const tasksData = await tasksRes.json();
+                if (!tasksRes.ok) {
+                    throw new Error(tasksData.message || tasksData.error || 'Failed to load tasks');
+                }
+                console.log('Tasks data:', tasksData);
                 setTasks(tasksData);
 
                 // Fetch members
                 const membersRes = await fetch(`/api/projects/${params.id}/members`);
-                if (!membersRes.ok) throw new Error('Failed to load members');
                 const membersData = await membersRes.json();
+                if (!membersRes.ok) {
+                    throw new Error(membersData.message || membersData.error || 'Failed to load members');
+                }
+                console.log('Members data:', membersData);
                 setMembers(membersData);
 
                 // Get current user
                 const userRes = await fetch('/api/user');
-                if (!userRes.ok) throw new Error('Failed to load user');
                 const userData = await userRes.json();
+                if (!userRes.ok) {
+                    throw new Error(userData.message || userData.error || 'Failed to load user');
+                }
+                console.log('User data:', userData);
                 setUser(userData);
 
             } catch (err) {
@@ -78,12 +89,9 @@ export default function ProjectPage({ params }) {
             setShowAddMemberModal(false);
             setNewMemberEmail('');
         } catch (error) {
-
-            ProjectPage.propTypes = {
-                params: PropTypes.shape({
-                    id: PropTypes.string.isRequired,
-                }).isRequired,
-            };
+            console.error('Error adding member:', error);
+            setError(error.message || 'Failed to add member');
+            setShowAddMemberModal(false);
         }
     };
 
