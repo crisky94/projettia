@@ -9,17 +9,13 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-    const server = createServer((req, res) => {
-        if (req.url.startsWith('/socket.io')) {
-            // Dejar que Socket.IO maneje la solicitud
-            res.writeHead(404).end();
-        } else {
-            try {
-                handle(req, res);
-            } catch (err) {
-                console.error('Error handling request:', err);
-                res.writeHead(500).end('Internal Server Error');
-            }
+    const server = createServer(async (req, res) => {
+        try {
+            await handle(req, res);
+        } catch (err) {
+            console.error('Error handling request:', err);
+            res.statusCode = 500;
+            res.end('Internal Server Error');
         }
     });
 
@@ -30,6 +26,4 @@ app.prepare().then(() => {
         console.log(`> Ready on http://localhost:${port}`);
         console.log('> Socket.IO server running');
     });
-});
-});
 });

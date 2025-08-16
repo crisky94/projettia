@@ -3,16 +3,19 @@ import prisma from './prisma';
 
 export function configureSocketServer(server) {
     const io = new Server(server, {
-        path: '/socket.io/',
+        path: '/socket.io',
         serveClient: false,
         pingInterval: 10000,
         pingTimeout: 5000,
         cookie: false,
         cors: {
-            origin: "http://localhost:3001",
+            origin: "*",
             methods: ["GET", "POST"],
-            credentials: true
-        }
+            credentials: true,
+            allowedHeaders: ["*"]
+        },
+        transports: ['websocket', 'polling'],
+        allowEIO3: true
     });
 
     // Mapa para mantener registro de qué usuario está en qué proyecto
