@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import TaskBoard from '../../components/projects/TaskBoard';
-import Chat from '../../components/chat/Chat';
+// import Chat from '../../components/chat/Chat';
 
 export default function ProjectPage({ params }) {
     const [project, setProject] = useState(null);
@@ -35,7 +35,17 @@ export default function ProjectPage({ params }) {
                     throw new Error(tasksData.message || tasksData.error || 'Failed to load tasks');
                 }
                 console.log('Tasks data:', tasksData);
-                setTasks(tasksData);
+                if (Array.isArray(tasksData)) {
+                    // Ensure all tasks have a status
+                    const validatedTasks = tasksData.map(task => ({
+                        ...task,
+                        status: task.status || 'PENDING' // Default to PENDING if no status
+                    }));
+                    setTasks(validatedTasks);
+                } else {
+                    console.error('Tasks data is not an array:', tasksData);
+                    setTasks([]);
+                }
 
                 // Fetch members
                 const membersRes = await fetch(`/api/projects/${params.id}/members`);
@@ -144,12 +154,12 @@ export default function ProjectPage({ params }) {
                     <div className="lg:col-span-2">
                         <TaskBoard
                             projectId={project.id}
-                            tasks={tasks}
+                            initialTasks={tasks}
                             isAdmin={isAdmin}
                         />
                     </div>
                     <div>
-                        <Chat projectId={project.id} user={user} />
+                        {/* <Chat projectId={project.id} user={user} /> */}
                     </div>
                 </div>
 

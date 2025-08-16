@@ -1,4 +1,4 @@
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export default authMiddleware({
@@ -26,5 +26,7 @@ export default authMiddleware({
 });
 
 export const config = {
-    matcher: ["/((?!.+\\.[\\w]+$|_next|api/auth|socket\\.io).*)"]
+  matcher: [
+    "/((?!.+\\.[\\w]+$|_next).*)", // páginas y rutas API
+  ],
 };
