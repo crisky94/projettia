@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
             );
         }
 
-        const tasks = await prisma.task.findMany({
+        const rawTasks = await prisma.task.findMany({
             where: {
                 projectId: params.id
             },
@@ -56,6 +56,20 @@ export async function GET(request, { params }) {
                 createdAt: 'desc'
             }
         });
+
+        // Asegurarse de que todas las tareas tengan el formato correcto
+        const tasks = rawTasks.map(task => ({
+            ...task,
+            id: task.id.toString(), // Asegurarse de que el ID sea string
+            status: task.status || 'PENDING', // Asegurar que haya un estado
+            assignee: task.assignee ? {
+                id: task.assignee.id.toString(),
+                name: task.assignee.name,
+                email: task.assignee.email
+            } : null
+        }));
+
+        console.log('Sending tasks:', tasks);
 
         return NextResponse.json(tasks);
     } catch (error) {
