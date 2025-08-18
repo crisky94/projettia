@@ -7,18 +7,8 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+// import { Inter, JetBrains_Mono } from 'next/font/google';
 import AuthRedirect from './components/auth/AuthRedirect';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 export const metadata = {
   title: 'WER Team Work',
@@ -28,7 +18,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <html lang="en">
         <body className="font-sans antialiased bg-gray-50">
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
