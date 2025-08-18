@@ -1,41 +1,51 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, useSortable, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { useState, useEffect } from 'react';
+import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, useDroppable, closestCorners, useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { io } from 'socket.io-client';
 import PropTypes from 'prop-types';
 
 const TaskCard = ({ task, isAdmin }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-        id: task.id.toString()
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
+        id: task.id.toString(),
+        disabled: !isAdmin,
     });
 
     const style = {
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
         transition,
-        cursor: isAdmin ? 'grab' : 'default'
+        cursor: isAdmin ? 'grab' : 'default',
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 1000 : 1,
     };
 
     return (
         <div
             ref={setNodeRef}
             style={style}
-            {...attributes}
-            {...listeners}
-            className="bg-white p-4 rounded-lg shadow mb-2"
+            {...(isAdmin ? attributes : {})}
+            {...(isAdmin ? listeners : {})}
+            className={`bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 ${isAdmin
+                    ? 'cursor-grab active:cursor-grabbing hover:border-blue-300 active:shadow-lg'
+                    : 'cursor-default'
+                } ${isDragging ? 'rotate-2 shadow-xl border-blue-400' : ''}`}
         >
-            <h4 className="font-semibold">{task.title}</h4>
+        
+            <h4 className="font-semibold text-gray-900">{task.title}</h4>
             {task.description && (
-                <p className="text-gray-600 text-sm mt-1">
+                <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                     {task.description}
                 </p>
             )}
             {task.assignee && (
-                <div className="mt-2 text-sm text-gray-500">
-                    Assigned to: {task.assignee.name}
+                <div className="mt-3 flex items-center text-sm text-gray-500">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-semibold mr-2">
+                        {task.assignee.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span>{task.assignee.name}</span>
                 </div>
             )}
+            <div className="mt-2 text-xs text-gray-400">
+                Estado: {task.status.replace('_', ' ')}
+            </div>
         </div>
     );
 };
@@ -45,6 +55,7 @@ TaskCard.propTypes = {
         id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         description: PropTypes.string,
+        status: PropTypes.string.isRequired,
         assignee: PropTypes.shape({
             name: PropTypes.string.isRequired
         })
@@ -52,24 +63,44 @@ TaskCard.propTypes = {
     isAdmin: PropTypes.bool.isRequired
 };
 
-const TaskColumn = ({ title, tasks, isAdmin }) => {
+const TaskColumn = ({ title, tasks, isAdmin, status }) => {
+    const { setNodeRef, isOver } = useDroppable({
+        id: status,
+    });
+
     return (
-        <div className="w-80 bg-gray-100 rounded-lg p-4">
+        <div
+            ref={setNodeRef}
+            className={`w-80 rounded-lg p-4 transition-colors duration-200 min-h-[500px] ${isOver ? 'bg-blue-100 border-2 border-blue-400 shadow-lg' : 'bg-gray-100 border-2 border-transparent'
+                }`}
+        >
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">{title}</h3>
+                <span className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm">
+                    {tasks.length}
+                </span>
             </div>
-            <div className="min-h-[200px]">
-                <SortableContext
-                    items={tasks.filter(task => task && task.id).map(task => task.id.toString())}
-                >
-                    {tasks.filter(task => task && task.id).map((task) => (
-                        <TaskCard
-                            key={task.id}
-                            task={task}
-                            isAdmin={isAdmin}
-                        />
-                    ))}
-                </SortableContext>
+            <div className="min-h-[400px] max-h-[600px] overflow-y-auto space-y-3 pr-1">
+                {tasks.filter(task => task && task.id).map((task) => (
+                    <TaskCard
+                        key={task.id}
+                        task={task}
+                        isAdmin={isAdmin}
+                    />
+                ))}
+                {tasks.length === 0 && (
+                    <div className={`text-center py-12 border-2 border-dashed rounded-lg transition-all duration-200 ${isOver
+                            ? 'text-blue-600 border-blue-400 bg-blue-50'
+                            : 'text-gray-400 border-gray-300'
+                        }`}>
+                        {isOver ? 'Suelta la tarea aquí' : 'Sin tareas'}
+                    </div>
+                )}
+                {tasks.length > 0 && isOver && (
+                    <div className="text-blue-600 text-center py-4 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50 font-medium">
+                        ✓ Soltar en {title}
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -77,6 +108,7 @@ const TaskColumn = ({ title, tasks, isAdmin }) => {
 
 TaskColumn.propTypes = {
     title: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
     tasks: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -93,7 +125,6 @@ TaskColumn.propTypes = {
 const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     const [tasks, setTasks] = useState(initialTasks || []);
     const [activeId, setActiveId] = useState(null);
-    const [isSocketConnected, setIsSocketConnected] = useState(false);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [newTask, setNewTask] = useState({
         title: '',
@@ -101,7 +132,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
         assigneeEmail: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const socketRef = useRef(null);
 
     // Debug logs
     useEffect(() => {
@@ -110,10 +140,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     }, [initialTasks, tasks]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates
-        })
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Reduced distance for easier activation
+            },
+        }),
+        useSensor(KeyboardSensor)
     );
 
     useEffect(() => {
@@ -131,100 +163,84 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
         }
     }, [initialTasks]);
 
-    const handleTaskUpdate = useCallback((updatedTask) => {
-        setTasks(currentTasks => {
-            const taskIndex = currentTasks.findIndex(task => task.id === updatedTask.id);
-            if (taskIndex === -1) {
-                return [...currentTasks, updatedTask];
-            }
-            const newTasks = [...currentTasks];
-            newTasks[taskIndex] = updatedTask;
-            return newTasks;
-        });
-    }, []);
-
-    const connectSocket = useCallback(() => {
-        if (!socketRef.current) {
-            socketRef.current = io('http://localhost:3000', {
-                autoConnect: false,
-                path: '/socket.io',
-                transports: ['websocket', 'polling'],
-                reconnectionAttempts: 5,
-                reconnectionDelay: 1000,
-                forceNew: true
-            });
-
-            socketRef.current.on('connect', () => {
-                console.log('Socket connected');
-                setIsSocketConnected(true);
-                socketRef.current.emit('joinProject', projectId);
-            });
-
-            socketRef.current.on('connect_error', (error) => {
-                console.error('Socket connection error:', error);
-                setIsSocketConnected(false);
-            });
-
-            socketRef.current.on('disconnect', () => {
-                console.log('Socket disconnected');
-                setIsSocketConnected(false);
-            });
-
-            socketRef.current.on('taskUpdated', handleTaskUpdate);
-        }
-
-        if (!isSocketConnected) {
-            socketRef.current.connect();
-        }
-    }, [projectId, isSocketConnected, handleTaskUpdate]);
-
-    const disconnectSocket = useCallback(() => {
-        if (socketRef.current) {
-            socketRef.current.disconnect();
-            socketRef.current = null;
-            setIsSocketConnected(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        connectSocket();
-        return () => {
-            disconnectSocket();
-        };
-    }, [connectSocket, disconnectSocket]);
-
     const handleDragStart = (event) => {
         const { active } = event;
         setActiveId(active.id);
     };
 
-    const handleDragEnd = (event) => {
+    const updateTaskStatus = async (taskId, newStatus, originalStatus) => {
+        try {
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: newStatus
+                }),
+            });
+
+            if (!response.ok) {
+                // Revert the change if the API call failed
+                const revertedTasks = tasks.map(task =>
+                    task.id === taskId
+                        ? { ...task, status: originalStatus }
+                        : task
+                );
+                setTasks(revertedTasks);
+                console.error('Failed to update task status');
+                return false;
+            }
+            return true;
+        } catch (error) {
+            // Revert the change if there was an error
+            const revertedTasks = tasks.map(task =>
+                task.id === taskId
+                    ? { ...task, status: originalStatus }
+                    : task
+            );
+            setTasks(revertedTasks);
+            console.error('Error updating task status:', error);
+            return false;
+        }
+    };
+
+    const handleDragEnd = async (event) => {
         const { active, over } = event;
+        setActiveId(null);
 
-        if (active.id !== over?.id) {
-            const activeTask = tasks.find(task => task.id === active.id);
-            const overTask = tasks.find(task => task.id === over?.id);
+        if (!over) {
+            console.log('No drop target');
+            return;
+        }
 
-            if (activeTask && overTask) {
-                const updatedTasks = [...tasks];
-                const activeIndex = tasks.indexOf(activeTask);
-                const overIndex = tasks.indexOf(overTask);
+        const activeTask = tasks.find(task => task.id.toString() === active.id);
+        if (!activeTask) {
+            console.log('Active task not found:', active.id);
+            return;
+        }
 
-                [updatedTasks[activeIndex], updatedTasks[overIndex]] =
-                    [updatedTasks[overIndex], updatedTasks[activeIndex]];
+        console.log('Dragging task:', activeTask.title, 'from', activeTask.status, 'to', over.id);
 
+        // Check if we're dropping on a column
+        const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED'];
+        if (validStatuses.includes(over.id)) {
+            const newStatus = over.id;
+
+            if (activeTask.status !== newStatus) {
+                console.log('Updating task status to:', newStatus);
+                // Update task status locally first for immediate UI feedback
+                const updatedTasks = tasks.map(task =>
+                    task.id === activeTask.id
+                        ? { ...task, status: newStatus }
+                        : task
+                );
                 setTasks(updatedTasks);
 
-                if (socketRef.current) {
-                    socketRef.current.emit('updateTaskPosition', {
-                        projectId,
-                        taskId: activeTask.id,
-                        newIndex: overIndex
-                    });
-                }
+                // Send update to backend
+                await updateTaskStatus(activeTask.id, newStatus, activeTask.status);
             }
         }
-        setActiveId(null);
     };
 
     const handleCreateTask = async (e) => {
@@ -273,29 +289,33 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
 
             <DndContext
                 sensors={sensors}
+                collisionDetection={closestCorners}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                modifiers={[restrictToHorizontalAxis]}
             >
                 <div className="flex gap-4">
                     {/* Debug info */}
                     {process.env.NODE_ENV === 'development' && (
                         <div className="fixed top-0 right-0 bg-white p-2 text-xs">
-                            Total tasks: {tasks.length}
+                            Total tasks: {tasks.length}<br />
+                            Active: {activeId || 'none'}
                         </div>
                     )}
                     <TaskColumn
                         title="Pending"
+                        status="PENDING"
                         tasks={tasks.filter(task => task.status === 'PENDING')}
                         isAdmin={isAdmin}
                     />
                     <TaskColumn
                         title="In Progress"
+                        status="IN_PROGRESS"
                         tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
                         isAdmin={isAdmin}
                     />
                     <TaskColumn
                         title="Completed"
+                        status="COMPLETED"
                         tasks={tasks.filter(task => task.status === 'COMPLETED')}
                         isAdmin={isAdmin}
                     />
@@ -363,8 +383,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                                 <button
                                     type="submit"
                                     className={`px-4 py-2 rounded-lg text-white ${isSubmitting
-                                            ? 'bg-blue-400 cursor-not-allowed'
-                                            : 'bg-blue-500 hover:bg-blue-600'
+                                        ? 'bg-blue-400 cursor-not-allowed'
+                                        : 'bg-blue-500 hover:bg-blue-600'
                                         }`}
                                     disabled={isSubmitting}
                                 >
