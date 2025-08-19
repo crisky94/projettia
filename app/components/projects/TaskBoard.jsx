@@ -3,7 +3,7 @@ import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, useDr
 import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 
-const TaskCard = ({ task, isAdmin }) => {
+const TaskCard = ({ task, isAdmin, allMembers = [] }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
         disabled: !isAdmin,
@@ -15,6 +15,37 @@ const TaskCard = ({ task, isAdmin }) => {
         cursor: isAdmin ? 'grab' : 'default',
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 1000 : 1,
+    };
+
+    // Function to get avatar color based on initials conflicts
+    const getAvatarColor = (userId, initials, allMembers) => {
+        const colors = [
+            'from-blue-500 to-purple-600',
+            'from-green-500 to-teal-600',
+            'from-pink-500 to-rose-600',
+            'from-orange-500 to-red-600',
+            'from-indigo-500 to-blue-600',
+            'from-purple-500 to-pink-600',
+            'from-teal-500 to-cyan-600',
+            'from-yellow-500 to-orange-600',
+            'from-emerald-500 to-green-600',
+            'from-violet-500 to-purple-600'
+        ];
+
+        // Find all members with the same initials
+        const membersWithSameInitials = allMembers.filter(member => {
+            const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+            return memberInitials === initials;
+        });
+
+        if (membersWithSameInitials.length === 1) {
+            // If only one member has these initials, use the default blue-purple
+            return colors[0];
+        }
+
+        // If multiple members have the same initials, assign different colors
+        const memberIndex = membersWithSameInitials.findIndex(member => member.userId === userId);
+        return colors[memberIndex % colors.length];
     };
 
     return (
@@ -37,9 +68,15 @@ const TaskCard = ({ task, isAdmin }) => {
             )}
             {task.assignee && (
                 <div className="mt-3 flex items-center text-sm text-gray-500">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shadow-sm">
-                        {task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                    </div>
+                    {(() => {
+                        const initials = task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                        const avatarColor = getAvatarColor(task.assignee.id, initials, allMembers);
+                        return (
+                            <div className={`w-8 h-8 bg-gradient-to-r ${avatarColor} rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shadow-sm`}>
+                                {initials}
+                            </div>
+                        );
+                    })()}
                     <div className="flex flex-col">
                         <span className="font-medium text-gray-700">{task.assignee.name}</span>
                         <span className="text-xs text-gray-500">{task.assignee.email}</span>
@@ -60,14 +97,23 @@ TaskCard.propTypes = {
         description: PropTypes.string,
         status: PropTypes.string.isRequired,
         assignee: PropTypes.shape({
+            id: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
             email: PropTypes.string
         })
     }).isRequired,
-    isAdmin: PropTypes.bool.isRequired
+    isAdmin: PropTypes.bool.isRequired,
+    allMembers: PropTypes.arrayOf(
+        PropTypes.shape({
+            userId: PropTypes.string.isRequired,
+            user: PropTypes.shape({
+                name: PropTypes.string.isRequired
+            }).isRequired
+        })
+    )
 };
 
-const TaskColumn = ({ title, tasks, isAdmin, status }) => {
+const TaskColumn = ({ title, tasks, isAdmin, status, allMembers = [] }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -90,6 +136,7 @@ const TaskColumn = ({ title, tasks, isAdmin, status }) => {
                         key={task.id}
                         task={task}
                         isAdmin={isAdmin}
+                        allMembers={allMembers}
                     />
                 ))}
                 {tasks.length === 0 && (
@@ -123,7 +170,15 @@ TaskColumn.propTypes = {
             })
         })
     ).isRequired,
-    isAdmin: PropTypes.bool.isRequired
+    isAdmin: PropTypes.bool.isRequired,
+    allMembers: PropTypes.arrayOf(
+        PropTypes.shape({
+            userId: PropTypes.string.isRequired,
+            user: PropTypes.shape({
+                name: PropTypes.string.isRequired
+            }).isRequired
+        })
+    )
 };
 
 const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
@@ -137,6 +192,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
         assigneeId: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoadingMembers, setIsLoadingMembers] = useState(false);
 
     // Debug logs
     useEffect(() => {
@@ -171,22 +227,84 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     // Load project members
     useEffect(() => {
         const loadMembers = async () => {
+            setIsLoadingMembers(true);
             try {
                 const response = await fetch(`/api/projects/${projectId}/members`);
                 if (response.ok) {
                     const membersData = await response.json();
+                    console.log('Miembros cargados:', membersData);
                     setMembers(membersData);
                 } else {
                     console.error('Failed to load project members');
                 }
             } catch (error) {
                 console.error('Error loading members:', error);
+            } finally {
+                setIsLoadingMembers(false);
             }
         };
 
         if (projectId) {
             loadMembers();
         }
+    }, [projectId]);
+
+    // Function to reload members (can be called when a new member is added)
+    const reloadMembers = async () => {
+        try {
+            const response = await fetch(`/api/projects/${projectId}/members`);
+            if (response.ok) {
+                const membersData = await response.json();
+                console.log('Miembros recargados:', membersData);
+                setMembers(membersData);
+            } else {
+                console.error('Failed to reload project members');
+            }
+        } catch (error) {
+            console.error('Error reloading members:', error);
+        }
+    };
+
+    // Listen for member updates via custom events or polling
+    useEffect(() => {
+        const handleMemberAdded = () => {
+            console.log('Nuevo miembro detectado, recargando lista...');
+            reloadMembers();
+        };
+
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                // Cuando el usuario vuelve a enfocar la ventana, recargar miembros
+                console.log('Ventana enfocada, recargando miembros...');
+                reloadMembers();
+            }
+        };
+
+        const handleFocus = () => {
+            console.log('Ventana enfocada, recargando miembros...');
+            reloadMembers();
+        };
+
+        // Listen for custom events
+        window.addEventListener('memberAdded', handleMemberAdded);
+        
+        // Listen for focus events
+        window.addEventListener('focus', handleFocus);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        // Poll for updates every 10 seconds (más frecuente)
+        const interval = setInterval(() => {
+            if (!document.hidden) {
+                reloadMembers();
+            }
+        }, 10000);
+
+        return () => {
+            window.removeEventListener('memberAdded', handleMemberAdded);
+            window.removeEventListener('focus', handleFocus);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            clearInterval(interval);
+        };
     }, [projectId]);
 
     const handleDragStart = (event) => {
@@ -303,7 +421,87 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-4">{/* Project Members Section */}
+            <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border">
+                <div className="flex justify-between items-center mb-3">
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-semibold text-gray-800">Miembros del Proyecto ({members.length})</h2>
+                        {isLoadingMembers && (
+                            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" 
+                                 title="Actualizando miembros..."></div>
+                        )}
+                    </div>
+                </div>
+                {members.length === 0 ? (
+                    <div className="flex items-center justify-center py-8 text-gray-500">
+                        {isLoadingMembers ? (
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                                <span>Cargando miembros...</span>
+                            </div>
+                        ) : (
+                            <span>No hay miembros en este proyecto</span>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex flex-wrap gap-3">
+                        {members.map((member) => {
+                            const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                            
+                            // Function to get avatar color based on initials conflicts
+                            const getAvatarColor = (userId, initials, allMembers) => {
+                                const colors = [
+                                    'from-blue-500 to-purple-600',
+                                    'from-green-500 to-teal-600',
+                                    'from-pink-500 to-rose-600',
+                                    'from-orange-500 to-red-600',
+                                    'from-indigo-500 to-blue-600',
+                                    'from-purple-500 to-pink-600',
+                                    'from-teal-500 to-cyan-600',
+                                    'from-yellow-500 to-orange-600',
+                                    'from-emerald-500 to-green-600',
+                                    'from-violet-500 to-purple-600'
+                                ];
+
+                                // Find all members with the same initials
+                                const membersWithSameInitials = allMembers.filter(m => {
+                                    const memberInitials = m.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                                    return memberInitials === initials;
+                                });
+
+                                if (membersWithSameInitials.length === 1) {
+                                    // If only one member has these initials, use the default blue-purple
+                                    return colors[0];
+                                }
+
+                                // If multiple members have the same initials, assign different colors
+                                const memberIndex = membersWithSameInitials.findIndex(m => m.userId === userId);
+                                return colors[memberIndex % colors.length];
+                            };
+
+                            const avatarColor = getAvatarColor(member.userId, initials, members);
+
+                            return (
+                                <div 
+                                    key={member.userId} 
+                                    className="flex items-center bg-gray-50 px-3 py-2 rounded-full border hover:bg-gray-100 transition-colors"
+                                >
+                                    <div className={`w-8 h-8 bg-gradient-to-r ${avatarColor} rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shadow-sm`}>
+                                        {initials}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-gray-700">{member.user.name}</span>
+                                        <span className="text-xs text-gray-500">
+                                            {member.role === 'ADMIN' ? 'Admin' : 'Miembro'}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
             {isAdmin && (
                 <div className="mb-4">
                     <button
@@ -324,7 +522,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                 <div className="flex gap-4">
                     {/* Debug info */}
                     {process.env.NODE_ENV === 'development' && (
-                        <div className="fixed top-0 right-0 bg-white p-2 text-xs">
+                        <div className="fixed top-12 right-0 bg-white p-2 text-xs">
                             Total tasks: {tasks.length}<br />
                             {/* Active: {activeId || 'none'} */}
                         </div>
@@ -334,18 +532,21 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                         status="PENDING"
                         tasks={tasks.filter(task => task.status === 'PENDING')}
                         isAdmin={isAdmin}
+                        allMembers={members}
                     />
                     <TaskColumn
                         title="In Progress"
                         status="IN_PROGRESS"
                         tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
                         isAdmin={isAdmin}
+                        allMembers={members}
                     />
                     <TaskColumn
                         title="Completed"
                         status="COMPLETED"
                         tasks={tasks.filter(task => task.status === 'COMPLETED')}
                         isAdmin={isAdmin}
+                        allMembers={members}
                     />
                 </div>
             </DndContext>
