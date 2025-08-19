@@ -31,15 +31,13 @@ const TaskCard = ({ task, isAdmin }) => {
         
             <h4 className="font-semibold text-gray-900">{task.title}</h4>
             {task.description && (
-                <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+                <p className="text-gray-600 text-sm mt-1 ">
                     {task.description}
                 </p>
             )}
             {task.assignee && (
                 <div className="mt-3 flex items-center text-sm text-gray-500">
-                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-semibold mr-2">
-                        {task.assignee.name.charAt(0).toUpperCase()}
-                    </div>
+                 
                     <span>{task.assignee.name}</span>
                 </div>
             )}
@@ -71,7 +69,7 @@ const TaskColumn = ({ title, tasks, isAdmin, status }) => {
     return (
         <div
             ref={setNodeRef}
-            className={`w-80 rounded-lg p-4 transition-colors duration-200 min-h-[500px] ${isOver ? 'bg-blue-100 border-2 border-blue-400 shadow-lg' : 'bg-gray-100 border-2 border-transparent'
+            className={`w-80 rounded-lg p-4 transition-colors duration-200 min-h-[500px] items-center ${isOver ? 'bg-blue-100 border-2 border-blue-400 shadow-lg' : 'bg-gray-100 border-2 border-transparent'
                 }`}
         >
             <div className="flex justify-between items-center mb-4">
@@ -80,7 +78,7 @@ const TaskColumn = ({ title, tasks, isAdmin, status }) => {
                     {tasks.length}
                 </span>
             </div>
-            <div className="min-h-[400px] max-h-[600px] overflow-y-auto space-y-3 pr-1">
+            <div className="min-h-[400px] max-h-[600px] overflow-y-hidden space-y-3 pr-1">
                 {tasks.filter(task => task && task.id).map((task) => (
                     <TaskCard
                         key={task.id}
@@ -298,7 +296,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                     {process.env.NODE_ENV === 'development' && (
                         <div className="fixed top-0 right-0 bg-white p-2 text-xs">
                             Total tasks: {tasks.length}<br />
-                            Active: {activeId || 'none'}
+                            {/* Active: {activeId || 'none'} */}
                         </div>
                     )}
                     <TaskColumn
