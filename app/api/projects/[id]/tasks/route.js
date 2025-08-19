@@ -96,7 +96,7 @@ export async function POST(request, { params }) {
         }
 
         const body = await request.json();
-        const { title, description, assigneeEmail, status = 'PENDING' } = body;
+        const { title, description, assigneeId, status = 'PENDING' } = body;
 
         // Verificar que el proyecto existe y el usuario tiene acceso
         const project = await prisma.project.findUnique({
@@ -124,27 +124,18 @@ export async function POST(request, { params }) {
             );
         }
 
-        // Si se proporciona un email de asignación, buscar el usuario
-        let assigneeId = null;
-        if (assigneeEmail) {
-            const assignee = await prisma.user.findFirst({
-                where: { email: assigneeEmail }
-            });
-            if (!assignee) {
-                return NextResponse.json(
-                    { error: 'Assignee not found' },
-                    { status: 404 }
-                );
-            }
+        // Si se proporciona un ID de asignación, verificar que el usuario sea miembro
+        let finalAssigneeId = null;
+        if (assigneeId) {
             // Verificar que el asignado es miembro del proyecto
-            const isMember = project.members.some(member => member.userId === assignee.id);
-            if (!isMember && assignee.id !== project.ownerId) {
+            const isMember = project.members.some(member => member.userId === assigneeId);
+            if (!isMember && assigneeId !== project.ownerId) {
                 return NextResponse.json(
                     { error: 'Assignee must be a member of the project' },
                     { status: 400 }
                 );
             }
-            assigneeId = assignee.id;
+            finalAssigneeId = assigneeId;
         }
 
         // Crear la tarea
@@ -154,7 +145,7 @@ export async function POST(request, { params }) {
                 description,
                 status,
                 projectId: params.id,
-                assigneeId
+                assigneeId: finalAssigneeId
             },
             include: {
                 assignee: {

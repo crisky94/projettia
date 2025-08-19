@@ -37,8 +37,13 @@ const TaskCard = ({ task, isAdmin }) => {
             )}
             {task.assignee && (
                 <div className="mt-3 flex items-center text-sm text-gray-500">
-                 
-                    <span>{task.assignee.name}</span>
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shadow-sm">
+                        {task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-700">{task.assignee.name}</span>
+                        <span className="text-xs text-gray-500">{task.assignee.email}</span>
+                    </div>
                 </div>
             )}
             <div className="mt-2 text-xs text-gray-400">
@@ -55,7 +60,8 @@ TaskCard.propTypes = {
         description: PropTypes.string,
         status: PropTypes.string.isRequired,
         assignee: PropTypes.shape({
-            name: PropTypes.string.isRequired
+            name: PropTypes.string.isRequired,
+            email: PropTypes.string
         })
     }).isRequired,
     isAdmin: PropTypes.bool.isRequired
@@ -124,10 +130,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     const [tasks, setTasks] = useState(initialTasks || []);
     const [activeId, setActiveId] = useState(null);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+    const [members, setMembers] = useState([]);
     const [newTask, setNewTask] = useState({
         title: '',
         description: '',
-        assigneeEmail: ''
+        assigneeId: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -160,6 +167,27 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
             setTasks([]);
         }
     }, [initialTasks]);
+
+    // Load project members
+    useEffect(() => {
+        const loadMembers = async () => {
+            try {
+                const response = await fetch(`/api/projects/${projectId}/members`);
+                if (response.ok) {
+                    const membersData = await response.json();
+                    setMembers(membersData);
+                } else {
+                    console.error('Failed to load project members');
+                }
+            } catch (error) {
+                console.error('Error loading members:', error);
+            }
+        };
+
+        if (projectId) {
+            loadMembers();
+        }
+    }, [projectId]);
 
     const handleDragStart = (event) => {
         const { active } = event;
@@ -252,7 +280,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...newTask,
+                    title: newTask.title,
+                    description: newTask.description,
+                    assigneeId: newTask.assigneeId || null,
                     status: 'PENDING'
                 }),
             });
@@ -264,7 +294,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
             const createdTask = await response.json();
             setTasks(prevTasks => [...prevTasks, createdTask]);
             setShowAddTaskModal(false);
-            setNewTask({ title: '', description: '', assigneeEmail: '' });
+            setNewTask({ title: '', description: '', assigneeId: '' });
         } catch (error) {
             console.error('Error creating task:', error);
         } finally {
@@ -353,25 +383,34 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="assigneeEmail" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Assignee Email
+                                <label htmlFor="assignee" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Asignar a
                                 </label>
-                                <input
-                                    id="assigneeEmail"
-                                    type="email"
-                                    value={newTask.assigneeEmail}
-                                    onChange={(e) => setNewTask(prev => ({ ...prev, assigneeEmail: e.target.value }))}
+                                <select
+                                    id="assignee"
+                                    value={newTask.assigneeId}
+                                    onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
                                     className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Enter team member's email"
                                     disabled={isSubmitting}
-                                />
+                                >
+                                    <option value="">Sin asignar</option>
+                                    {members.length === 0 ? (
+                                        <option disabled>Cargando miembros...</option>
+                                    ) : (
+                                        members.map((member) => (
+                                            <option key={member.userId} value={member.userId}>
+                                                {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Miembro'})
+                                            </option>
+                                        ))
+                                    )}
+                                </select>
                             </div>
                             <div className="flex justify-end gap-2">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         setShowAddTaskModal(false);
-                                        setNewTask({ title: '', description: '', assigneeEmail: '' });
+                                        setNewTask({ title: '', description: '', assigneeId: '' });
                                     }}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-800"
                                     disabled={isSubmitting}
