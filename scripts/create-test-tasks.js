@@ -5,7 +5,7 @@ async function createTestTasks() {
   try {
     // Obtener el proyecto existente
     const project = await prisma.project.findFirst();
-    
+
     if (!project) {
       console.log('No se encontró ningún proyecto.');
       return;

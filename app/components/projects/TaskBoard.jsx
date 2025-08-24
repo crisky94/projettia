@@ -55,11 +55,11 @@ const TaskCard = ({ task, isAdmin, allMembers = [] }) => {
             {...(isAdmin ? attributes : {})}
             {...(isAdmin ? listeners : {})}
             className={`bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 ${isAdmin
-                    ? 'cursor-grab active:cursor-grabbing hover:border-blue-300 active:shadow-lg'
-                    : 'cursor-default'
+                ? 'cursor-grab active:cursor-grabbing hover:border-blue-300 active:shadow-lg'
+                : 'cursor-default'
                 } ${isDragging ? 'rotate-2 shadow-xl border-blue-400' : ''}`}
         >
-        
+
             <h4 className="font-semibold text-gray-900">{task.title}</h4>
             {task.description && (
                 <p className="text-gray-600 text-sm mt-1 ">
@@ -141,8 +141,8 @@ const TaskColumn = ({ title, tasks, isAdmin, status, allMembers = [] }) => {
                 ))}
                 {tasks.length === 0 && (
                     <div className={`text-center py-12 border-2 border-dashed rounded-lg transition-all duration-200 ${isOver
-                            ? 'text-blue-600 border-blue-400 bg-blue-50'
-                            : 'text-gray-400 border-gray-300'
+                        ? 'text-blue-600 border-blue-400 bg-blue-50'
+                        : 'text-gray-400 border-gray-300'
                         }`}>
                         {isOver ? 'Suelta la tarea aquí' : 'Sin tareas'}
                     </div>
@@ -233,9 +233,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                 if (response.ok) {
                     const membersData = await response.json();
                     console.log('Miembros cargados:', membersData);
-                    setMembers(membersData);
+                    // Extraer solo el array de members de la respuesta
+                    setMembers(Array.isArray(membersData.members) ? membersData.members : []);
                 } else {
                     console.error('Failed to load project members');
+                    setMembers([]);
                 }
             } catch (error) {
                 console.error('Error loading members:', error);
@@ -256,12 +258,15 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
             if (response.ok) {
                 const membersData = await response.json();
                 console.log('Miembros recargados:', membersData);
-                setMembers(membersData);
+                // Extraer solo el array de members de la respuesta
+                setMembers(Array.isArray(membersData.members) ? membersData.members : []);
             } else {
                 console.error('Failed to reload project members');
+                setMembers([]);
             }
         } catch (error) {
             console.error('Error reloading members:', error);
+            setMembers([]);
         }
     };
 
@@ -287,11 +292,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
 
         // Listen for custom events
         window.addEventListener('memberAdded', handleMemberAdded);
-        
+
         // Listen for focus events
         window.addEventListener('focus', handleFocus);
         document.addEventListener('visibilitychange', handleVisibilityChange);
-        
+
         // Poll for updates every 10 seconds (más frecuente)
         const interval = setInterval(() => {
             if (!document.hidden) {
@@ -427,8 +432,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                     <div className="flex items-center gap-2">
                         <h2 className="text-lg font-semibold text-gray-800">Miembros del Proyecto ({members.length})</h2>
                         {isLoadingMembers && (
-                            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" 
-                                 title="Actualizando miembros..."></div>
+                            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+                                title="Actualizando miembros..."></div>
                         )}
                     </div>
                 </div>
@@ -445,9 +450,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                     </div>
                 ) : (
                     <div className="flex flex-wrap gap-3">
-                        {members.map((member) => {
+                        {Array.isArray(members) && members.map((member) => {
                             const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                            
+
                             // Function to get avatar color based on initials conflicts
                             const getAvatarColor = (userId, initials, allMembers) => {
                                 const colors = [
@@ -482,8 +487,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                             const avatarColor = getAvatarColor(member.userId, initials, members);
 
                             return (
-                                <div 
-                                    key={member.userId} 
+                                <div
+                                    key={member.userId}
                                     className="flex items-center bg-gray-50 px-3 py-2 rounded-full border hover:bg-gray-100 transition-colors"
                                 >
                                     <div className={`w-8 h-8 bg-gradient-to-r ${avatarColor} rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shadow-sm`}>
@@ -595,7 +600,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                                     disabled={isSubmitting}
                                 >
                                     <option value="">Sin asignar</option>
-                                    {members.length === 0 ? (
+                                    {!Array.isArray(members) || members.length === 0 ? (
                                         <option disabled>Cargando miembros...</option>
                                     ) : (
                                         members.map((member) => (

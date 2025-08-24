@@ -11,7 +11,7 @@ async function seedUsers() {
         email: 'maria.garcia@example.com'
       },
       {
-        id: 'user_test_2', 
+        id: 'user_test_2',
         name: 'Miguel González',
         email: 'miguel.gonzalez@example.com'
       },
@@ -50,10 +50,10 @@ async function seedUsers() {
 
     // Obtener el proyecto existente (asumiendo que hay uno)
     const existingProject = await prisma.project.findFirst();
-    
+
     if (existingProject) {
       console.log(`\nAgregando usuarios al proyecto: ${existingProject.name}`);
-      
+
       // Agregar usuarios al proyecto
       for (const user of testUsers) {
         await prisma.projectUser.upsert({
