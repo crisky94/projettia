@@ -116,7 +116,7 @@ export default function ProjectPage({ params }) {
     };
 
     const handleRemoveMember = async (userId) => {
-        if (!window.confirm('¿Estás seguro de que quieres eliminar este miembro del proyecto?')) {
+        if (!window.confirm('Are you sure you want to remove this member from the project?')) {
             return;
         }
 
@@ -187,16 +187,8 @@ export default function ProjectPage({ params }) {
                             onClick={() => setShowMembersModal(true)}
                             className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                         >
-                            Ver Miembros ({members.length})
+                            Members ({members.length})
                         </button>
-                        {canManageMembers && (
-                            <button
-                                onClick={() => setShowAddMemberModal(true)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                            >
-                                Agregar Miembro
-                            </button>
-                        )}
                     </div>
                 </div>
 
@@ -236,11 +228,11 @@ export default function ProjectPage({ params }) {
                                                 <div className="text-xs text-gray-500">
                                                     {(() => {
                                                         if (isProjectOwner && member.userId === project.ownerId) {
-                                                            return 'Administrador del proyecto';
+                                                            return 'Project Admin';
                                                         } else if (member.role === 'ADMIN') {
-                                                            return 'Administrador';
+                                                            return 'Admin';
                                                         } else {
-                                                            return 'Miembro';
+                                                            return 'Member';
                                                         }
                                                     })()}
                                                 </div>
@@ -260,7 +252,7 @@ export default function ProjectPage({ params }) {
                                     ))
                                 ) : (
                                     <div className="text-center py-4 text-gray-500">
-                                        No hay miembros en este proyecto
+                                        No members in this project
                                     </div>
                                 )}
                             </div>
@@ -273,7 +265,7 @@ export default function ProjectPage({ params }) {
                                         }}
                                         className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                                     >
-                                        Agregar Nuevo Miembro
+                                        Add New Member
                                     </button>
                                 </div>
                             )}
@@ -300,7 +292,7 @@ export default function ProjectPage({ params }) {
                                         onClick={() => setShowAddMemberModal(false)}
                                         className="px-4 py-2 text-gray-600 hover:text-gray-800"
                                     >
-                                        Cancelar
+                                        Cancel
                                     </button>
                                     <button
                                         type="submit"
