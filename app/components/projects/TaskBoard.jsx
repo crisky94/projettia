@@ -837,13 +837,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
 
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm border border-gray-200 dark:border-gray-700">
                         {/* Header */}
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
-                                        <svg className="w-4 h-4 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                    <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     </div>
@@ -865,9 +865,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-6 space-y-6">
+                        <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                             <div>
-                                <label htmlFor="title" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Task Title
                                 </label>
                                 <input
@@ -875,7 +875,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     type="text"
                                     value={newTask.title}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     placeholder="Enter task title..."
                                     required
                                     disabled={isSubmitting}
@@ -883,29 +883,29 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                             </div>
 
                             <div>
-                                <label htmlFor="description" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Description
                                 </label>
                                 <textarea
                                     id="description"
                                     value={newTask.description}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
-                                    rows="3"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    rows="2"
                                     placeholder="Describe the task details..."
                                     disabled={isSubmitting}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="assignee" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                <label htmlFor="assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Assign to
                                 </label>
                                 <select
                                     id="assignee"
                                     value={newTask.assigneeId}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     disabled={isSubmitting}
                                 >
                                     <option value="">Unassigned</option>
@@ -922,21 +922,21 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                             </div>
 
                             {/* Actions */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '' });
                                     }}
-                                    className="px-6 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors text-sm"
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${isSubmitting
+                                    className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm ${isSubmitting
                                         ? 'bg-violet-400 text-white cursor-not-allowed'
                                         : 'bg-violet-500 hover:bg-violet-600 text-white hover:shadow-md'
                                         }`}
