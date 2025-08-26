@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import TaskBoard from '../../components/projects/TaskBoard';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 export default function ProjectPage({ params }) {
     const [project, setProject] = useState(null);
@@ -21,6 +22,10 @@ export default function ProjectPage({ params }) {
         name: '',
         description: ''
     });
+    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+    const [deleteConfirmStep, setDeleteConfirmStep] = useState(1);
+    const [showRemoveMemberModal, setShowRemoveMemberModal] = useState(false);
+    const [memberToRemove, setMemberToRemove] = useState(null);
 
     useEffect(() => {
         async function fetchProjectData() {
@@ -114,27 +119,52 @@ export default function ProjectPage({ params }) {
             setMembers([...members, newMember]);
             setShowAddMemberModal(false);
             setNewMemberEmail('');
+
+            // Mostrar notificación de éxito
+            toast.success('¡Miembro agregado exitosamente!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
             console.error('Error adding member:', error);
-            setError(error.message || 'Failed to add member');
             setShowAddMemberModal(false);
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al agregar miembro', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     const handleRemoveMember = async (userId) => {
-        if (!window.confirm('Are you sure you want to remove this member from the project?')) {
-            return;
-        }
+        const member = members.find(m => m.userId === userId);
+        setMemberToRemove(member);
+        setShowRemoveMemberModal(true);
+    };
+
+    const handleConfirmRemoveMember = async () => {
+        if (!memberToRemove) return;
 
         try {
-            setRemovingMember(userId);
+            setRemovingMember(memberToRemove.userId);
+            setShowRemoveMemberModal(false);
+
             const response = await fetch(`/api/projects/${project.id}/members`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId: userId,
+                    userId: memberToRemove.userId,
                 }),
             });
 
@@ -144,13 +174,38 @@ export default function ProjectPage({ params }) {
             }
 
             // Actualizar la lista de miembros
-            setMembers(members.filter(member => member.userId !== userId));
+            setMembers(members.filter(member => member.userId !== memberToRemove.userId));
+
+            // Mostrar notificación de éxito
+            toast.success('¡Miembro eliminado del proyecto!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
             console.error('Error removing member:', error);
-            setError(error.message || 'Failed to remove member');
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al eliminar miembro', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setRemovingMember(null);
+            setMemberToRemove(null);
         }
+    };
+
+    const handleCancelRemoveMember = () => {
+        setShowRemoveMemberModal(false);
+        setMemberToRemove(null);
     };
 
     const handleEditProject = () => {
@@ -185,23 +240,46 @@ export default function ProjectPage({ params }) {
             setProject(updatedProject);
             setShowEditProjectModal(false);
             setEditProjectData({ name: '', description: '' });
+
+            // Mostrar notificación de éxito
+            toast.success('¡Proyecto actualizado exitosamente!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
             console.error('Error updating project:', error);
-            setError(error.message || 'Failed to update project');
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al actualizar el proyecto', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setEditingProject(false);
         }
     };
 
     const handleDeleteProject = async () => {
-        if (!window.confirm('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer y eliminará todas las tareas, miembros y mensajes asociados.')) {
+        setShowDeleteConfirmModal(true);
+        setDeleteConfirmStep(1);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (deleteConfirmStep === 1) {
+            setDeleteConfirmStep(2);
             return;
         }
 
-        if (!window.confirm('Esta acción eliminará PERMANENTEMENTE el proyecto y todos sus datos. ¿Continuar?')) {
-            return;
-        }
-
+        // Segunda confirmación - proceder con la eliminación
+        setShowDeleteConfirmModal(false);
         try {
             setLoading(true);
             const response = await fetch(`/api/projects/${project.id}`, {
@@ -213,13 +291,43 @@ export default function ProjectPage({ params }) {
                 throw new Error(errorData.error || 'Failed to delete project');
             }
 
-            // Redirigir al dashboard después de eliminar el proyecto
-            window.location.href = '/dashboard';
+            // Mostrar notificación de éxito antes de redirigir
+            toast.success('¡Proyecto eliminado exitosamente!', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                onClose: () => {
+                    // Redirigir al dashboard después de mostrar la notificación
+                    window.location.href = '/dashboard';
+                }
+            });
+
+            // También redirigir después de un timeout como fallback
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 2500);
         } catch (error) {
             console.error('Error deleting project:', error);
-            setError(error.message || 'Failed to delete project');
             setLoading(false);
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al eliminar el proyecto', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteConfirmModal(false);
+        setDeleteConfirmStep(1);
     };
 
     if (loading) {
@@ -469,6 +577,93 @@ export default function ProjectPage({ params }) {
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de confirmación de eliminación de proyecto */}
+                {showDeleteConfirmModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                            <div className="flex items-center mb-4">
+                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
+                                    <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <h3 className="text-lg font-medium text-gray-900">
+                                        {deleteConfirmStep === 1 ? 'Confirmar eliminación' : 'Confirmación final'}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                {deleteConfirmStep === 1 ? (
+                                    <p className="text-sm text-gray-500">
+                                        ¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer y eliminará todas las tareas, miembros y mensajes asociados.
+                                    </p>
+                                ) : (
+                                    <p className="text-sm text-gray-500">
+                                        <strong className="text-red-600">ATENCIÓN:</strong> Esta acción eliminará PERMANENTEMENTE el proyecto "{project.name}" y todos sus datos. ¿Continuar?
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={handleCancelDelete}
+                                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleConfirmDelete}
+                                    className={`px-4 py-2 rounded-lg text-white font-medium ${deleteConfirmStep === 1
+                                            ? 'bg-yellow-500 hover:bg-yellow-600'
+                                            : 'bg-red-500 hover:bg-red-600'
+                                        }`}
+                                >
+                                    {deleteConfirmStep === 1 ? 'Continuar' : 'Eliminar definitivamente'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de confirmación para eliminar miembro */}
+                {showRemoveMemberModal && memberToRemove && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                            <div className="flex items-center mb-4">
+                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
+                                    <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <h3 className="text-lg font-medium text-gray-900">
+                                        Eliminar miembro
+                                    </h3>
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-500">
+                                    ¿Estás seguro de que quieres eliminar a <strong>{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) del proyecto?
+                                </p>
+                            </div>
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={handleCancelRemoveMember}
+                                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleConfirmRemoveMember}
+                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium"
+                                >
+                                    Eliminar miembro
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

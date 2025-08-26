@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, useDroppable, closestCorners, useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
@@ -63,9 +64,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-                            onDeleteTask(task.id);
-                        }
+                        onDeleteTask(task.id);
                     }}
                     className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
                     title="Eliminar tarea"
@@ -210,6 +209,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+    const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null);
 
     // Debug logs
     useEffect(() => {
@@ -435,16 +436,45 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
             setTasks(prevTasks => [...prevTasks, createdTask]);
             setShowAddTaskModal(false);
             setNewTask({ title: '', description: '', assigneeId: '' });
+
+            // Mostrar notificación de éxito
+            toast.success('¡Tarea creada exitosamente!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
             console.error('Error creating task:', error);
+
+            // Mostrar notificación de error
+            toast.error('Error al crear la tarea', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleDeleteTask = async (taskId) => {
+        const task = tasks.find(t => t.id === taskId);
+        setTaskToDelete(task);
+        setShowDeleteTaskModal(true);
+    };
+
+    const handleConfirmDeleteTask = async () => {
+        if (!taskToDelete) return;
+
         try {
-            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+            setShowDeleteTaskModal(false);
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskToDelete.id}`, {
                 method: 'DELETE',
             });
 
@@ -454,13 +484,39 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
             }
 
             // Remover la tarea del estado local
-            setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+            setTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
 
-            console.log('Tarea eliminada exitosamente:', taskId);
+            // Mostrar notificación de éxito
+            toast.success('¡Tarea eliminada exitosamente!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+
+            console.log('Tarea eliminada exitosamente:', taskToDelete.id);
         } catch (error) {
             console.error('Error eliminando tarea:', error);
-            alert(error.message || 'Error al eliminar la tarea');
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al eliminar la tarea', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } finally {
+            setTaskToDelete(null);
         }
+    };
+
+    const handleCancelDeleteTask = () => {
+        setShowDeleteTaskModal(false);
+        setTaskToDelete(null);
     };
 
     return (
@@ -676,6 +732,45 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmación para eliminar tarea */}
+            {showDeleteTaskModal && taskToDelete && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                        <div className="flex items-center mb-4">
+                            <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
+                                <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                            </div>
+                            <div className="ml-4">
+                                <h3 className="text-lg font-medium text-gray-900">
+                                    Eliminar tarea
+                                </h3>
+                            </div>
+                        </div>
+                        <div className="mb-6">
+                            <p className="text-sm text-gray-500">
+                                ¿Estás seguro de que quieres eliminar la tarea <strong>"{taskToDelete.title}"</strong>? Esta acción no se puede deshacer.
+                            </p>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={handleCancelDeleteTask}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleConfirmDeleteTask}
+                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium"
+                            >
+                                Eliminar tarea
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

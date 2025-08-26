@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 export default function ProjectDashboard({ userId }) {
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -63,11 +64,30 @@ export default function ProjectDashboard({ userId }) {
             setProjectName('');
             setProjectDescription('');
 
+            // Mostrar notificación de éxito
+            toast.success('¡Proyecto creado exitosamente!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+
             // Redirigir al nuevo proyecto
             router.push(`/projects/${project.id}`);
         } catch (error) {
             console.error('Error creating project:', error);
-            setError(error.message || 'Failed to create project. Please try again.');
+
+            // Mostrar notificación de error
+            toast.error(error.message || 'Error al crear el proyecto', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setCreating(false);
         }
@@ -218,8 +238,8 @@ export default function ProjectDashboard({ userId }) {
                                 <button
                                     type="submit"
                                     className={`${creating
-                                            ? 'bg-blue-400 cursor-not-allowed'
-                                            : 'bg-blue-500 hover:bg-blue-600'
+                                        ? 'bg-blue-400 cursor-not-allowed'
+                                        : 'bg-blue-500 hover:bg-blue-600'
                                         } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
                                     disabled={creating}
                                 >
