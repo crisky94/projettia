@@ -854,8 +854,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 <button
                                     type="submit"
                                     className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                            ? 'bg-blue-400 text-white cursor-not-allowed'
-                                            : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'
+                                        ? 'bg-blue-400 text-white cursor-not-allowed'
+                                        : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'
                                         }`}
                                     disabled={isSubmitting || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
                                 >

@@ -56,8 +56,8 @@ const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
             {...(isAdmin ? attributes : {})}
             {...(isAdmin ? listeners : {})}
             className={`group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 relative overflow-hidden ${isAdmin
-                    ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'
-                    : 'cursor-default'
+                ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'
+                : 'cursor-default'
                 } ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}`}
         >
             {/* Delete button */}
@@ -256,8 +256,8 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], onDeleteTask 
                 <div className="relative">
                     {tasks.length === 0 ? (
                         <div className={`text-center py-12 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
-                                ? 'border-current text-current bg-current/5'
-                                : 'text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700'
+                            ? 'border-current text-current bg-current/5'
+                            : 'text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700'
                             }`}>
                             {isOver ? (
                                 <div className="flex flex-col items-center gap-2">
@@ -937,8 +937,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                 <button
                                     type="submit"
                                     className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                            ? 'bg-violet-400 text-white cursor-not-allowed'
-                                            : 'bg-violet-500 hover:bg-violet-600 text-white hover:shadow-md'
+                                        ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        : 'bg-violet-500 hover:bg-violet-600 text-white hover:shadow-md'
                                         }`}
                                     disabled={isSubmitting}
                                 >
