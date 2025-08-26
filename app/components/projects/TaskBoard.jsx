@@ -3,7 +3,7 @@ import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, useDr
 import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 
-const TaskCard = ({ task, isAdmin, allMembers = [] }) => {
+const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
         disabled: !isAdmin,
@@ -54,11 +54,25 @@ const TaskCard = ({ task, isAdmin, allMembers = [] }) => {
             style={style}
             {...(isAdmin ? attributes : {})}
             {...(isAdmin ? listeners : {})}
-            className={`bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 ${isAdmin
+            className={`bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 relative group ${isAdmin
                 ? 'cursor-grab active:cursor-grabbing hover:border-blue-300 active:shadow-lg'
                 : 'cursor-default'
                 } ${isDragging ? 'rotate-2 shadow-xl border-blue-400' : ''}`}
         >
+            {isAdmin && onDeleteTask && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                            onDeleteTask(task.id);
+                        }
+                    }}
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                    title="Eliminar tarea"
+                >
+                    ×
+                </button>
+            )}
 
             <h4 className="font-semibold text-gray-900">{task.title}</h4>
             {task.description && (
@@ -110,10 +124,11 @@ TaskCard.propTypes = {
                 name: PropTypes.string.isRequired
             }).isRequired
         })
-    )
+    ),
+    onDeleteTask: PropTypes.func
 };
 
-const TaskColumn = ({ title, tasks, isAdmin, status, allMembers = [] }) => {
+const TaskColumn = ({ title, tasks, isAdmin, status, allMembers = [], onDeleteTask }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -137,6 +152,7 @@ const TaskColumn = ({ title, tasks, isAdmin, status, allMembers = [] }) => {
                         task={task}
                         isAdmin={isAdmin}
                         allMembers={allMembers}
+                        onDeleteTask={onDeleteTask}
                     />
                 ))}
                 {tasks.length === 0 && (
@@ -178,7 +194,8 @@ TaskColumn.propTypes = {
                 name: PropTypes.string.isRequired
             }).isRequired
         })
-    )
+    ),
+    onDeleteTask: PropTypes.func
 };
 
 const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
@@ -425,6 +442,27 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
         }
     };
 
+    const handleDeleteTask = async (taskId) => {
+        try {
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al eliminar la tarea');
+            }
+
+            // Remover la tarea del estado local
+            setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+
+            console.log('Tarea eliminada exitosamente:', taskId);
+        } catch (error) {
+            console.error('Error eliminando tarea:', error);
+            alert(error.message || 'Error al eliminar la tarea');
+        }
+    };
+
     return (
         <div className="p-4">{/* Project Members Section */}
             <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border">
@@ -538,6 +576,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                         tasks={tasks.filter(task => task.status === 'PENDING')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        onDeleteTask={handleDeleteTask}
                     />
                     <TaskColumn
                         title="In Progress"
@@ -545,6 +584,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                         tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        onDeleteTask={handleDeleteTask}
                     />
                     <TaskColumn
                         title="Completed"
@@ -552,6 +592,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin }) => {
                         tasks={tasks.filter(task => task.status === 'COMPLETED')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        onDeleteTask={handleDeleteTask}
                     />
                 </div>
             </DndContext>

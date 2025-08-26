@@ -193,6 +193,35 @@ export default function ProjectPage({ params }) {
         }
     };
 
+    const handleDeleteProject = async () => {
+        if (!window.confirm('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer y eliminará todas las tareas, miembros y mensajes asociados.')) {
+            return;
+        }
+
+        if (!window.confirm('Esta acción eliminará PERMANENTEMENTE el proyecto y todos sus datos. ¿Continuar?')) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/projects/${project.id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to delete project');
+            }
+
+            // Redirigir al dashboard después de eliminar el proyecto
+            window.location.href = '/dashboard';
+        } catch (error) {
+            console.error('Error deleting project:', error);
+            setError(error.message || 'Failed to delete project');
+            setLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -248,6 +277,15 @@ export default function ProjectPage({ params }) {
                         >
                             Members ({members.length})
                         </button>
+                        {isProjectOwner && (
+                            <button
+                                onClick={handleDeleteProject}
+                                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                title="Delete Project"
+                            >
+                                Delete Project
+                            </button>
+                        )}
                     </div>
                 </div>
 

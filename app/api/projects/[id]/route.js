@@ -204,3 +204,105 @@ export async function PUT(request, { params }) {
         );
     }
 }
+
+export async function DELETE(request, { params }) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        // Verificar que el ID existe
+        if (!params.id) {
+            return NextResponse.json(
+                { error: 'Missing project ID' },
+                { status: 400 }
+            );
+        }
+
+        // Verificar que el proyecto existe
+        const project = await prisma.project.findUnique({
+            where: {
+                id: params.id
+            },
+            include: {
+                _count: {
+                    select: {
+                        tasks: true,
+                        members: true,
+                        messages: true
+                    }
+                }
+            }
+        });
+
+        if (!project) {
+            return NextResponse.json(
+                { error: 'Project not found' },
+                { status: 404 }
+            );
+        }
+
+        // Solo el propietario puede eliminar el proyecto
+        if (project.ownerId !== userId) {
+            return NextResponse.json(
+                { error: 'Only project owners can delete projects' },
+                { status: 403 }
+            );
+        }
+
+        // Usar una transacción para eliminar todos los datos relacionados
+        await prisma.$transaction(async (prisma) => {
+            // Eliminar todas las tareas del proyecto
+            await prisma.task.deleteMany({
+                where: {
+                    projectId: params.id
+                }
+            });
+
+            // Eliminar todos los mensajes del proyecto
+            await prisma.message.deleteMany({
+                where: {
+                    projectId: params.id
+                }
+            });
+
+            // Eliminar todos los miembros del proyecto
+            await prisma.projectUser.deleteMany({
+                where: {
+                    projectId: params.id
+                }
+            });
+
+            // Finalmente, eliminar el proyecto
+            await prisma.project.delete({
+                where: {
+                    id: params.id
+                }
+            });
+        });
+
+        return NextResponse.json({
+            message: 'Project deleted successfully',
+            projectId: params.id,
+            deletedCounts: {
+                tasks: project._count.tasks,
+                members: project._count.members,
+                messages: project._count.messages
+            }
+        });
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        return NextResponse.json(
+            {
+                error: 'Error deleting project',
+                message: error.message || 'An unexpected error occurred'
+            },
+            { status: 500 }
+        );
+    }
+}

@@ -98,3 +98,84 @@ export async function PATCH(request, { params }) {
         );
     }
 }
+
+export async function DELETE(request, { params }) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        const { id: projectId, taskId } = params;
+
+        // Verificar que el proyecto existe y el usuario tiene acceso
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+            include: {
+                members: {
+                    where: {
+                        userId: userId
+                    }
+                }
+            }
+        });
+
+        if (!project) {
+            return NextResponse.json(
+                { error: 'Project not found' },
+                { status: 404 }
+            );
+        }
+
+        // Verificar si el usuario tiene permisos para eliminar tareas
+        const isOwner = project.ownerId === userId;
+        const isAdmin = project.members.length > 0 && project.members[0].role === 'ADMIN';
+
+        if (!isOwner && !isAdmin) {
+            return NextResponse.json(
+                { error: 'Not authorized to delete tasks in this project' },
+                { status: 403 }
+            );
+        }
+
+        // Verificar que la tarea existe y pertenece al proyecto
+        const existingTask = await prisma.task.findFirst({
+            where: {
+                id: taskId,
+                projectId: projectId
+            }
+        });
+
+        if (!existingTask) {
+            return NextResponse.json(
+                { error: 'Task not found' },
+                { status: 404 }
+            );
+        }
+
+        // Eliminar la tarea
+        await prisma.task.delete({
+            where: {
+                id: taskId
+            }
+        });
+
+        return NextResponse.json({
+            message: 'Task deleted successfully',
+            taskId: taskId
+        });
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        return NextResponse.json(
+            {
+                error: 'Error deleting task',
+                message: error.message || 'An unexpected error occurred'
+            },
+            { status: 500 }
+        );
+    }
+}
