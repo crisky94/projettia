@@ -50,6 +50,13 @@ export async function GET(request, { params }) {
                         name: true,
                         email: true
                     }
+                },
+                sprint: {
+                    select: {
+                        id: true,
+                        name: true,
+                        status: true
+                    }
                 }
             },
             orderBy: {
@@ -62,10 +69,16 @@ export async function GET(request, { params }) {
             ...task,
             id: task.id.toString(), // Asegurarse de que el ID sea string
             status: task.status || 'PENDING', // Asegurar que haya un estado
+            estimatedHours: task.estimatedHours || null,
             assignee: task.assignee ? {
                 id: task.assignee.id.toString(),
                 name: task.assignee.name,
                 email: task.assignee.email
+            } : null,
+            sprint: task.sprint ? {
+                id: task.sprint.id.toString(),
+                name: task.sprint.name,
+                status: task.sprint.status
             } : null
         }));
 
@@ -96,7 +109,7 @@ export async function POST(request, { params }) {
         }
 
         const body = await request.json();
-        const { title, description, assigneeId, status = 'PENDING' } = body;
+        const { title, description, assigneeId, status = 'PENDING', sprintId, estimatedHours } = body;
 
         // Verificar que el proyecto existe y el usuario tiene acceso
         const project = await prisma.project.findUnique({
@@ -124,6 +137,31 @@ export async function POST(request, { params }) {
             );
         }
 
+        // Validar estimatedHours si se proporciona
+        if (estimatedHours && (estimatedHours < 0 || estimatedHours > 1000)) {
+            return NextResponse.json(
+                { error: 'Estimated hours must be between 0 and 1000' },
+                { status: 400 }
+            );
+        }
+
+        // Si se proporciona sprintId, verificar que el sprint existe y pertenece al proyecto
+        if (sprintId) {
+            const sprint = await prisma.sprint.findFirst({
+                where: {
+                    id: sprintId,
+                    projectId: params.id
+                }
+            });
+
+            if (!sprint) {
+                return NextResponse.json(
+                    { error: 'Sprint not found or does not belong to this project' },
+                    { status: 400 }
+                );
+            }
+        }
+
         // Si se proporciona un ID de asignación, verificar que el usuario sea miembro
         let finalAssigneeId = null;
         if (assigneeId) {
@@ -144,6 +182,8 @@ export async function POST(request, { params }) {
                 title,
                 description,
                 status,
+                estimatedHours: estimatedHours ? parseFloat(estimatedHours) : null,
+                sprintId: sprintId || null,
                 projectId: params.id,
                 assigneeId: finalAssigneeId
             },
@@ -153,6 +193,13 @@ export async function POST(request, { params }) {
                         id: true,
                         name: true,
                         email: true
+                    }
+                },
+                sprint: {
+                    select: {
+                        id: true,
+                        name: true,
+                        status: true
                     }
                 }
             }

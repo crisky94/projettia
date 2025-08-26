@@ -14,7 +14,7 @@ export async function PATCH(request, { params }) {
         }
 
         const { id: projectId, taskId } = params;
-        const { status } = await request.json();
+        const { status, title, description, assigneeId, sprintId, estimatedHours } = await request.json();
 
         // Verificar que el proyecto existe y el usuario tiene acceso
         const project = await prisma.project.findUnique({
@@ -57,20 +57,69 @@ export async function PATCH(request, { params }) {
             );
         }
 
+        // Validaciones adicionales
+        if (estimatedHours && (estimatedHours < 0 || estimatedHours > 1000)) {
+            return NextResponse.json(
+                { error: 'Estimated hours must be between 0 and 1000' },
+                { status: 400 }
+            );
+        }
+
+        if (sprintId) {
+            const sprint = await prisma.sprint.findFirst({
+                where: {
+                    id: sprintId,
+                    projectId: projectId
+                }
+            });
+
+            if (!sprint) {
+                return NextResponse.json(
+                    { error: 'Sprint not found or does not belong to this project' },
+                    { status: 400 }
+                );
+            }
+        }
+
+        if (assigneeId) {
+            const isMember = project.members.some(member => member.userId === assigneeId);
+            if (!isMember && assigneeId !== project.ownerId) {
+                return NextResponse.json(
+                    { error: 'Assignee must be a member of the project' },
+                    { status: 400 }
+                );
+            }
+        }
+
+        // Construir datos de actualización
+        const updateData = {};
+        if (status !== undefined) updateData.status = status;
+        if (title !== undefined) updateData.title = title;
+        if (description !== undefined) updateData.description = description;
+        if (assigneeId !== undefined) updateData.assigneeId = assigneeId;
+        if (sprintId !== undefined) updateData.sprintId = sprintId;
+        if (estimatedHours !== undefined) updateData.estimatedHours = estimatedHours ? parseFloat(estimatedHours) : null;
+        updateData.updatedAt = new Date();
+
         // Actualizar la tarea
         const updatedTask = await prisma.task.update({
             where: {
                 id: taskId
             },
-            data: {
-                status: status || existingTask.status
-            },
+            data: updateData,
             include: {
                 assignee: {
                     select: {
                         id: true,
                         name: true,
                         email: true
+                    }
+                },
+                sprint: {
+                    select: {
+                        id: true,
+                        name: true,
+                        status: true
                     }
                 }
             }
@@ -83,6 +132,10 @@ export async function PATCH(request, { params }) {
             assignee: updatedTask.assignee ? {
                 ...updatedTask.assignee,
                 id: updatedTask.assignee.id.toString()
+            } : null,
+            sprint: updatedTask.sprint ? {
+                ...updatedTask.sprint,
+                id: updatedTask.sprint.id.toString()
             } : null
         };
 

@@ -36,6 +36,7 @@ model Project {
   owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
   tasks       Task[]
   messages    Message[]
+  sprints     Sprint[]
   members     ProjectUser[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -69,22 +70,48 @@ model Message {
 
 // Modelo para tareas
 model Task {
-  id          String     @id @default(uuid())
-  title       String
+  id                String     @id @default(uuid())
+  title             String
+  description       String?
+  status            TaskStatus @default(PENDING)
+  estimatedHours    Float?     // Duración aproximada en horas
+  projectId         String
+  assigneeId        String?
+  sprintId          String?
+  project           Project    @relation(fields: [projectId], references: [id])
+  assignee          User?      @relation(fields: [assigneeId], references: [id])
+  sprint            Sprint?    @relation(fields: [sprintId], references: [id])
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+// Modelo para sprints
+model Sprint {
+  id          String      @id @default(uuid())
+  name        String
   description String?
-  status      TaskStatus @default(PENDING)
+  startDate   DateTime
+  endDate     DateTime
+  status      SprintStatus @default(PLANNING)
   projectId   String
-  assigneeId  String?
-  project     Project    @relation(fields: [projectId], references: [id])
-  assignee    User?      @relation(fields: [assigneeId], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  project     Project     @relation(fields: [projectId], references: [id])
+  tasks       Task[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 // Enum para estados de las tareas
 enum TaskStatus {
   PENDING
   IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// Enum para estados de los sprints
+enum SprintStatus {
+  PLANNING
+  ACTIVE
   COMPLETED
   CANCELLED
 }
