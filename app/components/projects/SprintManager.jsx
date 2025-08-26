@@ -34,10 +34,10 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 estimatedHours: editingTask.estimatedHours ? parseFloat(editingTask.estimatedHours) : null
             });
             setIsEditing(false);
-            toast.success('¡Tarea actualizada exitosamente!');
+            toast.success('Task updated successfully!');
         } catch (error) {
             console.error('Error updating task:', error);
-            toast.error('Error al actualizar la tarea');
+            toast.error('Error updating task');
         }
     };
 
@@ -93,7 +93,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                 <button
                                     onClick={() => onDeleteTask(task.id)}
                                     className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
-                                    title="Eliminar tarea"
+                                    title="Delete task"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -105,7 +105,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                 <button
                                     onClick={handleSave}
                                     className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
-                                    title="Guardar cambios"
+                                    title="Save changes"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -114,7 +114,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                 <button
                                     onClick={handleCancel}
                                     className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
-                                    title="Cancelar"
+                                    title="Cancel"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -150,7 +150,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
                             className="flex-1 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         >
-                            <option value="">Sin sprint</option>
+                            <option value="">No sprint</option>
                             {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
                                 <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
                             ))}
@@ -280,10 +280,10 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
         try {
             await onUpdateSprint(sprint.id, editingSprint);
             setIsEditing(false);
-            toast.success('¡Sprint actualizado exitosamente!');
+            toast.success('Sprint updated successfully!');
         } catch (error) {
             console.error('Error updating sprint:', error);
-            toast.error('Error al actualizar el sprint');
+            toast.error('Error updating sprint');
         }
     };
 
@@ -523,7 +523,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             }
         } catch (error) {
             console.error('Error loading data:', error);
-            toast.error('Error al cargar los datos');
+            toast.error('Error loading data');
         } finally {
             setLoading(false);
         }
@@ -546,14 +546,14 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 setSprints([sprint, ...sprints]);
                 setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                 setShowAddSprintModal(false);
-                toast.success('¡Sprint creado exitosamente!');
+                toast.success('Sprint created successfully!');
             } else {
                 const error = await response.json();
-                toast.error(error.error || 'Error al crear el sprint');
+                toast.error(error.error || 'Error creating sprint');
             }
         } catch (error) {
             console.error('Error creating sprint:', error);
-            toast.error('Error al crear el sprint');
+            toast.error('Error creating sprint');
         } finally {
             setIsSubmitting(false);
         }
@@ -595,14 +595,14 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 setTasks(tasks.map(task =>
                     task.sprintId === sprintId ? { ...task, sprint: null, sprintId: null } : task
                 ));
-                toast.success('¡Sprint eliminado exitosamente!');
+                toast.success('Sprint deleted successfully!');
             } else {
                 const error = await response.json();
-                toast.error(error.error || 'Error al eliminar el sprint');
+                toast.error(error.error || 'Error deleting sprint');
             }
         } catch (error) {
             console.error('Error deleting sprint:', error);
-            toast.error('Error al eliminar el sprint');
+            toast.error('Error deleting sprint');
         }
     };
 
@@ -646,14 +646,14 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 if (onTaskDelete && deletedTask) {
                     onTaskDelete(deletedTask);
                 }
-                toast.success('¡Tarea eliminada exitosamente!');
+                toast.success('Task deleted successfully!');
             } else {
                 const error = await response.json();
-                toast.error(error.error || 'Error al eliminar la tarea');
+                toast.error(error.error || 'Error deleting task');
             }
         } catch (error) {
             console.error('Error deleting task:', error);
-            toast.error('Error al eliminar la tarea');
+            toast.error('Error deleting task');
         }
     };
 

@@ -68,7 +68,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
                         onDeleteTask(task.id);
                     }}
                     className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white rounded-lg w-7 h-7 flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-110"
-                    title="Eliminar tarea"
+                    title="Delete task"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -582,8 +582,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
             setShowAddTaskModal(false);
             setNewTask({ title: '', description: '', assigneeId: '' });
 
-            // Mostrar notificación de éxito
-            toast.success('¡Tarea creada exitosamente!', {
+            // Show success notification
+            toast.success('Task created successfully!', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -594,8 +594,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         } catch (error) {
             console.error('Error creating task:', error);
 
-            // Mostrar notificación de error
-            toast.error('Error al crear la tarea', {
+            // Show error notification
+            toast.error('Error creating task', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -625,7 +625,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Error al eliminar la tarea');
+                throw new Error(errorData.error || 'Error deleting task');
             }
 
             // Remover la tarea del estado local
@@ -636,8 +636,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                 onTaskDelete(taskToDelete);
             }
 
-            // Mostrar notificación de éxito
-            toast.success('¡Tarea eliminada exitosamente!', {
+            // Show success notification
+            toast.success('Task deleted successfully!', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -646,12 +646,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                 draggable: true,
             });
 
-            console.log('Tarea eliminada exitosamente:', taskToDelete.id);
+            console.log('Task deleted successfully:', taskToDelete.id);
         } catch (error) {
-            console.error('Error eliminando tarea:', error);
+            console.error('Error deleting task:', error);
 
-            // Mostrar notificación de error
-            toast.error(error.message || 'Error al eliminar la tarea', {
+            // Show error notification
+            toast.error(error.message || 'Error deleting task', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -847,7 +847,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     </div>
-                                    Nueva Tarea
+                                    New Task
                                 </h2>
                                 <button
                                     onClick={() => {
@@ -868,7 +868,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         <form onSubmit={handleCreateTask} className="p-6 space-y-6">
                             <div>
                                 <label htmlFor="title" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    Título de la tarea
+                                    Task Title
                                 </label>
                                 <input
                                     id="title"
@@ -876,7 +876,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     value={newTask.title}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
                                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                    placeholder="Ingresa el título de la tarea..."
+                                    placeholder="Enter task title..."
                                     required
                                     disabled={isSubmitting}
                                 />
@@ -884,7 +884,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
 
                             <div>
                                 <label htmlFor="description" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    Descripción
+                                    Description
                                 </label>
                                 <textarea
                                     id="description"
@@ -892,14 +892,14 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
                                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                     rows="3"
-                                    placeholder="Describe los detalles de la tarea..."
+                                    placeholder="Describe the task details..."
                                     disabled={isSubmitting}
                                 />
                             </div>
 
                             <div>
                                 <label htmlFor="assignee" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    Asignar a
+                                    Assign to
                                 </label>
                                 <select
                                     id="assignee"
@@ -908,13 +908,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     disabled={isSubmitting}
                                 >
-                                    <option value="">Sin asignar</option>
+                                    <option value="">Unassigned</option>
                                     {!Array.isArray(members) || members.length === 0 ? (
-                                        <option disabled>Cargando miembros...</option>
+                                        <option disabled>Loading members...</option>
                                     ) : (
                                         members.map((member) => (
                                             <option key={member.userId} value={member.userId}>
-                                                {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Miembro'})
+                                                {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
                                             </option>
                                         ))
                                     )}
@@ -932,7 +932,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     className="px-6 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
                                     disabled={isSubmitting}
                                 >
-                                    Cancelar
+                                    Cancel
                                 </button>
                                 <button
                                     type="submit"
@@ -945,10 +945,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     {isSubmitting ? (
                                         <span className="flex items-center gap-2">
                                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            Creando...
+                                            Creating...
                                         </span>
                                     ) : (
-                                        'Crear Tarea'
+                                        'Create Task'
                                     )}
                                 </button>
                             </div>
@@ -957,7 +957,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                 </div>
             )}
 
-            {/* Modal de confirmación para eliminar tarea */}
+            {/* Task deletion confirmation modal */}
             {showDeleteTaskModal && taskToDelete && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
@@ -971,10 +971,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                        Eliminar tarea
+                                        Delete task
                                     </h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        Esta acción no se puede deshacer
+                                        This action cannot be undone
                                     </p>
                                 </div>
                             </div>
@@ -984,7 +984,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         <div className="p-6">
                             <div className="mb-6">
                                 <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed">
-                                    ¿Estás seguro de que quieres eliminar la tarea{' '}
+                                    Are you sure you want to delete the task{' '}
                                     <span className="font-semibold text-gray-900 dark:text-gray-100">"{taskToDelete.title}"</span>?
                                 </p>
                             </div>
@@ -995,13 +995,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     onClick={handleCancelDeleteTask}
                                     className="px-6 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
                                 >
-                                    Cancelar
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmDeleteTask}
                                     className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                 >
-                                    Eliminar tarea
+                                    Delete task
                                 </button>
                             </div>
                         </div>
