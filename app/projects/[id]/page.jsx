@@ -13,8 +13,14 @@ export default function ProjectPage({ params }) {
     const [error, setError] = useState(null);
     const [showAddMemberModal, setShowAddMemberModal] = useState(false);
     const [showMembersModal, setShowMembersModal] = useState(false);
+    const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const [newMemberEmail, setNewMemberEmail] = useState('');
     const [removingMember, setRemovingMember] = useState(null);
+    const [editingProject, setEditingProject] = useState(false);
+    const [editProjectData, setEditProjectData] = useState({
+        name: '',
+        description: ''
+    });
 
     useEffect(() => {
         async function fetchProjectData() {
@@ -147,6 +153,46 @@ export default function ProjectPage({ params }) {
         }
     };
 
+    const handleEditProject = () => {
+        setEditProjectData({
+            name: project.name,
+            description: project.description || ''
+        });
+        setShowEditProjectModal(true);
+    };
+
+    const handleSaveProject = async (e) => {
+        e.preventDefault();
+        try {
+            setEditingProject(true);
+            const response = await fetch(`/api/projects/${project.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: editProjectData.name,
+                    description: editProjectData.description,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to update project');
+            }
+
+            const updatedProject = await response.json();
+            setProject(updatedProject);
+            setShowEditProjectModal(false);
+            setEditProjectData({ name: '', description: '' });
+        } catch (error) {
+            console.error('Error updating project:', error);
+            setError(error.message || 'Failed to update project');
+        } finally {
+            setEditingProject(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -181,7 +227,20 @@ export default function ProjectPage({ params }) {
         <div className="min-h-screen bg-gray-100">
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
+                        {canManageMembers && (
+                            <button
+                                onClick={handleEditProject}
+                                className="text-gray-500 hover:text-gray-700 p-1 rounded"
+                                title="Edit project"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setShowMembersModal(true)}
@@ -191,6 +250,12 @@ export default function ProjectPage({ params }) {
                         </button>
                     </div>
                 </div>
+
+                {project.description && (
+                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                        <p className="text-gray-700">{project.description}</p>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2">
@@ -241,9 +306,8 @@ export default function ProjectPage({ params }) {
                                                 <button
                                                     onClick={() => handleRemoveMember(member.userId)}
                                                     disabled={removingMember === member.userId}
-                                                    className={`text-red-500 hover:text-red-700 px-2 py-1 rounded ${
-                                                        removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
-                                                    }`}
+                                                    className={`text-red-500 hover:text-red-700 px-2 py-1 rounded ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
+                                                        }`}
                                                 >
                                                     {removingMember === member.userId ? 'Eliminando...' : 'Eliminar'}
                                                 </button>
@@ -299,6 +363,71 @@ export default function ProjectPage({ params }) {
                                         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                                     >
                                         Agregar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal para editar proyecto */}
+                {showEditProjectModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                            <h2 className="text-xl font-bold mb-4">Edit Project</h2>
+                            <form onSubmit={handleSaveProject}>
+                                <div className="mb-4">
+                                    <label htmlFor="editProjectName" className="block text-gray-700 text-sm font-bold mb-2">
+                                        Project Name
+                                    </label>
+                                    <input
+                                        id="editProjectName"
+                                        type="text"
+                                        value={editProjectData.name}
+                                        onChange={(e) => setEditProjectData(prev => ({ ...prev, name: e.target.value }))}
+                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        required
+                                        disabled={editingProject}
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="editProjectDescription" className="block text-gray-700 text-sm font-bold mb-2">
+                                        Description (optional)
+                                    </label>
+                                    <textarea
+                                        id="editProjectDescription"
+                                        value={editProjectData.description}
+                                        onChange={(e) => setEditProjectData(prev => ({ ...prev, description: e.target.value }))}
+                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        rows={3}
+                                        disabled={editingProject}
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowEditProjectModal(false)}
+                                        className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                        disabled={editingProject}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className={`${editingProject
+                                            ? 'bg-blue-400 cursor-not-allowed'
+                                            : 'bg-blue-500 hover:bg-blue-600'
+                                            } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                                        disabled={editingProject}
+                                    >
+                                        {editingProject ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            'Save Changes'
+                                        )}
                                     </button>
                                 </div>
                             </form>

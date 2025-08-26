@@ -92,3 +92,115 @@ export async function GET(request, { params }) {
         );
     }
 }
+
+export async function PUT(request, { params }) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        // Verificar que el ID existe
+        if (!params.id) {
+            return NextResponse.json(
+                { error: 'Missing project ID' },
+                { status: 400 }
+            );
+        }
+
+        const { name, description } = await request.json();
+
+        // Validar datos requeridos
+        if (!name || name.trim() === '') {
+            return NextResponse.json(
+                { error: 'Project name is required' },
+                { status: 400 }
+            );
+        }
+
+        // Verificar que el proyecto existe y el usuario es el propietario
+        const project = await prisma.project.findUnique({
+            where: {
+                id: params.id
+            },
+            include: {
+                members: {
+                    where: {
+                        userId: userId
+                    }
+                }
+            }
+        });
+
+        if (!project) {
+            return NextResponse.json(
+                { error: 'Project not found' },
+                { status: 404 }
+            );
+        }
+
+        // Verificar permisos: solo el propietario o administradores pueden editar
+        const isOwner = project.ownerId === userId;
+        const isAdmin = project.members.some(member => member.userId === userId && member.role === 'ADMIN');
+
+        if (!isOwner && !isAdmin) {
+            return NextResponse.json(
+                { error: 'Only project owners and administrators can edit project details' },
+                { status: 403 }
+            );
+        }
+
+        // Actualizar el proyecto
+        const updatedProject = await prisma.project.update({
+            where: {
+                id: params.id
+            },
+            data: {
+                name: name.trim(),
+                description: description?.trim() || null,
+                updatedAt: new Date()
+            },
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true
+                    }
+                },
+                members: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true
+                            }
+                        }
+                    }
+                },
+                _count: {
+                    select: {
+                        tasks: true,
+                        members: true
+                    }
+                }
+            }
+        });
+
+        return NextResponse.json(updatedProject);
+    } catch (error) {
+        console.error('Error updating project:', error);
+        return NextResponse.json(
+            {
+                error: 'Error updating project',
+                message: error.message || 'An unexpected error occurred'
+            },
+            { status: 500 }
+        );
+    }
+}

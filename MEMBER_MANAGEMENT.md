@@ -1,13 +1,17 @@
 # Gestión de Miembros del Proyecto
 
 ## Descripción
-Se ha implementado la funcionalidad para que los administradores puedan eliminar miembros de los proyectos. Solo los usuarios con permisos de administrador (propietarios del proyecto o usuarios con rol ADMIN) pueden eliminar miembros.
+
+Se ha implementado la funcionalidad para que los administradores puedan eliminar
+miembros de los proyectos. Solo los usuarios con permisos de administrador
+(propietarios del proyecto o usuarios con rol ADMIN) pueden eliminar miembros.
 
 ## Funcionalidades Implementadas
 
 ### 1. API Backend (`/app/api/projects/[id]/members/route.js`)
 
 #### Método GET
+
 - Actualizado para incluir información sobre los permisos del usuario actual
 - Devuelve:
   - `members`: Lista de miembros del proyecto
@@ -17,6 +21,7 @@ Se ha implementado la funcionalidad para que los administradores puedan eliminar
     - `isProjectAdmin`: Si el usuario tiene rol de administrador
 
 #### Método DELETE (Nuevo)
+
 - Permite eliminar miembros del proyecto
 - Validaciones implementadas:
   - Verificar que el usuario está autenticado
@@ -28,37 +33,48 @@ Se ha implementado la funcionalidad para que los administradores puedan eliminar
 ### 2. Frontend (`/app/projects/[id]/page.jsx`)
 
 #### Nuevas funcionalidades:
-- **Modal de gestión de miembros**: Botón "Ver Miembros" que muestra lista completa de miembros
-- **Botón eliminar miembro**: Solo visible para administradores y no disponible para el propietario
+
+- **Modal de gestión de miembros**: Botón "Ver Miembros" que muestra lista
+  completa de miembros
+- **Botón eliminar miembro**: Solo visible para administradores y no disponible
+  para el propietario
 - **Estados de carga**: Indicador visual durante la eliminación
 - **Confirmación de eliminación**: Diálogo de confirmación antes de eliminar
 - **Interfaz multiidioma**: Textos en español
 
 #### Componentes actualizados:
-- Lista de miembros con roles claramente identificados (Propietario/Administrador/Miembro)
+
+- Lista de miembros con roles claramente identificados
+  (Propietario/Administrador/Miembro)
 - Botones de acción contextuales según permisos
 - Gestión mejorada de estados de carga y errores
 
 ## Permisos y Roles
 
 ### Roles del Sistema:
+
 - **Propietario del proyecto**: Usuario que creó el proyecto (`project.ownerId`)
 - **Administrador**: Usuario con `role: 'ADMIN'` en `ProjectUser`
 - **Miembro**: Usuario con `role: 'USER'` en `ProjectUser`
 
 ### Permisos de eliminación:
+
 - ✅ **Propietario**: Puede eliminar cualquier miembro excepto a sí mismo
-- ✅ **Administrador**: Puede eliminar miembros regulares (no puede eliminar al propietario)
+- ✅ **Administrador**: Puede eliminar miembros regulares (no puede eliminar al
+  propietario)
 - ❌ **Miembro**: No puede eliminar a otros miembros
 
 ### Restricciones:
+
 - El propietario del proyecto no puede ser eliminado
-- Solo usuarios con permisos administrativos pueden acceder a las funciones de eliminación
+- Solo usuarios con permisos administrativos pueden acceder a las funciones de
+  eliminación
 - Se requiere confirmación explícita antes de eliminar un miembro
 
 ## Uso
 
 ### Para Administradores:
+
 1. Acceder a la página del proyecto
 2. Hacer clic en "Ver Miembros (X)" para abrir el modal de gestión
 3. Localizar el miembro a eliminar
@@ -67,6 +83,7 @@ Se ha implementado la funcionalidad para que los administradores puedan eliminar
 6. El miembro será removido inmediatamente de la lista
 
 ### Para Miembros Regulares:
+
 - Solo pueden ver la lista de miembros
 - No tienen acceso a funciones de eliminación
 - Pueden ver los roles de cada miembro
@@ -82,6 +99,7 @@ Se ha implementado la funcionalidad para que los administradores puedan eliminar
 ## Estructura de Datos
 
 ### ProjectUser Model (Prisma):
+
 ```prisma
 model ProjectUser {
   id        String   @id @default(uuid())
@@ -105,9 +123,11 @@ enum UserRole {
 ## API Endpoints
 
 ### GET `/api/projects/[id]/members`
+
 Obtiene la lista de miembros con información de permisos.
 
 **Response:**
+
 ```json
 {
   "members": [
@@ -132,9 +152,11 @@ Obtiene la lista de miembros con información de permisos.
 ```
 
 ### DELETE `/api/projects/[id]/members`
+
 Elimina un miembro del proyecto.
 
 **Request Body:**
+
 ```json
 {
   "userId": "uuid"
@@ -142,6 +164,7 @@ Elimina un miembro del proyecto.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Member removed successfully",
