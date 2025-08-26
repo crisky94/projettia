@@ -68,7 +68,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         <input
                             type="text"
                             value={editingTask.title}
-                            onChange={(e) => setEditingTask({...editingTask, title: e.target.value})}
+                            onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
                             className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             placeholder="Título de la tarea"
                         />
@@ -76,7 +76,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         <h3 className="font-semibold text-sm mb-1">{task.title}</h3>
                     )}
                 </div>
-                
+
                 {isAdmin && (
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         {!isEditing ? (
@@ -130,7 +130,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
             {isEditing ? (
                 <textarea
                     value={editingTask.description}
-                    onChange={(e) => setEditingTask({...editingTask, description: e.target.value})}
+                    onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
                     placeholder="Descripción de la tarea"
                     rows="2"
@@ -147,7 +147,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                     <div className="flex gap-2 w-full">
                         <select
                             value={editingTask.sprintId}
-                            onChange={(e) => setEditingTask({...editingTask, sprintId: e.target.value})}
+                            onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
                             className="flex-1 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         >
                             <option value="">Sin sprint</option>
@@ -158,7 +158,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         <input
                             type="number"
                             value={editingTask.estimatedHours}
-                            onChange={(e) => setEditingTask({...editingTask, estimatedHours: e.target.value})}
+                            onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
                             className="w-20 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             placeholder="0h"
                             min="0"
@@ -186,7 +186,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
             {isEditing ? (
                 <select
                     value={editingTask.assigneeId}
-                    onChange={(e) => setEditingTask({...editingTask, assigneeId: e.target.value})}
+                    onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                     <option value="">Sin asignar</option>
@@ -326,14 +326,14 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                 <input
                                     type="text"
                                     value={editingSprint.name}
-                                    onChange={(e) => setEditingSprint({...editingSprint, name: e.target.value})}
+                                    onChange={(e) => setEditingSprint({ ...editingSprint, name: e.target.value })}
                                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     placeholder="Nombre del sprint"
                                 />
                                 <div className="flex gap-2">
                                     <select
                                         value={editingSprint.status}
-                                        onChange={(e) => setEditingSprint({...editingSprint, status: e.target.value})}
+                                        onChange={(e) => setEditingSprint({ ...editingSprint, status: e.target.value })}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     >
                                         <option value="PLANNING">Planificación</option>
@@ -344,13 +344,13 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     <input
                                         type="date"
                                         value={editingSprint.startDate}
-                                        onChange={(e) => setEditingSprint({...editingSprint, startDate: e.target.value})}
+                                        onChange={(e) => setEditingSprint({ ...editingSprint, startDate: e.target.value })}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     />
                                     <input
                                         type="date"
                                         value={editingSprint.endDate}
-                                        onChange={(e) => setEditingSprint({...editingSprint, endDate: e.target.value})}
+                                        onChange={(e) => setEditingSprint({ ...editingSprint, endDate: e.target.value })}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     />
                                 </div>
@@ -417,7 +417,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                 )}
                             </div>
                         )}
-                        
+
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
                             className="p-2 hover:bg-white/20 rounded-md transition-colors"
@@ -434,7 +434,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                 {isEditing ? (
                     <textarea
                         value={editingSprint.description}
-                        onChange={(e) => setEditingSprint({...editingSprint, description: e.target.value})}
+                        onChange={(e) => setEditingSprint({ ...editingSprint, description: e.target.value })}
                         className="w-full mt-3 p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         placeholder="Descripción del sprint"
                         rows="2"
@@ -592,7 +592,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             if (response.ok) {
                 setSprints(sprints.filter(s => s.id !== sprintId));
                 // Actualizar tareas para remover el sprint eliminado
-                setTasks(tasks.map(task => 
+                setTasks(tasks.map(task =>
                     task.sprintId === sprintId ? { ...task, sprint: null, sprintId: null } : task
                 ));
                 toast.success('¡Sprint eliminado exitosamente!');
@@ -791,7 +791,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 <input
                                     type="text"
                                     value={newSprint.name}
-                                    onChange={(e) => setNewSprint({...newSprint, name: e.target.value})}
+                                    onChange={(e) => setNewSprint({ ...newSprint, name: e.target.value })}
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     placeholder="ej: Sprint 1 - Funcionalidades básicas"
                                     required
@@ -804,7 +804,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </label>
                                 <textarea
                                     value={newSprint.description}
-                                    onChange={(e) => setNewSprint({...newSprint, description: e.target.value})}
+                                    onChange={(e) => setNewSprint({ ...newSprint, description: e.target.value })}
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                     rows="3"
                                     placeholder="Descripción opcional del sprint..."
@@ -819,7 +819,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     <input
                                         type="date"
                                         value={newSprint.startDate}
-                                        onChange={(e) => setNewSprint({...newSprint, startDate: e.target.value})}
+                                        onChange={(e) => setNewSprint({ ...newSprint, startDate: e.target.value })}
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
@@ -832,7 +832,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     <input
                                         type="date"
                                         value={newSprint.endDate}
-                                        onChange={(e) => setNewSprint({...newSprint, endDate: e.target.value})}
+                                        onChange={(e) => setNewSprint({ ...newSprint, endDate: e.target.value })}
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
@@ -853,11 +853,10 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${
-                                        isSubmitting
+                                    className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${isSubmitting
                                             ? 'bg-blue-400 text-white cursor-not-allowed'
                                             : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'
-                                    }`}
+                                        }`}
                                     disabled={isSubmitting || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
                                 >
                                     {isSubmitting ? 'Creando...' : 'Crear Sprint'}
