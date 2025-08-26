@@ -116,14 +116,14 @@ export default function ProjectPage({ params }) {
 
             if (!response.ok) throw new Error('Failed to add member');
 
-            // Actualizar la lista de miembros
+            // Update members list
             const newMember = await response.json();
             setMembers([...members, newMember]);
             setShowAddMemberModal(false);
             setNewMemberEmail('');
 
-            // Mostrar notificación de éxito
-            toast.success('¡Miembro agregado exitosamente!', {
+            // Show success notification
+            toast.success('Member added successfully!', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -135,8 +135,8 @@ export default function ProjectPage({ params }) {
             console.error('Error adding member:', error);
             setShowAddMemberModal(false);
 
-            // Mostrar notificación de error
-            toast.error(error.message || 'Error al agregar miembro', {
+            // Show error notification
+            toast.error(error.message || 'Error adding member', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -175,11 +175,11 @@ export default function ProjectPage({ params }) {
                 throw new Error(errorData.error || 'Failed to remove member');
             }
 
-            // Actualizar la lista de miembros
+            // Update members list
             setMembers(members.filter(member => member.userId !== memberToRemove.userId));
 
-            // Mostrar notificación de éxito
-            toast.success('¡Miembro eliminado del proyecto!', {
+            // Show success notification
+            toast.success('Member removed from project!', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -190,8 +190,8 @@ export default function ProjectPage({ params }) {
         } catch (error) {
             console.error('Error removing member:', error);
 
-            // Mostrar notificación de error
-            toast.error(error.message || 'Error al eliminar miembro', {
+            // Show error notification
+            toast.error(error.message || 'Error removing member', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -243,8 +243,8 @@ export default function ProjectPage({ params }) {
             setShowEditProjectModal(false);
             setEditProjectData({ name: '', description: '' });
 
-            // Mostrar notificación de éxito
-            toast.success('¡Proyecto actualizado exitosamente!', {
+            // Show success notification
+            toast.success('Project updated successfully!', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -255,8 +255,8 @@ export default function ProjectPage({ params }) {
         } catch (error) {
             console.error('Error updating project:', error);
 
-            // Mostrar notificación de error
-            toast.error(error.message || 'Error al actualizar el proyecto', {
+            // Show error notification
+            toast.error(error.message || 'Error updating project', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -280,7 +280,7 @@ export default function ProjectPage({ params }) {
             return;
         }
 
-        // Segunda confirmación - proceder con la eliminación
+        // Second confirmation - proceed with deletion
         setShowDeleteConfirmModal(false);
         try {
             setLoading(true);
@@ -293,8 +293,8 @@ export default function ProjectPage({ params }) {
                 throw new Error(errorData.error || 'Failed to delete project');
             }
 
-            // Mostrar notificación de éxito antes de redirigir
-            toast.success('¡Proyecto eliminado exitosamente!', {
+            // Show success notification before redirecting
+            toast.success('Project deleted successfully!', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -302,12 +302,12 @@ export default function ProjectPage({ params }) {
                 pauseOnHover: false,
                 draggable: true,
                 onClose: () => {
-                    // Redirigir al dashboard después de mostrar la notificación
+                    // Redirect to dashboard after showing notification
                     window.location.href = '/dashboard';
                 }
             });
 
-            // También redirigir después de un timeout como fallback
+            // Also redirect after timeout as fallback
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2500);
@@ -315,8 +315,8 @@ export default function ProjectPage({ params }) {
             console.error('Error deleting project:', error);
             setLoading(false);
 
-            // Mostrar notificación de error
-            toast.error(error.message || 'Error al eliminar el proyecto', {
+            // Show error notification
+            toast.error(error.message || 'Error deleting project', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -506,12 +506,12 @@ export default function ProjectPage({ params }) {
                     </div>
                 </div>
 
-                {/* Modal para ver/gestionar miembros */}
+                {/* Modal to view/manage members */}
                 {showMembersModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw] max-h-[80vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold">Miembros del Proyecto</h2>
+                                <h2 className="text-xl font-bold">Project Members</h2>
                                 <button
                                     onClick={() => setShowMembersModal(false)}
                                     className="text-gray-500 hover:text-gray-700"
@@ -545,7 +545,7 @@ export default function ProjectPage({ params }) {
                                                     className={`text-red-500 hover:text-red-700 px-2 py-1 rounded ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
                                                         }`}
                                                 >
-                                                    {removingMember === member.userId ? 'Eliminando...' : 'Eliminar'}
+                                                    {removingMember === member.userId ? 'Removing...' : 'Remove'}
                                                 </button>
                                             )}
                                         </div>
@@ -576,13 +576,13 @@ export default function ProjectPage({ params }) {
                 {showAddMemberModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96">
-                            <h2 className="text-xl font-bold mb-4">Agregar Miembro</h2>
+                            <h2 className="text-xl font-bold mb-4">Add Member</h2>
                             <form onSubmit={handleAddMember}>
                                 <input
                                     type="email"
                                     value={newMemberEmail}
                                     onChange={(e) => setNewMemberEmail(e.target.value)}
-                                    placeholder="Ingresa el email del miembro"
+                                    placeholder="Enter member's email"
                                     className="w-full p-2 border rounded-lg mb-4"
                                     required
                                 />
@@ -598,7 +598,7 @@ export default function ProjectPage({ params }) {
                                         type="submit"
                                         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                                     >
-                                        Agregar
+                                        Add
                                     </button>
                                 </div>
                             </form>
@@ -606,7 +606,7 @@ export default function ProjectPage({ params }) {
                     </div>
                 )}
 
-                {/* Modal para editar proyecto */}
+                {/* Modal to edit project */}
                 {showEditProjectModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
@@ -671,7 +671,7 @@ export default function ProjectPage({ params }) {
                     </div>
                 )}
 
-                {/* Modal de confirmación de eliminación de proyecto */}
+                {/* Project deletion confirmation modal */}
                 {showDeleteConfirmModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
@@ -683,18 +683,18 @@ export default function ProjectPage({ params }) {
                                 </div>
                                 <div className="ml-4">
                                     <h3 className="text-lg font-medium text-gray-900">
-                                        {deleteConfirmStep === 1 ? 'Confirmar eliminación' : 'Confirmación final'}
+                                        {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
                                     </h3>
                                 </div>
                             </div>
                             <div className="mb-6">
                                 {deleteConfirmStep === 1 ? (
                                     <p className="text-sm text-gray-500">
-                                        ¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer y eliminará todas las tareas, miembros y mensajes asociados.
+                                        Are you sure you want to delete this project? This action cannot be undone and will remove all associated tasks, members, and messages.
                                     </p>
                                 ) : (
                                     <p className="text-sm text-gray-500">
-                                        <strong className="text-red-600">ATENCIÓN:</strong> Esta acción eliminará PERMANENTEMENTE el proyecto "{project.name}" y todos sus datos. ¿Continuar?
+                                        <strong className="text-red-600">WARNING:</strong> This action will PERMANENTLY delete the project "{project.name}" and all its data. Continue?
                                     </p>
                                 )}
                             </div>
@@ -703,7 +703,7 @@ export default function ProjectPage({ params }) {
                                     onClick={handleCancelDelete}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
                                 >
-                                    Cancelar
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmDelete}
@@ -712,14 +712,14 @@ export default function ProjectPage({ params }) {
                                         : 'bg-red-500 hover:bg-red-600'
                                         }`}
                                 >
-                                    {deleteConfirmStep === 1 ? 'Continuar' : 'Eliminar definitivamente'}
+                                    {deleteConfirmStep === 1 ? 'Continue' : 'Delete Permanently'}
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Modal de confirmación para eliminar miembro */}
+                {/* Confirmation modal to remove member */}
                 {showRemoveMemberModal && memberToRemove && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
@@ -731,13 +731,13 @@ export default function ProjectPage({ params }) {
                                 </div>
                                 <div className="ml-4">
                                     <h3 className="text-lg font-medium text-gray-900">
-                                        Eliminar miembro
+                                        Remove Member
                                     </h3>
                                 </div>
                             </div>
                             <div className="mb-6">
                                 <p className="text-sm text-gray-500">
-                                    ¿Estás seguro de que quieres eliminar a <strong>{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) del proyecto?
+                                    Are you sure you want to remove <strong>{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) from the project?
                                 </p>
                             </div>
                             <div className="flex justify-end gap-3">
@@ -745,13 +745,13 @@ export default function ProjectPage({ params }) {
                                     onClick={handleCancelRemoveMember}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
                                 >
-                                    Cancelar
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmRemoveMember}
                                     className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium"
                                 >
-                                    Eliminar miembro
+                                    Remove Member
                                 </button>
                             </div>
                         </div>
