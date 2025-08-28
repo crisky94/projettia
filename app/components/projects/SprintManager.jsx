@@ -281,9 +281,17 @@ TaskCard.propTypes = {
 };
 
 // Component to display a sprint with its tasks
-const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, allMembers }) => {
+const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, allMembers, projectId, onTaskCreate }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+    const [newTask, setNewTask] = useState({
+        title: '',
+        description: '',
+        assigneeId: '',
+        estimatedHours: ''
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [editingSprint, setEditingSprint] = useState({
         name: sprint.name,
         description: sprint.description || '',
@@ -332,6 +340,64 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             status: sprint.status
         });
         setIsEditing(false);
+    };
+
+    const handleCreateTask = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch(`/api/projects/${projectId}/tasks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: newTask.title,
+                    description: newTask.description,
+                    assigneeId: newTask.assigneeId || null,
+                    sprintId: sprint.id,
+                    estimatedHours: newTask.estimatedHours ? parseFloat(newTask.estimatedHours) : null,
+                    status: 'PENDING'
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create task');
+            }
+
+            const createdTask = await response.json();
+
+            // Notify parent component
+            if (onTaskCreate) {
+                onTaskCreate(createdTask);
+            }
+
+            setShowAddTaskModal(false);
+            setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+
+            // Show success notification
+            toast.success('Task created successfully!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } catch (error) {
+            console.error('Error creating task:', error);
+            toast.error('Error creating task', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const getTotalEstimatedHours = () => {
@@ -410,6 +476,15 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <div className="flex gap-1">
                                 {!isEditing ? (
                                     <>
+                                        <button
+                                            onClick={() => setShowAddTaskModal(true)}
+                                            className="p-2 hover:bg-white/20 rounded-md transition-colors"
+                                            title="Add new task to this sprint"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                        </button>
                                         <button
                                             onClick={() => setIsEditing(true)}
                                             className="p-2 hover:bg-white/20 rounded-md transition-colors"
@@ -509,6 +584,151 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                     )}
                 </div>
             )}
+
+            {/* Add Task Modal */}
+            {showAddTaskModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                    </div>
+                                    Add Task to Sprint
+                                </h2>
+                                <button
+                                    onClick={() => {
+                                        setShowAddTaskModal(false);
+                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+                                    }}
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                Creating task for: <span className="font-semibold">{sprint.name}</span>
+                            </p>
+                        </div>
+
+                        {/* Form */}
+                        <form onSubmit={handleCreateTask} className="p-6 space-y-4">
+                            <div>
+                                <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Task Title *
+                                </label>
+                                <input
+                                    id="task-title"
+                                    type="text"
+                                    value={newTask.title}
+                                    onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    placeholder="Enter task title..."
+                                    required
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Description
+                                </label>
+                                <textarea
+                                    id="task-description"
+                                    value={newTask.description}
+                                    onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    rows="3"
+                                    placeholder="Describe the task details..."
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="task-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Assign to
+                                    </label>
+                                    <select
+                                        id="task-assignee"
+                                        value={newTask.assigneeId}
+                                        onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        disabled={isSubmitting}
+                                    >
+                                        <option value="">Unassigned</option>
+                                        {!Array.isArray(allMembers) || allMembers.length === 0 ? (
+                                            <option disabled>Loading members...</option>
+                                        ) : (
+                                            allMembers.map((member) => (
+                                                <option key={member.userId} value={member.userId}>
+                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
+                                                </option>
+                                            ))
+                                        )}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Estimated Hours
+                                    </label>
+                                    <input
+                                        id="task-hours"
+                                        type="number"
+                                        min="0"
+                                        step="0.5"
+                                        value={newTask.estimatedHours}
+                                        onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        placeholder="0.5"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowAddTaskModal(false);
+                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+                                    }}
+                                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
+                                            ? 'bg-blue-400 text-white cursor-not-allowed'
+                                            : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
+                                        }`}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? (
+                                        <span className="flex items-center gap-2">
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            Creating...
+                                        </span>
+                                    ) : (
+                                        'Create Task'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -528,7 +748,9 @@ SprintCard.propTypes = {
     onDeleteTask: PropTypes.func.isRequired,
     onUpdateSprint: PropTypes.func.isRequired,
     onDeleteSprint: PropTypes.func.isRequired,
-    allMembers: PropTypes.array.isRequired
+    allMembers: PropTypes.array.isRequired,
+    projectId: PropTypes.string.isRequired,
+    onTaskCreate: PropTypes.func.isRequired
 };
 
 // Componente principal para gestión de sprints
@@ -536,11 +758,18 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
+    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [newSprint, setNewSprint] = useState({
         name: '',
         description: '',
         startDate: '',
         endDate: ''
+    });
+    const [newTask, setNewTask] = useState({
+        title: '',
+        description: '',
+        assigneeId: '',
+        estimatedHours: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -693,6 +922,63 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
         }
     };
 
+    const handleCreateTask = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch(`/api/projects/${projectId}/tasks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: newTask.title,
+                    description: newTask.description,
+                    assigneeId: newTask.assigneeId || null,
+                    estimatedHours: newTask.estimatedHours ? parseFloat(newTask.estimatedHours) : null,
+                    status: 'PENDING'
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create task');
+            }
+
+            const createdTask = await response.json();
+
+            // Notify parent component
+            if (onTaskCreate) {
+                onTaskCreate(createdTask);
+            }
+
+            setShowAddTaskModal(false);
+            setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+
+            // Show success notification
+            toast.success('Task created successfully!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } catch (error) {
+            console.error('Error creating task:', error);
+            toast.error('Error creating task', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const getTasksForSprint = (sprintId) => {
         return tasks.filter(task => task.sprintId === sprintId);
     };
@@ -718,15 +1004,26 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     <p className="text-gray-600 dark:text-gray-400 mt-1">Organiza las tareas por sprints y gestiona el tiempo</p>
                 </div>
                 {isAdmin && (
-                    <button
-                        onClick={() => setShowAddSprintModal(true)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        New Sprint
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setShowAddTaskModal(true)}
+                            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            New Task
+                        </button>
+                        <button
+                            onClick={() => setShowAddSprintModal(true)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            New Sprint
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -743,6 +1040,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                         onUpdateSprint={handleUpdateSprint}
                         onDeleteSprint={handleDeleteSprint}
                         allMembers={allMembers}
+                        projectId={projectId}
+                        onTaskCreate={onTaskCreate}
                     />
                 ))}
 
@@ -750,10 +1049,24 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 {getTasksWithoutSprint().length > 0 && (
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
                         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                                📋 Tasks without Sprint
-                                <span className="text-sm font-normal">({getTasksWithoutSprint().length})</span>
-                            </h3>
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                                    📋 Tasks without Sprint
+                                    <span className="text-sm font-normal">({getTasksWithoutSprint().length})</span>
+                                </h3>
+                                {isAdmin && (
+                                    <button
+                                        onClick={() => setShowAddTaskModal(true)}
+                                        className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
+                                        title="Add new task without sprint"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                        Add Task
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div className="p-4">
                             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -896,6 +1209,151 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     disabled={isSubmitting || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
                                 >
                                     {isSubmitting ? 'Creating...' : 'Create Sprint'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Task Modal (for tasks without sprint) */}
+            {showAddTaskModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    Create New Task
+                                </h2>
+                                <button
+                                    onClick={() => {
+                                        setShowAddTaskModal(false);
+                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+                                    }}
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                This task will not be assigned to any sprint initially
+                            </p>
+                        </div>
+
+                        {/* Form */}
+                        <form onSubmit={handleCreateTask} className="p-6 space-y-4">
+                            <div>
+                                <label htmlFor="main-task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Task Title *
+                                </label>
+                                <input
+                                    id="main-task-title"
+                                    type="text"
+                                    value={newTask.title}
+                                    onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    placeholder="Enter task title..."
+                                    required
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="main-task-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Description
+                                </label>
+                                <textarea
+                                    id="main-task-description"
+                                    value={newTask.description}
+                                    onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    rows="3"
+                                    placeholder="Describe the task details..."
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="main-task-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Assign to
+                                    </label>
+                                    <select
+                                        id="main-task-assignee"
+                                        value={newTask.assigneeId}
+                                        onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        disabled={isSubmitting}
+                                    >
+                                        <option value="">Unassigned</option>
+                                        {!Array.isArray(allMembers) || allMembers.length === 0 ? (
+                                            <option disabled>Loading members...</option>
+                                        ) : (
+                                            allMembers.map((member) => (
+                                                <option key={member.userId} value={member.userId}>
+                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
+                                                </option>
+                                            ))
+                                        )}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="main-task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Estimated Hours
+                                    </label>
+                                    <input
+                                        id="main-task-hours"
+                                        type="number"
+                                        min="0"
+                                        step="0.5"
+                                        value={newTask.estimatedHours}
+                                        onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        placeholder="0.5"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowAddTaskModal(false);
+                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
+                                    }}
+                                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
+                                            ? 'bg-gray-400 text-white cursor-not-allowed'
+                                            : 'bg-gray-600 hover:bg-gray-700 text-white hover:shadow-md'
+                                        }`}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? (
+                                        <span className="flex items-center gap-2">
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            Creating...
+                                        </span>
+                                    ) : (
+                                        'Create Task'
+                                    )}
                                 </button>
                             </div>
                         </form>
