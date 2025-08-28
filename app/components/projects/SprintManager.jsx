@@ -80,8 +80,13 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
 
     const formatEstimatedTime = (hours) => {
         if (!hours) return null;
-        if (hours < 1) return `${Math.round(hours * 60)}min`;
+        if (hours < 1) {
+            // Convert to minutes and handle decimal precision
+            const minutes = Math.round(hours * 60);
+            return `${minutes}min`;
+        }
         if (hours >= 8) return `${Math.round(hours / 8)}d`;
+        // Show hours as they are
         return `${hours}h`;
     };
 
@@ -186,8 +191,8 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             value={editingTask.estimatedHours}
                             onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
                             className="w-20 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            placeholder="0h"
-                            min="0"
+                            placeholder="0.5h"
+                            min="0.5"
                             max="1000"
                             step="0.5"
                         />
@@ -678,19 +683,20 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
 
                                 <div>
                                     <label htmlFor="task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Estimated Hours
+                                        Estimated Hours (min: 30min)
                                     </label>
                                     <input
                                         id="task-hours"
                                         type="number"
-                                        min="0"
+                                        min="0.5"
                                         step="0.5"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="0.5"
+                                        placeholder="0.5 (30 min)"
                                         disabled={isSubmitting}
                                     />
+                                    <p className="text-xs text-gray-500 mt-1">Examples: 0.5 = 30min, 1 = 1h, 1.5 = 1.5h</p>
                                 </div>
                             </div>
 
@@ -710,8 +716,8 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                 <button
                                     type="submit"
                                     className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                            ? 'bg-blue-400 text-white cursor-not-allowed'
-                                            : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
+                                        ? 'bg-blue-400 text-white cursor-not-allowed'
+                                        : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
                                         }`}
                                     disabled={isSubmitting}
                                 >
@@ -1000,8 +1006,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">🚀 Gestión de Sprints</h2>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">Organiza las tareas por sprints y gestiona el tiempo</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">🚀 Sprint Management</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">Organize your tasks into time-boxed sprints</p>
                 </div>
                 {isAdmin && (
                     <div className="flex gap-2">
@@ -1093,11 +1099,11 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     <svg className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                        No hay sprints creados aún
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300 mb-2">
+                        No sprints created yet
                     </h3>
                     <p className="text-gray-500 dark:text-gray-400 mb-6">
-                        Crea tu primer sprint para organizar las tareas por tiempo
+                        Create your first sprint to organize tasks by time
                     </p>
                     {isAdmin && (
                         <button
@@ -1309,19 +1315,20 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
                                 <div>
                                     <label htmlFor="main-task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Estimated Hours
+                                        Estimated Hours (min: 30min)
                                     </label>
                                     <input
                                         id="main-task-hours"
                                         type="number"
-                                        min="0"
+                                        min="0.5"
                                         step="0.5"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="0.5"
+                                        placeholder="0.5 (30 min)"
                                         disabled={isSubmitting}
                                     />
+                                    <p className="text-xs text-gray-500 mt-1">Examples: 0.5 = 30min, 1 = 1h, 1.5 = 1.5h</p>
                                 </div>
                             </div>
 
@@ -1341,8 +1348,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 <button
                                     type="submit"
                                     className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                            ? 'bg-gray-400 text-white cursor-not-allowed'
-                                            : 'bg-gray-600 hover:bg-gray-700 text-white hover:shadow-md'
+                                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                                        : 'bg-gray-600 hover:bg-gray-700 text-white hover:shadow-md'
                                         }`}
                                     disabled={isSubmitting}
                                 >
