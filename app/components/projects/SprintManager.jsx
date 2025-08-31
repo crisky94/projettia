@@ -451,13 +451,24 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     <input
                                         type="date"
                                         value={editingSprint.startDate}
-                                        onChange={(e) => setEditingSprint({ ...editingSprint, startDate: e.target.value })}
+                                        onChange={(e) => {
+                                            const newStartDate = e.target.value;
+                                            const updates = { startDate: newStartDate };
+                                            
+                                            // If end date is before start date, clear it
+                                            if (editingSprint.endDate && editingSprint.endDate < newStartDate) {
+                                                updates.endDate = '';
+                                            }
+                                            
+                                            setEditingSprint({ ...editingSprint, ...updates });
+                                        }}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     />
                                     <input
                                         type="date"
                                         value={editingSprint.endDate}
                                         onChange={(e) => setEditingSprint({ ...editingSprint, endDate: e.target.value })}
+                                        min={editingSprint.startDate || undefined}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     />
                                 </div>
@@ -1174,7 +1185,17 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     <input
                                         type="date"
                                         value={newSprint.startDate}
-                                        onChange={(e) => setNewSprint({ ...newSprint, startDate: e.target.value })}
+                                        onChange={(e) => {
+                                            const newStartDate = e.target.value;
+                                            const updates = { startDate: newStartDate };
+                                            
+                                            // If end date is before start date, clear it
+                                            if (newSprint.endDate && newSprint.endDate < newStartDate) {
+                                                updates.endDate = '';
+                                            }
+                                            
+                                            setNewSprint({ ...newSprint, ...updates });
+                                        }}
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
@@ -1188,6 +1209,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         type="date"
                                         value={newSprint.endDate}
                                         onChange={(e) => setNewSprint({ ...newSprint, endDate: e.target.value })}
+                                        min={newSprint.startDate || undefined}
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
