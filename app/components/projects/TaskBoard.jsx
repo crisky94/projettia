@@ -4,18 +4,32 @@ import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
-const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
+const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+    const [isEditingSprint, setIsEditingSprint] = useState(false);
+
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
-        disabled: !isAdmin,
+        disabled: false, // Allow all users to move tasks
     });
 
     const style = {
         transform: CSS.Translate.toString(transform),
         transition,
-        cursor: isAdmin ? 'grab' : 'default',
+        cursor: 'grab',
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 1000 : 1,
+    };
+
+    const handleSprintChange = async (newSprintId) => {
+        try {
+            if (onUpdateTask) {
+                await onUpdateTask(task.id, { sprintId: newSprintId || null });
+                setIsEditingSprint(false);
+            }
+        } catch (error) {
+            console.error('Error updating task sprint:', error);
+            toast.error('Error updating task sprint');
+        }
     };
 
     // Function to get avatar color based on initials conflicts
@@ -108,6 +122,61 @@ const TaskCard = ({ task, isAdmin, allMembers = [], onDeleteTask }) => {
                     </div>
                 )}
 
+                {/* Sprint Assignment */}
+                <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Sprint:</span>
+                            {!isEditingSprint ? (
+                                <div className="flex items-center gap-2">
+                                    {task.sprint ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 rounded-md text-xs font-medium">
+                                            🚀 {task.sprint.name}
+                                        </span>
+                                    ) : (
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 italic">No sprint assigned</span>
+                                    )}
+                                    {isAdmin && (
+                                        <button
+                                            onClick={() => setIsEditingSprint(true)}
+                                            className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                                            title="Edit sprint assignment"
+                                        >
+                                            <svg className="w-3 h-3 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 flex-1">
+                                    <select
+                                        value={task.sprintId || ''}
+                                        onChange={(e) => handleSprintChange(e.target.value)}
+                                        className="flex-1 text-xs p-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                        <option value="">No sprint</option>
+                                        {sprints.map(sprint => (
+                                            <option key={sprint.id} value={sprint.id}>
+                                                {sprint.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        onClick={() => setIsEditingSprint(false)}
+                                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                                        title="Cancel editing"
+                                    >
+                                        <svg className="w-3 h-3 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
                 {/* Task Status Badge */}
                 <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
                     <div className="flex items-center gap-2">
@@ -160,6 +229,12 @@ TaskCard.propTypes = {
         title: PropTypes.string.isRequired,
         description: PropTypes.string,
         status: PropTypes.string.isRequired,
+        sprintId: PropTypes.string,
+        sprint: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            status: PropTypes.string
+        }),
         assignee: PropTypes.shape({
             id: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
@@ -175,10 +250,18 @@ TaskCard.propTypes = {
             }).isRequired
         })
     ),
-    onDeleteTask: PropTypes.func
+    sprints: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            status: PropTypes.string
+        })
+    ),
+    onDeleteTask: PropTypes.func,
+    onUpdateTask: PropTypes.func
 };
 
-const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], onDeleteTask }) => {
+const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -283,7 +366,9 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], onDeleteTask 
                                         task={task}
                                         isAdmin={isAdmin}
                                         allMembers={allMembers}
+                                        sprints={sprints}
                                         onDeleteTask={onDeleteTask}
+                                        onUpdateTask={onUpdateTask}
                                     />
                                 </div>
                             ))}
@@ -329,12 +414,19 @@ TaskRow.propTypes = {
             }).isRequired
         })
     ),
-    onDeleteTask: PropTypes.func
+    sprints: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            status: PropTypes.string
+        })
+    ),
+    onDeleteTask: PropTypes.func,
+    onUpdateTask: PropTypes.func
 };
 
-const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelete, onTaskCreate }) => {
+const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
     const [tasks, setTasks] = useState(initialTasks || []);
-    const [activeId, setActiveId] = useState(null);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [newTask, setNewTask] = useState({
@@ -346,6 +438,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
     const [isLoadingMembers, setIsLoadingMembers] = useState(false);
     const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState(null);
+    const [activeId, setActiveId] = useState(null);
 
     // Debug logs
     useEffect(() => {
@@ -420,6 +513,29 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         } catch (error) {
             console.error('Error reloading members:', error);
             setMembers([]);
+        }
+    };
+
+    // Function to refresh tasks from the API
+    const refreshTasks = async () => {
+        try {
+            const tasksRes = await fetch(`/api/projects/${projectId}/tasks`);
+            if (tasksRes.ok) {
+                const tasksData = await tasksRes.json();
+                console.log('Tasks refreshed:', tasksData);
+                if (Array.isArray(tasksData)) {
+                    const validatedTasks = tasksData.map(task => ({
+                        ...task,
+                        status: task.status || 'PENDING'
+                    }));
+                    setTasks(validatedTasks);
+                } else {
+                    console.error('Tasks data is not an array:', tasksData);
+                    setTasks([]);
+                }
+            }
+        } catch (error) {
+            console.error('Error refreshing tasks:', error);
         }
     };
 
@@ -552,7 +668,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
     const handleCreateTask = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-
         try {
             const response = await fetch(`/api/projects/${projectId}/tasks`, {
                 method: 'POST',
@@ -566,13 +681,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                     status: 'PENDING'
                 }),
             });
-
             if (!response.ok) {
                 throw new Error('Failed to create task');
             }
 
             const createdTask = await response.json();
-            setTasks(prevTasks => [...prevTasks, createdTask]);
+            await refreshTasks();
+            // Refresh tasks from server to ensure we have the most up-to-date data
 
             // Notify parent component
             if (onTaskCreate) {
@@ -608,6 +723,40 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         }
     };
 
+    const handleTaskUpdate = async (taskId, updateData) => {
+        try {
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updateData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error updating task');
+            }
+
+            const updatedTask = await response.json();
+
+            // Update local state
+            setTasks(prevTasks =>
+                prevTasks.map(task =>
+                    task.id === taskId ? updatedTask : task
+                )
+            );
+
+            // Notify parent component
+            if (onTaskUpdate) {
+                onTaskUpdate(updatedTask);
+            }
+
+            toast.success('Task updated successfully!');
+        } catch (error) {
+            console.error('Error updating task:', error);
+            toast.error('Error updating task');
+        }
+    };
+
     const handleDeleteTask = async (taskId) => {
         const task = tasks.find(t => t.id === taskId);
         setTaskToDelete(task);
@@ -628,23 +777,25 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                 throw new Error(errorData.error || 'Error deleting task');
             }
 
-            // Remover la tarea del estado local
-            setTasks(prevTasks => prevTasks.filter(task => task.id !== taskToDelete.id));
-
-            // Notify parent component
-            if (onTaskDelete) {
-                onTaskDelete(taskToDelete);
-            }
-
-            // Show success notification
+            // Show success notification first
             toast.success('Task deleted successfully!', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
             });
+
+            // Refresh tasks from server to get the most up-to-date data
+            setTimeout(async () => {
+                await refreshTasks();
+
+                // Notify parent component after refreshing
+                if (onTaskDelete) {
+                    onTaskDelete(taskToDelete.id);
+                }
+            }, 2100); // Slightly longer than toast autoClose to ensure it's visible
 
             console.log('Task deleted successfully:', taskToDelete.id);
         } catch (error) {
@@ -662,9 +813,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         } finally {
             setTaskToDelete(null);
         }
-    };
-
-    const handleCancelDeleteTask = () => {
+    }; const handleCancelDeleteTask = () => {
         setShowDeleteTaskModal(false);
         setTaskToDelete(null);
     };
@@ -691,8 +840,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         >
                             <span className="flex items-center gap-2">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
                                 New Task
                             </span>
                         </button>
@@ -810,7 +959,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         tasks={tasks.filter(task => task.status === 'PENDING')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        sprints={sprints}
                         onDeleteTask={handleDeleteTask}
+                        onUpdateTask={handleTaskUpdate}
                     />
 
                     {/* In Progress Row */}
@@ -820,7 +971,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        sprints={sprints}
                         onDeleteTask={handleDeleteTask}
+                        onUpdateTask={handleTaskUpdate}
                     />
 
                     {/* Completed Row */}
@@ -830,7 +983,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         tasks={tasks.filter(task => task.status === 'COMPLETED')}
                         isAdmin={isAdmin}
                         allMembers={members}
+                        sprints={sprints}
                         onDeleteTask={handleDeleteTask}
+                        onUpdateTask={handleTaskUpdate}
                     />
                 </div>
             </DndContext>
@@ -1026,6 +1181,13 @@ TaskBoard.propTypes = {
         })
     ).isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    sprints: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            status: PropTypes.string
+        })
+    ),
     onTaskUpdate: PropTypes.func,
     onTaskDelete: PropTypes.func,
     onTaskCreate: PropTypes.func

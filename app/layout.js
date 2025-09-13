@@ -7,7 +7,6 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-// import { Inter, JetBrains_Mono } from 'next/font/google';
 import AuthRedirect from './components/auth/AuthRedirect';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

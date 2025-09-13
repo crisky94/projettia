@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 export default function ProjectPage({ params }) {
     const [project, setProject] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [sprints, setSprints] = useState([]);
     const [members, setMembers] = useState([]);
     const [memberPermissions, setMemberPermissions] = useState({ canManageMembers: false, isProjectOwner: false, isProjectAdmin: false });
     const [user, setUser] = useState(null);
@@ -76,6 +77,17 @@ export default function ProjectPage({ params }) {
                     console.log('Members data:', membersData);
                     setMembers(Array.isArray(membersData.members) ? membersData.members : []);
                     setMemberPermissions(membersData.permissions || { canManageMembers: false, isProjectOwner: false, isProjectAdmin: false });
+                }
+
+                // Fetch sprints
+                const sprintsRes = await fetch(`/api/projects/${params.id}/sprints`);
+                const sprintsData = await sprintsRes.json();
+                if (!sprintsRes.ok) {
+                    console.error('Sprints API error:', sprintsData);
+                    setSprints([]);
+                } else {
+                    console.log('Sprints data:', sprintsData);
+                    setSprints(Array.isArray(sprintsData) ? sprintsData : []);
                 }
 
                 // Get current user
@@ -334,11 +346,18 @@ export default function ProjectPage({ params }) {
 
     // Funciones para manejar actualizaciones de tareas compartidas entre pestañas
     const handleTaskUpdate = (updatedTask) => {
+        const oldTask = tasks.find(task => task.id === updatedTask.id);
+
         setTasks(prevTasks =>
             prevTasks.map(task =>
                 task.id === updatedTask.id ? updatedTask : task
             )
         );
+
+        // If sprint assignment changed, refresh sprints to update task counts
+        if (oldTask && oldTask.sprintId !== updatedTask.sprintId) {
+            refreshSprints();
+        }
     };
 
     const handleTaskDelete = (taskId) => {
@@ -358,6 +377,18 @@ export default function ProjectPage({ params }) {
             }
         } catch (error) {
             console.error('Error refreshing tasks:', error);
+        }
+    };
+
+    const refreshSprints = async () => {
+        try {
+            const sprintsRes = await fetch(`/api/projects/${params.id}/sprints`);
+            if (sprintsRes.ok) {
+                const sprintsData = await sprintsRes.json();
+                setSprints(Array.isArray(sprintsData) ? sprintsData : []);
+            }
+        } catch (error) {
+            console.error('Error refreshing sprints:', error);
         }
     };
 
@@ -483,6 +514,7 @@ export default function ProjectPage({ params }) {
                                 projectId={project.id}
                                 initialTasks={tasks}
                                 isAdmin={canManageMembers}
+                                sprints={sprints}
                                 onTaskUpdate={handleTaskUpdate}
                                 onTaskDelete={handleTaskDelete}
                                 onTaskCreate={handleTaskCreate}
@@ -498,6 +530,7 @@ export default function ProjectPage({ params }) {
                                 onTaskDelete={handleTaskDelete}
                                 onTaskCreate={handleTaskCreate}
                                 onRefreshTasks={refreshTasks}
+                                onRefreshSprints={refreshSprints}
                             />
                         )}
                     </div>
