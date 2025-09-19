@@ -166,11 +166,17 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                                         className="flex-1 text-xs p-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     >
                                         <option value="">No sprint</option>
-                                        {sprints.map(sprint => (
-                                            <option key={sprint.id} value={sprint.id}>
-                                                {sprint.name}
-                                            </option>
-                                        ))}
+                                        {Array.isArray(sprints) && sprints.length > 0 ? (
+                                            sprints
+                                                .filter(sprint => sprint && sprint.status !== 'DELETED')
+                                                .map(sprint => (
+                                                    <option key={sprint.id} value={sprint.id}>
+                                                        {sprint.name}
+                                                    </option>
+                                                ))
+                                        ) : (
+                                            <option disabled>No sprints available</option>
+                                        )}
                                     </select>
                                     <button
                                         onClick={() => setIsEditingSprint(false)}
@@ -441,6 +447,33 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [editTask, setEditTask] = useState({ title: '', description: '', assigneeId: '' });
     const [tasks, setTasks] = useState(initialTasks || []);
+    // Eliminar sprint de las tareas si el sprint fue borrado
+    useEffect(() => {
+        // Cuando cambian los sprints, recargar las tareas desde el backend para reflejar cambios
+        const fetchTasks = async () => {
+            try {
+                const tasksRes = await fetch(`/api/projects/${projectId}/tasks`);
+                if (tasksRes.ok) {
+                    const tasksData = await tasksRes.json();
+                    if (Array.isArray(tasksData)) {
+                        const validatedTasks = tasksData.map(task => ({
+                            ...task,
+                            status: task.status || 'PENDING',
+                            // Si el sprint asignado ya no existe, quitar la referencia
+                            sprintId: task.sprintId && !sprints.some(s => s.id === task.sprintId) ? null : task.sprintId,
+                            sprint: task.sprintId && !sprints.some(s => s.id === task.sprintId) ? null : task.sprint
+                        }));
+                        setTasks(validatedTasks);
+                    } else {
+                        setTasks([]);
+                    }
+                }
+            } catch (error) {
+                setTasks([]);
+            }
+        };
+        fetchTasks();
+    }, [sprints, projectId]);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [newTask, setNewTask] = useState({

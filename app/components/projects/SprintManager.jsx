@@ -857,6 +857,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 throw new Error(error.error);
             }
         } catch (error) {
+            console.error('Error updating sprint:', error);
+            toast.error('Error updating sprint');
             throw error;
         }
     };
@@ -874,9 +876,6 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             if (response.ok) {
                 setSprints(sprints.filter(s => s.id !== sprintId));
                 // Actualizar tareas para remover el sprint eliminado
-                setTasks(tasks.map(task =>
-                    task.sprintId === sprintId ? { ...task, sprint: null, sprintId: null } : task
-                ));
                 toast.success('Sprint deleted successfully!');
             } else {
                 const error = await response.json();
