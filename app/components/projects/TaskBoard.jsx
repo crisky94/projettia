@@ -122,6 +122,16 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                     </div>
                 )}
 
+                {/* Botón Editar para admins */}
+                {isAdmin && (
+                    <button
+                        onClick={() => onUpdateTask('edit', task)}
+                        className="mt-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm transition-all duration-200"
+                    >
+                        Editar
+                    </button>
+                )}
+
                 {/* Sprint Assignment */}
                 <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <div className="flex items-center justify-between">
@@ -426,6 +436,10 @@ TaskRow.propTypes = {
 };
 
 const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
+    // Estado para edición de tarea
+    const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+    const [taskToEdit, setTaskToEdit] = useState(null);
+    const [editTask, setEditTask] = useState({ title: '', description: '', assigneeId: '' });
     const [tasks, setTasks] = useState(initialTasks || []);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [members, setMembers] = useState([]);
@@ -723,37 +737,45 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         }
     };
 
-    const handleTaskUpdate = async (taskId, updateData) => {
+    // Abrir modal de edición
+    const handleOpenEditTask = (action, task) => {
+        if (action === 'edit' && task) {
+            setTaskToEdit(task);
+            setEditTask({
+                title: task.title,
+                description: task.description || '',
+                assigneeId: task.assignee?.id || ''
+            });
+            setShowEditTaskModal(true);
+        }
+    };
+
+    // Guardar cambios de tarea
+    const handleSaveEditTask = async (e) => {
+        e.preventDefault();
+        if (!taskToEdit) return;
+        setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+            // Enviar assigneeId como null si está vacío
+            const payload = {
+                title: editTask.title,
+                description: editTask.description,
+                assigneeId: editTask.assigneeId ? editTask.assigneeId : null
+            };
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskToEdit.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updateData)
+                body: JSON.stringify(payload)
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error updating task');
-            }
-
-            const updatedTask = await response.json();
-
-            // Update local state
-            setTasks(prevTasks =>
-                prevTasks.map(task =>
-                    task.id === taskId ? updatedTask : task
-                )
-            );
-
-            // Notify parent component
-            if (onTaskUpdate) {
-                onTaskUpdate(updatedTask);
-            }
-
+            if (!response.ok) throw new Error('Error updating task');
+            await refreshTasks();
+            setShowEditTaskModal(false);
+            setTaskToEdit(null);
             toast.success('Task updated successfully!');
         } catch (error) {
-            console.error('Error updating task:', error);
             toast.error('Error updating task');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -961,7 +983,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
-                        onUpdateTask={handleTaskUpdate}
+                        onUpdateTask={handleOpenEditTask}
                     />
 
                     {/* In Progress Row */}
@@ -973,7 +995,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
-                        onUpdateTask={handleTaskUpdate}
+                        onUpdateTask={handleOpenEditTask}
                     />
 
                     {/* Completed Row */}
@@ -985,8 +1007,86 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
-                        onUpdateTask={handleTaskUpdate}
+                        onUpdateTask={handleOpenEditTask}
                     />
+                    {/* Modal de edición de tarea */}
+                    {showEditTaskModal && taskToEdit && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm border border-gray-200 dark:border-gray-700">
+                                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Editar Tarea</h2>
+                                </div>
+                                <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
+                                    <div>
+                                        <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Título
+                                        </label>
+                                        <input
+                                            id="edit-title"
+                                            type="text"
+                                            value={editTask.title}
+                                            onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Descripción
+                                        </label>
+                                        <textarea
+                                            id="edit-description"
+                                            value={editTask.description}
+                                            onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none"
+                                            rows="2"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="edit-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Asignar a
+                                        </label>
+                                        <select
+                                            id="edit-assignee"
+                                            value={editTask.assigneeId}
+                                            onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Sin asignar</option>
+                                            {members.map((member) => (
+                                                <option key={member.userId} value={member.userId}>
+                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                        <button
+                                            type="button"
+                                            onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
+                                            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium"
+                                            disabled={isSubmitting}
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm ${isSubmitting
+                                                ? 'bg-blue-400 text-white cursor-not-allowed'
+                                                : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
+                                                }`}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </DndContext>
 
