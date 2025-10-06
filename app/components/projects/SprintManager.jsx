@@ -776,6 +776,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     const [loading, setLoading] = useState(true);
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+    const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
+    const [sprintToDelete, setSprintToDelete] = useState(null);
     const [newSprint, setNewSprint] = useState({
         name: '',
         description: '',
@@ -864,28 +866,74 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     };
 
     const handleDeleteSprint = async (sprintId) => {
-        if (!confirm('Are you sure you want to delete this sprint? Tasks will be moved to "No sprint".')) {
-            return;
-        }
+        setSprintToDelete(sprints.find(s => s.id === sprintId));
+        setShowDeleteSprintModal(true);
+    };
 
+    const confirmDeleteSprint = async () => {
+        if (!sprintToDelete) return;
+        setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/projects/${projectId}/sprints/${sprintId}`, {
+            const response = await fetch(`/api/projects/${projectId}/sprints/${sprintToDelete.id}`, {
                 method: 'DELETE'
             });
-
             if (response.ok) {
-                setSprints(sprints.filter(s => s.id !== sprintId));
-                // Actualizar tareas para remover el sprint eliminado
-                toast.success('Sprint deleted successfully!');
+                setSprints(sprints.filter(s => s.id !== sprintToDelete.id));
+                toast.success('Sprint eliminado correctamente');
             } else {
                 const error = await response.json();
-                toast.error(error.error || 'Error deleting sprint');
+                toast.error(error.error || 'Error eliminando sprint');
             }
         } catch (error) {
-            console.error('Error deleting sprint:', error);
-            toast.error('Error deleting sprint');
+            console.error('Error eliminando sprint:', error);
+            toast.error('Error eliminando sprint');
+        } finally {
+            setIsSubmitting(false);
+            setShowDeleteSprintModal(false);
+            setSprintToDelete(null);
         }
     };
+
+    const cancelDeleteSprint = () => {
+        setShowDeleteSprintModal(false);
+        setSprintToDelete(null);
+    };
+    {/* Modal de confirmación para eliminar sprint */}
+    {showDeleteSprintModal && sprintToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                            <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Eliminar Sprint</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">¿Seguro que quieres eliminar el sprint "{sprintToDelete.name}"? Las tareas se moverán a "Sin sprint".</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="px-6 py-4 flex justify-end gap-3">
+                    <button
+                        onClick={cancelDeleteSprint}
+                        className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 rounded-lg hover:bg-gray-50"
+                        disabled={isSubmitting}
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        onClick={confirmDeleteSprint}
+                        className={`px-4 py-2 rounded-lg text-white font-medium ${isSubmitting ? 'bg-red-400' : 'bg-red-500 hover:bg-red-600'}`}
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Eliminando...' : 'Eliminar'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    )}
 
     const handleUpdateTask = async (taskId, updateData) => {
         try {

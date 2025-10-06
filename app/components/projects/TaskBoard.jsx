@@ -9,7 +9,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
 
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
-        disabled: false, // Allow all users to move tasks
+        disabled: false, // Permitir mover tareas a todos los miembros
     });
 
     const style = {
@@ -67,12 +67,13 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
         <div
             ref={setNodeRef}
             style={style}
-            {...(isAdmin ? attributes : {})}
-            {...(isAdmin ? listeners : {})}
-            className={`group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 relative overflow-hidden ${isAdmin
-                ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'
-                : 'cursor-default'
-                } ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}`}
+            {...attributes}
+            {...listeners}
+            className={`group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 relative overflow-hidden
+                ${isAdmin ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl' : 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'}
+                ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}
+                w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
+            `}
         >
             {/* Delete button */}
             {isAdmin && onDeleteTask && (
@@ -90,20 +91,20 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 </button>
             )}
 
-            <div className="p-5">
+            <div className="p-4 sm:p-5">
                 {/* Task Title */}
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-base mb-2 pr-8 uppercase">{task.title}</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base mb-2 pr-8 uppercase break-words">{task.title}</h4>
 
                 {/* Task Description */}
                 {task.description && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed break-words">
                         {task.description}
                     </p>
                 )}
 
                 {/* Task Assignee */}
                 {task.assignee && (
-                    <div className="flex items-center gap-3 mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <div className="flex items-center gap-2 sm:gap-3 mt-4 p-2 sm:p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                         {(() => {
                             const initials = task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
                             const avatarColor = getAvatarColor(task.assignee.id, initials, allMembers);
@@ -114,9 +115,9 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                             );
                         })()}
                         <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{task.assignee.name}</div>
+                            <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{task.assignee.name}</div>
                             {task.assignee.email && (
-                                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{task.assignee.email}</div>
+                                <div className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate">{task.assignee.email}</div>
                             )}
                         </div>
                     </div>
@@ -126,7 +127,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 {isAdmin && (
                     <button
                         onClick={() => onUpdateTask('edit', task)}
-                        className="mt-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm transition-all duration-200"
+                        className="mt-2 px-2 sm:px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-medium shadow-sm transition-all duration-200"
                     >
                         Editar
                     </button>
