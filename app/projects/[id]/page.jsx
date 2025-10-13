@@ -415,19 +415,19 @@ export default function ProjectPage({ params }) {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-                <div className="text-red-500 mb-4">{error}</div>
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+                <div className="text-destructive mb-4">{error}</div>
                 <button
                     onClick={() => window.location.reload()}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
                     Try Again
                 </button>
@@ -437,31 +437,31 @@ export default function ProjectPage({ params }) {
 
     if (!project || !user) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <div className="text-gray-500">Project not found</div>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="text-muted-foreground">Project not found</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-background">
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => window.location.href = '/projects'}
-                            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 rounded-lg font-medium shadow-sm transition-all duration-200 flex items-center gap-2"
+                            className="px-3 py-2 bg-card hover:bg-muted text-card-foreground rounded-lg font-medium shadow-sm transition-all duration-200 flex items-center gap-2 border border-border"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                             Volver a proyectos
                         </button>
-                        <h1 className="text-3xl font-bold text-gray-900 uppercase">{project.name}</h1>
+                        <h1 className="text-3xl font-bold text-foreground uppercase">{project.name}</h1>
                         {canManageMembers && (
                             <button
                                 onClick={handleEditProject}
-                                className="text-gray-500 hover:text-gray-700 p-1 rounded"
+                                className="text-muted-foreground hover:text-foreground p-1 rounded transition-colors"
                                 title="Edit project"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -472,7 +472,7 @@ export default function ProjectPage({ params }) {
                     </div>
                     <div className="flex gap-2">
 
-                        <button onClick={() => setShowMembersModal(true)} className="btn bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg text-sm font-medium">
+                        <button onClick={() => setShowMembersModal(true)} className="btn bg-card text-card-foreground hover:bg-muted border border-border px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                             <span className="flex items-center gap-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.9281 19.6343H20.0657C20.2539 19.6375 20.4401 19.5951 20.6083 19.5106C20.7766 19.4261 20.9218 19.3021 21.0316 19.1491C21.1413 18.9962 21.2124 18.8189 21.2386 18.6325C21.2649 18.4461 21.2455 18.2561 21.1822 18.0788C20.637 16.9119 19.7739 15.9223 18.692 15.2236C17.6101 14.5248 16.3531 14.1451 15.0652 14.1281" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -487,7 +487,7 @@ export default function ProjectPage({ params }) {
                         {isProjectOwner && (
                             <button
                                 onClick={handleDeleteProject}
-                                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                                 title="Delete Project"
                             >
                                 <span className="flex items-center gap-2">
@@ -507,28 +507,28 @@ export default function ProjectPage({ params }) {
                 </div>
 
                 {project.description && (
-                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <p className="text-gray-700">{project.description}</p>
+                    <div className="mb-6 p-4 bg-card rounded-lg border border-border">
+                        <p className="text-card-foreground">{project.description}</p>
                     </div>
                 )}
 
                 {/* Navigation Tabs */}
-                <div className="border-b border-gray-200 mb-6">
+                <div className="border-b border-border mb-6">
                     <nav className="flex space-x-8" aria-label="Tabs">
                         <button
                             onClick={() => setActiveTab('kanban')}
-                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${activeTab === 'kanban'
-                                ? 'border-blue-500 text-blue-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'kanban'
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                                 }`}
                         >
                             📋 Task Board
                         </button>
                         <button
                             onClick={() => setActiveTab('sprints')}
-                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${activeTab === 'sprints'
-                                ? 'border-blue-500 text-blue-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'sprints'
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                                 }`}
                         >
                             🚀 Sprint Management
@@ -573,12 +573,12 @@ export default function ProjectPage({ params }) {
                 {/* Modal to view/manage members */}
                 {showMembersModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw] max-h-[80vh] overflow-y-auto">
+                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] max-h-[80vh] overflow-y-auto border border-border">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold">Project Members</h2>
+                                <h2 className="text-xl font-bold text-card-foreground">Project Members</h2>
                                 <button
                                     onClick={() => setShowMembersModal(false)}
-                                    className="text-gray-500 hover:text-gray-700"
+                                    className="text-muted-foreground hover:text-card-foreground transition-colors"
                                 >
                                     ✕
                                 </button>
@@ -586,11 +586,11 @@ export default function ProjectPage({ params }) {
                             <div className="space-y-3">
                                 {Array.isArray(members) && members.length > 0 ? (
                                     members.map((member) => (
-                                        <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                        <div key={member.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
                                             <div>
-                                                <div className="font-medium">{member.user.name}</div>
-                                                <div className="text-sm text-gray-600">{member.user.email}</div>
-                                                <div className="text-xs text-gray-500">
+                                                <div className="font-medium text-foreground">{member.user.name}</div>
+                                                <div className="text-sm text-muted-foreground">{member.user.email}</div>
+                                                <div className="text-xs text-muted-foreground">
                                                     {(() => {
                                                         if (isProjectOwner && member.userId === project.ownerId) {
                                                             return 'Project Admin';
@@ -606,7 +606,7 @@ export default function ProjectPage({ params }) {
                                                 <button
                                                     onClick={() => handleRemoveMember(member.userId)}
                                                     disabled={removingMember === member.userId}
-                                                    className={`text-red-500 hover:text-red-700 px-2 py-1 rounded ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
+                                                    className={`text-destructive hover:opacity-90 px-2 py-1 rounded transition-opacity ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
                                                         }`}
                                                 >
                                                     {removingMember === member.userId ? 'Removing...' : 'Remove'}
@@ -615,19 +615,19 @@ export default function ProjectPage({ params }) {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="text-center py-4 text-gray-500">
+                                    <div className="text-center py-4 text-muted-foreground">
                                         No members in this project
                                     </div>
                                 )}
                             </div>
                             {canManageMembers && (
-                                <div className="mt-4 pt-4 border-t">
+                                <div className="mt-4 pt-4 border-t border-border">
                                     <button
                                         onClick={() => {
                                             setShowMembersModal(false);
                                             setShowAddMemberModal(true);
                                         }}
-                                        className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                        className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                                     >
                                         Add New Member
                                     </button>
@@ -639,28 +639,28 @@ export default function ProjectPage({ params }) {
 
                 {showAddMemberModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-96">
-                            <h2 className="text-xl font-bold mb-4">Add Member</h2>
+                        <div className="bg-card p-6 rounded-lg w-96 border border-border">
+                            <h2 className="text-xl font-bold mb-4 text-card-foreground">Add Member</h2>
                             <form onSubmit={handleAddMember}>
                                 <input
                                     type="email"
                                     value={newMemberEmail}
                                     onChange={(e) => setNewMemberEmail(e.target.value)}
                                     placeholder="Enter member's email"
-                                    className="w-full p-2 border rounded-lg mb-4"
+                                    className="w-full p-2 border border-border rounded-lg mb-4 bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required
                                 />
                                 <div className="flex justify-end gap-2">
                                     <button
                                         type="button"
                                         onClick={() => setShowAddMemberModal(false)}
-                                        className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                        className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                                     >
                                         Add
                                     </button>
@@ -673,11 +673,11 @@ export default function ProjectPage({ params }) {
                 {/* Modal to edit project */}
                 {showEditProjectModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
-                            <h2 className="text-xl font-bold mb-4">Edit Project</h2>
+                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
+                            <h2 className="text-xl font-bold mb-4 text-card-foreground">Edit Project</h2>
                             <form onSubmit={handleSaveProject}>
                                 <div className="mb-4">
-                                    <label htmlFor="editProjectName" className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label htmlFor="editProjectName" className="block text-card-foreground text-sm font-bold mb-2">
                                         Project Name
                                     </label>
                                     <input
@@ -685,20 +685,20 @@ export default function ProjectPage({ params }) {
                                         type="text"
                                         value={editProjectData.name}
                                         onChange={(e) => setEditProjectData(prev => ({ ...prev, name: e.target.value }))}
-                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                                         required
                                         disabled={editingProject}
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="editProjectDescription" className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label htmlFor="editProjectDescription" className="block text-card-foreground text-sm font-bold mb-2">
                                         Description (optional)
                                     </label>
                                     <textarea
                                         id="editProjectDescription"
                                         value={editProjectData.description}
                                         onChange={(e) => setEditProjectData(prev => ({ ...prev, description: e.target.value }))}
-                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                                         rows={3}
                                         disabled={editingProject}
                                     />
@@ -707,7 +707,7 @@ export default function ProjectPage({ params }) {
                                     <button
                                         type="button"
                                         onClick={() => setShowEditProjectModal(false)}
-                                        className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
                                         disabled={editingProject}
                                     >
                                         Cancel
@@ -715,9 +715,9 @@ export default function ProjectPage({ params }) {
                                     <button
                                         type="submit"
                                         className={`${editingProject
-                                            ? 'bg-blue-400 cursor-not-allowed'
-                                            : 'bg-blue-500 hover:bg-blue-600'
-                                            } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                                            ? 'bg-primary opacity-50 cursor-not-allowed'
+                                            : 'bg-primary hover:opacity-90'
+                                            } text-primary-foreground px-4 py-2 rounded-lg transition-opacity flex items-center gap-2`}
                                         disabled={editingProject}
                                     >
                                         {editingProject ? (
@@ -738,42 +738,42 @@ export default function ProjectPage({ params }) {
                 {/* Project deletion confirmation modal */}
                 {showDeleteConfirmModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
                             <div className="flex items-center mb-4">
-                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
-                                    <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
+                                    <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                     </svg>
                                 </div>
                                 <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-gray-900">
+                                    <h3 className="text-lg font-medium text-card-foreground">
                                         {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
                                     </h3>
                                 </div>
                             </div>
                             <div className="mb-6">
                                 {deleteConfirmStep === 1 ? (
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-muted-foreground">
                                         Are you sure you want to delete this project? This action cannot be undone and will remove all associated tasks, members, and messages.
                                     </p>
                                 ) : (
-                                    <p className="text-sm text-gray-500">
-                                        <strong className="text-red-600">WARNING:</strong> This action will PERMANENTLY delete the project "{project.name}" and all its data. Continue?
+                                    <p className="text-sm text-muted-foreground">
+                                        <strong className="text-destructive">WARNING:</strong> This action will PERMANENTLY delete the project "{project.name}" and all its data. Continue?
                                     </p>
                                 )}
                             </div>
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={handleCancelDelete}
-                                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmDelete}
-                                    className={`px-4 py-2 rounded-lg text-white font-medium ${deleteConfirmStep === 1
-                                        ? 'bg-yellow-500 hover:bg-yellow-600'
-                                        : 'bg-red-500 hover:bg-red-600'
+                                    className={`px-4 py-2 rounded-lg text-white font-medium transition-opacity ${deleteConfirmStep === 1
+                                        ? 'bg-warning hover:opacity-90'
+                                        : 'bg-destructive hover:opacity-90'
                                         }`}
                                 >
                                     {deleteConfirmStep === 1 ? 'Continue' : 'Delete Permanently'}
@@ -786,34 +786,34 @@ export default function ProjectPage({ params }) {
                 {/* Confirmation modal to remove member */}
                 {showRemoveMemberModal && memberToRemove && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
+                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
                             <div className="flex items-center mb-4">
-                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
-                                    <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
+                                    <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                     </svg>
                                 </div>
                                 <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-gray-900">
+                                    <h3 className="text-lg font-medium text-card-foreground">
                                         Remove Member
                                     </h3>
                                 </div>
                             </div>
                             <div className="mb-6">
-                                <p className="text-sm text-gray-500">
-                                    Are you sure you want to remove <strong>{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) from the project?
+                                <p className="text-sm text-muted-foreground">
+                                    Are you sure you want to remove <strong className="text-card-foreground">{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) from the project?
                                 </p>
                             </div>
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={handleCancelRemoveMember}
-                                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmRemoveMember}
-                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium"
+                                    className="px-4 py-2 bg-destructive hover:opacity-90 text-destructive-foreground rounded-lg font-medium transition-opacity"
                                 >
                                     Remove Member
                                 </button>

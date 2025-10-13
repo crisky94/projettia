@@ -3,24 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: 255, 255, 255;
-  --foreground: 23, 23, 23;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 10, 10, 10;
-    --foreground: 237, 237, 237;
-  }
+  /* Tema oscuro forzado con alto contraste */
+  --background: 15, 23, 42;
+  /* Fondo principal muy oscuro (slate-900) */
+  --foreground: 248, 250, 252;
+  /* Texto principal muy claro (slate-50) */
+  --card: 30, 41, 59;
+  /* Fondo de tarjetas (slate-800) */
+  --card-foreground: 226, 232, 240;
+  /* Texto en tarjetas (slate-200) */
+  --border: 71, 85, 105;
+  /* Bordes (slate-600) */
+  --primary: 59, 130, 246;
+  /* Azul brillante para acciones */
+  --primary-foreground: 248, 250, 252;
+  /* Texto en botones primarios */
+  --muted: 51, 65, 85;
+  /* Fondos apagados (slate-700) */
+  --muted-foreground: 148, 163, 184;
+  /* Texto apagado (slate-400) */
+  --accent: 168, 85, 247;
+  /* Púrpura para acentos */
+  --destructive: 239, 68, 68;
+  /* Rojo para errores */
+  --success: 34, 197, 94;
+  /* Verde para éxito */
+  --warning: 245, 158, 11;
+  /* Amarillo para advertencias */
 }
 
 body {
   color: rgb(var(--foreground));
   background: rgb(var(--background));
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Personalización del scrollbar para tema oscuro */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--muted-foreground));
 }

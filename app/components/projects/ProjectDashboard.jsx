@@ -94,12 +94,12 @@ export default function ProjectDashboard({ userId }) {
     };
 
     const LoadingSpinner = () => (
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
     );
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex items-center justify-center min-h-screen bg-background">
                 <LoadingSpinner />
             </div>
         );
@@ -107,11 +107,11 @@ export default function ProjectDashboard({ userId }) {
 
     if (error && !loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <div className="text-red-500 mb-4">{error}</div>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+                <div className="text-destructive mb-4">{error}</div>
                 <button
                     onClick={fetchProjects}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
                     Try Again
                 </button>
@@ -120,12 +120,12 @@ export default function ProjectDashboard({ userId }) {
     }
 
     return (
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-background min-h-screen">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">My Projects</h1>
+                <h1 className="text-3xl font-bold text-foreground">My Projects</h1>
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
                     Create Project
                 </button>
@@ -133,10 +133,10 @@ export default function ProjectDashboard({ userId }) {
 
             {projects.length === 0 ? (
                 <div className="text-center py-12">
-                    <h3 className="text-xl text-gray-600 mb-4">No projects yet</h3>
+                    <h3 className="text-xl text-muted-foreground mb-4">No projects yet</h3>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="text-blue-500 hover:text-blue-600"
+                        className="text-primary hover:opacity-80 transition-opacity"
                     >
                         Create your first project
                     </button>
@@ -147,18 +147,18 @@ export default function ProjectDashboard({ userId }) {
                         <Link
                             key={project.id}
                             href={`/projects/${project.id}`}
-                            className="block bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+                            className="block bg-card rounded-lg shadow hover:shadow-lg transition-shadow duration-200 border border-border"
                         >
                             <div className="p-6">
-                                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                                <h2 className="text-xl font-semibold text-card-foreground mb-2">
                                     {project.name}
                                 </h2>
                                 {project.description && (
-                                    <p className="text-gray-600 mb-4 line-clamp-2">
+                                    <p className="text-muted-foreground mb-4 line-clamp-2">
                                         {project.description}
                                     </p>
                                 )}
-                                <div className="flex justify-between items-center text-sm text-gray-500">
+                                <div className="flex justify-between items-center text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <svg
                                             className="w-4 h-4"
@@ -196,11 +196,11 @@ export default function ProjectDashboard({ userId }) {
 
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-96 max-w-[90vw]">
-                        <h2 className="text-xl font-bold mb-4">Create New Project</h2>
+                    <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
+                        <h2 className="text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
                         <form onSubmit={handleCreateProject}>
                             <div className="mb-4">
-                                <label htmlFor="projectName" className="block text-gray-700 text-sm font-bold mb-2">
+                                <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
                                     Project Name
                                 </label>
                                 <input
@@ -208,20 +208,20 @@ export default function ProjectDashboard({ userId }) {
                                     type="text"
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
-                                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                                     required
                                     disabled={creating}
                                 />
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="projectDescription" className="block text-gray-700 text-sm font-bold mb-2">
+                                <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
                                     Description (optional)
                                 </label>
                                 <textarea
                                     id="projectDescription"
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                                     rows={3}
                                     disabled={creating}
                                 />
@@ -230,7 +230,7 @@ export default function ProjectDashboard({ userId }) {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
                                     disabled={creating}
                                 >
                                     Cancel
@@ -238,9 +238,9 @@ export default function ProjectDashboard({ userId }) {
                                 <button
                                     type="submit"
                                     className={`${creating
-                                        ? 'bg-blue-400 cursor-not-allowed'
-                                        : 'bg-blue-500 hover:bg-blue-600'
-                                        } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                                        ? 'bg-primary opacity-50 cursor-not-allowed'
+                                        : 'bg-primary hover:opacity-90'
+                                        } text-primary-foreground px-4 py-2 rounded-lg transition-opacity flex items-center gap-2`}
                                     disabled={creating}
                                 >
                                     {creating ? (

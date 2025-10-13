@@ -20,12 +20,12 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="font-sans antialiased bg-gray-50">
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
+        <body className="font-sans antialiased bg-background text-foreground">
+          <header className="flex justify-end items-center p-4 gap-4 h-16 bg-card border-b border-border">
             <SignedOut>
               <SignInButton />
               <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                <button className="bg-primary text-primary-foreground rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:opacity-90 transition-opacity">
                   Sign Up
                 </button>
               </SignUpButton>
