@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 export default function Navbar({ user }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -41,7 +42,8 @@ export default function Navbar({ user }) {
                     <div className="sm:hidden flex items-center">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="text-card-foreground hover:text-muted-foreground p-2 rounded-md transition-colors"
+                            className="text-card-foreground hover:text-muted-foreground p-2 rounded-md transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 {isMobileMenuOpen ? (
@@ -60,24 +62,24 @@ export default function Navbar({ user }) {
                         <div className="px-2 pt-2 pb-3 space-y-1">
                             <Link
                                 href="/projects"
-                                className="block px-3 py-2 text-card-foreground hover:bg-muted rounded-md transition-colors"
+                                className="flex px-3 py-3 text-card-foreground hover:bg-muted rounded-md transition-colors min-h-[44px] items-center"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Projects
                             </Link>
                             {user ? (
                                 <>
-                                    <div className="block px-3 py-2 text-muted-foreground text-sm">
+                                    <div className="flex px-3 py-3 text-muted-foreground text-sm min-h-[44px] items-center">
                                         {user.name}
                                     </div>
-                                    <button className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-card-foreground transition-colors">
+                                    <button className="flex w-full text-left px-3 py-3 text-muted-foreground hover:text-card-foreground transition-colors min-h-[44px] items-center">
                                         Logout
                                     </button>
                                 </>
                             ) : (
                                 <Link
                                     href="/login"
-                                    className="block px-3 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
+                                    className="flex px-3 py-3 text-muted-foreground hover:text-card-foreground transition-colors min-h-[44px] items-center"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     Login
@@ -90,3 +92,9 @@ export default function Navbar({ user }) {
         </nav>
     );
 }
+
+Navbar.propTypes = {
+    user: PropTypes.shape({
+        name: PropTypes.string.isRequired
+    })
+};

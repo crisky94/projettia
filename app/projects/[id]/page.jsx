@@ -833,11 +833,12 @@ export default function ProjectPage({ params }) {
                     )}
                 </div>
             </div>
-            );
+        </div>
+    );
 }
 
-            ProjectPage.propTypes = {
-                params: PropTypes.shape({
-                id: PropTypes.string.isRequired,
+ProjectPage.propTypes = {
+    params: PropTypes.shape({
+        id: PropTypes.string.isRequired,
     }).isRequired,
 };

@@ -15,17 +15,17 @@ export default function Home() {
   }, [isLoaded, isSignedIn, router]);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
-      <div className="text-center max-w-2xl mx-auto px-4">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-8">
+      <div className="text-center max-w-2xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
           Welcome to WE Team Work
         </h1>
-        <p className="text-lg sm:text-xl text-gray-600 mb-8">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
           Collaborate with your team in real-time, manage tasks efficiently, and communicate seamlessly.
         </p>
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-gray-800">Get Started</h2>
-          <p className="text-gray-600">
+        <div className="space-y-4 sm:space-y-6">
+          <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Get Started</h2>
+          <p className="text-muted-foreground leading-relaxed">
             Sign in or create an account to begin collaborating with your team.
           </p>
         </div>
