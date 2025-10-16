@@ -69,7 +69,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             style={style}
             {...attributes}
             {...listeners}
-            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden
+            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden active:scale-95
                 ${isAdmin ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl' : 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'}
                 ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}
                 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
@@ -127,9 +127,9 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 {isAdmin && (
                     <button
                         onClick={() => onUpdateTask('edit', task)}
-                        className="mt-2 px-2 sm:px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-medium shadow-sm transition-all duration-200"
+                        className="mt-3 w-full sm:w-auto px-3 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-all duration-200"
                     >
-                        Editar
+                        ✏️ Editar
                     </button>
                 )}
 
@@ -376,9 +376,10 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                             )}
                         </div>
                     ) : (
-                        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+                        /* Mobile: Grid layout, Desktop: Horizontal scroll */
+                        <div className="grid grid-cols-1 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-2 gap-4">
                             {tasks.filter(task => task && task.id).map((task) => (
-                                <div key={task.id} className="flex-shrink-0 w-80">
+                                <div key={task.id} className="w-full sm:flex-shrink-0 sm:w-80">
                                     <TaskCard
                                         task={task}
                                         isAdmin={isAdmin}
@@ -392,12 +393,12 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
 
                             {/* Drop zone indicator when dragging */}
                             {isOver && tasks.length > 0 && (
-                                <div className="flex-shrink-0 w-80 h-full flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
+                                <div className="w-full sm:flex-shrink-0 sm:w-80 h-24 sm:h-full flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
                                     <div className="flex flex-col items-center gap-2">
-                                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <span className="font-medium text-sm">Soltar aquí</span>
+                                        <span className="font-medium text-xs sm:text-sm">Soltar aquí</span>
                                     </div>
                                 </div>
                             )}
@@ -878,27 +879,26 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
         <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
 
             {/* Page header */}
-            <div className="sm:flex sm:justify-between sm:items-center mb-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
                 {/* Left: Title */}
-                <div className="mb-4 sm:mb-0">
-                    <h1 className="text-2xl md:text-3xl text-foreground font-bold">Tablero de Tareas</h1>
+                <div>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl text-foreground font-bold">Tablero de Tareas</h1>
                 </div>
 
                 {/* Right: Actions */}
-                <div className="grid grid-flow-row sm:auto-row-max justify-start sm:justify-end gap-2">
-
-
+                <div className="flex gap-2">
                     {/* Add Task button */}
                     {isAdmin && (
                         <button
                             onClick={() => setShowAddTaskModal(true)}
-                            className="btn  bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm"
+                            className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm hover:opacity-90 transition-opacity"
                         >
-                            <span className="flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            <span className="flex items-center justify-center gap-2">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
-                                New Task
+                                <span className="hidden sm:inline">New Task</span>
+                                <span className="sm:hidden">Add Task</span>
                             </span>
                         </button>
                     )}

@@ -445,23 +445,23 @@ export default function ProjectPage({ params }) {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center mb-6">
-                    <div className="flex items-center gap-4">
+            <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
+                <div className="flex flex-col gap-4 mb-6">
+                    <div className="flex items-center justify-between">
                         <button
                             onClick={() => window.location.href = '/projects'}
                             className="px-3 py-2 bg-card hover:bg-muted text-card-foreground rounded-lg font-medium shadow-sm transition-all duration-200 flex items-center gap-2 border border-border"
                         >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
-                            Volver a proyectos
+                            <span className="hidden sm:inline">Volver a proyectos</span>
+                            <span className="sm:hidden">Volver</span>
                         </button>
-                        <h1 className="text-3xl font-bold text-foreground uppercase">{project.name}</h1>
                         {canManageMembers && (
                             <button
                                 onClick={handleEditProject}
-                                className="text-muted-foreground hover:text-foreground p-1 rounded transition-colors"
+                                className="text-muted-foreground hover:text-foreground p-2 rounded transition-colors"
                                 title="Edit project"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -470,364 +470,374 @@ export default function ProjectPage({ params }) {
                             </button>
                         )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground uppercase line-clamp-2">{project.name}</h1>
+                        <div className="flex flex-col sm:flex-row gap-2">
 
-                        <button onClick={() => setShowMembersModal(true)} className="btn bg-card text-card-foreground hover:bg-muted border border-border px-3 py-2 rounded-lg text-sm font-medium transition-colors">
-                            <span className="flex items-center gap-2">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.9281 19.6343H20.0657C20.2539 19.6375 20.4401 19.5951 20.6083 19.5106C20.7766 19.4261 20.9218 19.3021 21.0316 19.1491C21.1413 18.9962 21.2124 18.8189 21.2386 18.6325C21.2649 18.4461 21.2455 18.2561 21.1822 18.0788C20.637 16.9119 19.7739 15.9223 18.692 15.2236C17.6101 14.5248 16.3531 14.1451 15.0652 14.1281" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M15.0652 11.3701C15.5465 11.3701 16.023 11.2754 16.4676 11.0912C16.9122 10.907 17.3161 10.6371 17.6564 10.2968C17.9967 9.95657 18.2666 9.5526 18.4508 9.10801C18.6349 8.66341 18.7297 8.18691 18.7297 7.70568C18.731 7.22366 18.6371 6.74612 18.4535 6.30042C18.2699 5.85473 18.0002 5.44964 17.6598 5.10835C17.3194 4.76706 16.915 4.49628 16.4698 4.31153C16.0246 4.12678 15.5473 4.03168 15.0652 4.03168" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M14.0251 20.8271C14.3771 20.8263 14.7221 20.7281 15.0218 20.5434C15.3215 20.3587 15.5643 20.0947 15.7233 19.7807C15.8823 19.4666 15.9513 19.1146 15.9228 18.7638C15.8942 18.4129 15.7692 18.0767 15.5615 17.7925C14.8329 16.8246 13.8947 16.0342 12.8171 15.4805C11.7396 14.9269 10.5507 14.6243 9.33953 14.5956C8.1284 14.6243 6.93948 14.9269 5.86193 15.4805C4.78437 16.0342 3.84614 16.8246 3.11758 17.7925C2.90988 18.0767 2.78484 18.4129 2.75629 18.7638C2.72774 19.1146 2.79678 19.4666 2.95579 19.7807C3.11481 20.0947 3.35759 20.3587 3.6573 20.5434C3.957 20.7281 4.30195 20.8263 4.65398 20.8271H14.0251Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9.3395 11.4847C10.4413 11.4822 11.4972 11.0427 12.2754 10.2627C13.0536 9.48267 13.4907 8.42583 13.4907 7.324C13.4907 6.22305 13.0533 5.16718 12.2748 4.38869C11.4963 3.6102 10.4405 3.17285 9.3395 3.17285C8.23855 3.17285 7.18269 3.6102 6.4042 4.38869C5.62571 5.16718 5.18835 6.22305 5.18835 7.324C5.18835 8.42583 5.6254 9.48267 6.40362 10.2627C7.18184 11.0427 8.23768 11.4822 9.3395 11.4847Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-
-                                Members ({members.length})
-                            </span>
-                        </button>
-                        {isProjectOwner && (
-                            <button
-                                onClick={handleDeleteProject}
-                                className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                                title="Delete Project"
-                            >
-                                <span className="flex items-center gap-2">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.47058 6.01471V18.5294C5.47058 19.251 5.75721 19.943 6.26742 20.4532C6.77763 20.9634 7.46962 21.25 8.19117 21.25H15.8088C16.5304 21.25 17.2224 20.9634 17.7326 20.4532C18.2428 19.943 18.5294 19.251 18.5294 18.5294V6.01471" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M3.29413 6.01471H20.7059" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M8.73529 6.01471V4.38235C8.73529 3.94943 8.90727 3.53423 9.2134 3.2281C9.51952 2.92198 9.93472 2.75 10.3676 2.75H13.6323C14.0653 2.75 14.4805 2.92198 14.7866 3.2281C15.0927 3.53423 15.2647 3.94943 15.2647 4.38235V6.01471" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M9.82352 16.9915V11.5535" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M14.1765 16.9915V11.5535" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <button onClick={() => setShowMembersModal(true)} className="w-full sm:w-auto bg-card text-card-foreground hover:bg-muted border border-border px-4 py-3 sm:py-2 rounded-lg text-sm font-medium transition-colors">
+                                <span className="flex items-center justify-center gap-2">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.9281 19.6343H20.0657C20.2539 19.6375 20.4401 19.5951 20.6083 19.5106C20.7766 19.4261 20.9218 19.3021 21.0316 19.1491C21.1413 18.9962 21.2124 18.8189 21.2386 18.6325C21.2649 18.4461 21.2455 18.2561 21.1822 18.0788C20.637 16.9119 19.7739 15.9223 18.692 15.2236C17.6101 14.5248 16.3531 14.1451 15.0652 14.1281" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M15.0652 11.3701C15.5465 11.3701 16.023 11.2754 16.4676 11.0912C16.9122 10.907 17.3161 10.6371 17.6564 10.2968C17.9967 9.95657 18.2666 9.5526 18.4508 9.10801C18.6349 8.66341 18.7297 8.18691 18.7297 7.70568C18.731 7.22366 18.6371 6.74612 18.4535 6.30042C18.2699 5.85473 18.0002 5.44964 17.6598 5.10835C17.3194 4.76706 16.915 4.49628 16.4698 4.31153C16.0246 4.12678 15.5473 4.03168 15.0652 4.03168" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M14.0251 20.8271C14.3771 20.8263 14.7221 20.7281 15.0218 20.5434C15.3215 20.3587 15.5643 20.0947 15.7233 19.7807C15.8823 19.4666 15.9513 19.1146 15.9228 18.7638C15.8942 18.4129 15.7692 18.0767 15.5615 17.7925C14.8329 16.8246 13.8947 16.0342 12.8171 15.4805C11.7396 14.9269 10.5507 14.6243 9.33953 14.5956C8.1284 14.6243 6.93948 14.9269 5.86193 15.4805C4.78437 16.0342 3.84614 16.8246 3.11758 17.7925C2.90988 18.0767 2.78484 18.4129 2.75629 18.7638C2.72774 19.1146 2.79678 19.4666 2.95579 19.7807C3.11481 20.0947 3.35759 20.3587 3.6573 20.5434C3.957 20.7281 4.30195 20.8263 4.65398 20.8271H14.0251Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M9.3395 11.4847C10.4413 11.4822 11.4972 11.0427 12.2754 10.2627C13.0536 9.48267 13.4907 8.42583 13.4907 7.324C13.4907 6.22305 13.0533 5.16718 12.2748 4.38869C11.4963 3.6102 10.4405 3.17285 9.3395 3.17285C8.23855 3.17285 7.18269 3.6102 6.4042 4.38869C5.62571 5.16718 5.18835 6.22305 5.18835 7.324C5.18835 8.42583 5.6254 9.48267 6.40362 10.2627C7.18184 11.0427 8.23768 11.4822 9.3395 11.4847Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-
-                                    Delete Project
+                                    <span className="hidden sm:inline">Members ({members.length})</span>
+                                    <span className="sm:hidden">Members</span>
                                 </span>
                             </button>
-                        )}
-                    </div>
-                </div>
-
-                {project.description && (
-                    <div className="mb-6 p-4 bg-card rounded-lg border border-border">
-                        <p className="text-card-foreground">{project.description}</p>
-                    </div>
-                )}
-
-                {/* Navigation Tabs */}
-                <div className="border-b border-border mb-6">
-                    <nav className="flex space-x-8" aria-label="Tabs">
-                        <button
-                            onClick={() => setActiveTab('kanban')}
-                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'kanban'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                }`}
-                        >
-                            📋 Task Board
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('sprints')}
-                            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'sprints'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                }`}
-                        >
-                            🚀 Sprint Management
-                        </button>
-                    </nav>
-                </div>
-
-                {/* Tab Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2">
-                        {activeTab === 'kanban' && (
-                            <TaskBoard
-                                projectId={project.id}
-                                initialTasks={tasks}
-                                isAdmin={canManageMembers}
-                                sprints={sprints}
-                                onTaskUpdate={handleTaskUpdate}
-                                onTaskDelete={handleTaskDelete}
-                                onTaskCreate={handleTaskCreate}
-                            />
-                        )}
-                        {activeTab === 'sprints' && (
-                            <SprintManager
-                                projectId={project.id}
-                                isAdmin={canManageMembers}
-                                allMembers={members}
-                                tasks={tasks}
-                                onTaskUpdate={handleTaskUpdate}
-                                onTaskDelete={handleTaskDelete}
-                                onTaskCreate={handleTaskCreate}
-                                onRefreshTasks={refreshTasks}
-                                onRefreshSprints={refreshSprints}
-                                onDeleteSprint={handleDeleteSprint}
-                            />
-                        )}
-                    </div>
-                    <div>
-                        {/* <Chat projectId={project.id} user={user} /> */}
-                    </div>
-                </div>
-
-                {/* Modal to view/manage members */}
-                {showMembersModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] max-h-[80vh] overflow-y-auto border border-border">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold text-card-foreground">Project Members</h2>
+                            {isProjectOwner && (
                                 <button
-                                    onClick={() => setShowMembersModal(false)}
-                                    className="text-muted-foreground hover:text-card-foreground transition-colors"
+                                    onClick={handleDeleteProject}
+                                    className="w-full sm:w-auto bg-destructive text-destructive-foreground px-4 py-3 sm:py-2 rounded-lg hover:opacity-90 transition-opacity"
+                                    title="Delete Project"
                                 >
-                                    ✕
+                                    <span className="flex items-center justify-center gap-2">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.47058 6.01471V18.5294C5.47058 19.251 5.75721 19.943 6.26742 20.4532C6.77763 20.9634 7.46962 21.25 8.19117 21.25H15.8088C16.5304 21.25 17.2224 20.9634 17.7326 20.4532C18.2428 19.943 18.5294 19.251 18.5294 18.5294V6.01471" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M3.29413 6.01471H20.7059" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M8.73529 6.01471V4.38235C8.73529 3.94943 8.90727 3.53423 9.2134 3.2281C9.51952 2.92198 9.93472 2.75 10.3676 2.75H13.6323C14.0653 2.75 14.4805 2.92198 14.7866 3.2281C15.0927 3.53423 15.2647 3.94943 15.2647 4.38235V6.01471" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M9.82352 16.9915V11.5535" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M14.1765 16.9915V11.5535" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        <span className="hidden sm:inline">Delete Project</span>
+                                        <span className="sm:hidden">Delete</span>
+                                    </span>
                                 </button>
-                            </div>
-                            <div className="space-y-3">
-                                {Array.isArray(members) && members.length > 0 ? (
-                                    members.map((member) => (
-                                        <div key={member.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
-                                            <div>
-                                                <div className="font-medium text-foreground">{member.user.name}</div>
-                                                <div className="text-sm text-muted-foreground">{member.user.email}</div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    {(() => {
-                                                        if (isProjectOwner && member.userId === project.ownerId) {
-                                                            return 'Project Admin';
-                                                        } else if (member.role === 'ADMIN') {
-                                                            return 'Admin';
-                                                        } else {
-                                                            return 'Member';
-                                                        }
-                                                    })()}
-                                                </div>
-                                            </div>
-                                            {canManageMembers && member.userId !== project.ownerId && (
-                                                <button
-                                                    onClick={() => handleRemoveMember(member.userId)}
-                                                    disabled={removingMember === member.userId}
-                                                    className={`text-destructive hover:opacity-90 px-2 py-1 rounded transition-opacity ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
-                                                        }`}
-                                                >
-                                                    {removingMember === member.userId ? 'Removing...' : 'Remove'}
-                                                </button>
-                                            )}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-center py-4 text-muted-foreground">
-                                        No members in this project
-                                    </div>
-                                )}
-                            </div>
-                            {canManageMembers && (
-                                <div className="mt-4 pt-4 border-t border-border">
-                                    <button
-                                        onClick={() => {
-                                            setShowMembersModal(false);
-                                            setShowAddMemberModal(true);
-                                        }}
-                                        className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                                    >
-                                        Add New Member
-                                    </button>
-                                </div>
                             )}
                         </div>
                     </div>
-                )}
 
-                {showAddMemberModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-card p-6 rounded-lg w-96 border border-border">
-                            <h2 className="text-xl font-bold mb-4 text-card-foreground">Add Member</h2>
-                            <form onSubmit={handleAddMember}>
-                                <input
-                                    type="email"
-                                    value={newMemberEmail}
-                                    onChange={(e) => setNewMemberEmail(e.target.value)}
-                                    placeholder="Enter member's email"
-                                    className="w-full p-2 border border-border rounded-lg mb-4 bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
-                                    required
+                    {project.description && (
+                        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-card rounded-lg border border-border">
+                            <p className="text-card-foreground text-sm sm:text-base">{project.description}</p>
+                        </div>
+                    )}
+
+                    {/* Navigation Tabs */}
+                    <div className="border-b border-border mb-4 sm:mb-6">
+                        <nav className="flex space-x-2 sm:space-x-8 overflow-x-auto" aria-label="Tabs">
+                            <button
+                                onClick={() => setActiveTab('kanban')}
+                                className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'kanban'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                    }`}
+                            >
+                                <span className="flex items-center gap-2">
+                                    <span>📋</span>
+                                    <span className="hidden sm:inline">Task Board</span>
+                                    <span className="sm:hidden">Tasks</span>
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('sprints')}
+                                className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'sprints'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                    }`}
+                            >
+                                <span className="flex items-center gap-2">
+                                    <span>🚀</span>
+                                    <span className="hidden sm:inline">Sprint Management</span>
+                                    <span className="sm:hidden">Sprints</span>
+                                </span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    {/* Tab Content */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                        <div className="lg:col-span-2">
+                            {activeTab === 'kanban' && (
+                                <TaskBoard
+                                    projectId={project.id}
+                                    initialTasks={tasks}
+                                    isAdmin={canManageMembers}
+                                    sprints={sprints}
+                                    onTaskUpdate={handleTaskUpdate}
+                                    onTaskDelete={handleTaskDelete}
+                                    onTaskCreate={handleTaskCreate}
                                 />
-                                <div className="flex justify-end gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowAddMemberModal(false)}
-                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                            </form>
+                            )}
+                            {activeTab === 'sprints' && (
+                                <SprintManager
+                                    projectId={project.id}
+                                    isAdmin={canManageMembers}
+                                    allMembers={members}
+                                    tasks={tasks}
+                                    onTaskUpdate={handleTaskUpdate}
+                                    onTaskDelete={handleTaskDelete}
+                                    onTaskCreate={handleTaskCreate}
+                                    onRefreshTasks={refreshTasks}
+                                    onRefreshSprints={refreshSprints}
+                                    onDeleteSprint={handleDeleteSprint}
+                                />
+                            )}
+                        </div>
+                        <div>
+                            {/* <Chat projectId={project.id} user={user} /> */}
                         </div>
                     </div>
-                )}
 
-                {/* Modal to edit project */}
-                {showEditProjectModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                            <h2 className="text-xl font-bold mb-4 text-card-foreground">Edit Project</h2>
-                            <form onSubmit={handleSaveProject}>
-                                <div className="mb-4">
-                                    <label htmlFor="editProjectName" className="block text-card-foreground text-sm font-bold mb-2">
-                                        Project Name
-                                    </label>
-                                    <input
-                                        id="editProjectName"
-                                        type="text"
-                                        value={editProjectData.name}
-                                        onChange={(e) => setEditProjectData(prev => ({ ...prev, name: e.target.value }))}
-                                        className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
-                                        required
-                                        disabled={editingProject}
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="editProjectDescription" className="block text-card-foreground text-sm font-bold mb-2">
-                                        Description (optional)
-                                    </label>
-                                    <textarea
-                                        id="editProjectDescription"
-                                        value={editProjectData.description}
-                                        onChange={(e) => setEditProjectData(prev => ({ ...prev, description: e.target.value }))}
-                                        className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
-                                        rows={3}
-                                        disabled={editingProject}
-                                    />
-                                </div>
-                                <div className="flex justify-end gap-2">
+                    {/* Modal to view/manage members */}
+                    {showMembersModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-border">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-lg sm:text-xl font-bold text-card-foreground">Project Members</h2>
                                     <button
-                                        type="button"
-                                        onClick={() => setShowEditProjectModal(false)}
-                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
-                                        disabled={editingProject}
+                                        onClick={() => setShowMembersModal(false)}
+                                        className="text-muted-foreground hover:text-card-foreground transition-colors p-2 -m-2"
                                     >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className={`${editingProject
-                                            ? 'bg-primary opacity-50 cursor-not-allowed'
-                                            : 'bg-primary hover:opacity-90'
-                                            } text-primary-foreground px-4 py-2 rounded-lg transition-opacity flex items-center gap-2`}
-                                        disabled={editingProject}
-                                    >
-                                        {editingProject ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                                Saving...
-                                            </>
-                                        ) : (
-                                            'Save Changes'
-                                        )}
+                                        ✕
                                     </button>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
-
-                {/* Project deletion confirmation modal */}
-                {showDeleteConfirmModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                            <div className="flex items-center mb-4">
-                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
-                                    <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                    </svg>
+                                <div className="space-y-3">
+                                    {Array.isArray(members) && members.length > 0 ? (
+                                        members.map((member) => (
+                                            <div key={member.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border border-border rounded-lg bg-background gap-3">
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-foreground">{member.user.name}</div>
+                                                    <div className="text-sm text-muted-foreground truncate">{member.user.email}</div>
+                                                    <div className="text-xs text-muted-foreground">
+                                                        {(() => {
+                                                            if (isProjectOwner && member.userId === project.ownerId) {
+                                                                return 'Project Admin';
+                                                            } else if (member.role === 'ADMIN') {
+                                                                return 'Admin';
+                                                            } else {
+                                                                return 'Member';
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                {canManageMembers && member.userId !== project.ownerId && (
+                                                    <button
+                                                        onClick={() => handleRemoveMember(member.userId)}
+                                                        disabled={removingMember === member.userId}
+                                                        className={`w-full sm:w-auto text-destructive hover:opacity-90 px-3 py-2 rounded transition-opacity text-sm ${removingMember === member.userId ? 'opacity-50 cursor-not-allowed' : ''
+                                                            }`}
+                                                    >
+                                                        {removingMember === member.userId ? 'Removing...' : 'Remove'}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-4 text-muted-foreground">
+                                            No members in this project
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-card-foreground">
-                                        {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
-                                    </h3>
-                                </div>
-                            </div>
-                            <div className="mb-6">
-                                {deleteConfirmStep === 1 ? (
-                                    <p className="text-sm text-muted-foreground">
-                                        Are you sure you want to delete this project? This action cannot be undone and will remove all associated tasks, members, and messages.
-                                    </p>
-                                ) : (
-                                    <p className="text-sm text-muted-foreground">
-                                        <strong className="text-destructive">WARNING:</strong> This action will PERMANENTLY delete the project "{project.name}" and all its data. Continue?
-                                    </p>
+                                {canManageMembers && (
+                                    <div className="mt-4 pt-4 border-t border-border">
+                                        <button
+                                            onClick={() => {
+                                                setShowMembersModal(false);
+                                                setShowAddMemberModal(true);
+                                            }}
+                                            className="w-full bg-primary text-primary-foreground px-4 py-3 rounded-lg hover:opacity-90 transition-opacity font-medium"
+                                        >
+                                            + Add New Member
+                                        </button>
+                                    </div>
                                 )}
                             </div>
-                            <div className="flex justify-end gap-3">
-                                <button
-                                    onClick={handleCancelDelete}
-                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleConfirmDelete}
-                                    className={`px-4 py-2 rounded-lg text-white font-medium transition-opacity ${deleteConfirmStep === 1
-                                        ? 'bg-warning hover:opacity-90'
-                                        : 'bg-destructive hover:opacity-90'
-                                        }`}
-                                >
-                                    {deleteConfirmStep === 1 ? 'Continue' : 'Delete Permanently'}
-                                </button>
-                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* Confirmation modal to remove member */}
-                {showRemoveMemberModal && memberToRemove && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                            <div className="flex items-center mb-4">
-                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
-                                    <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                    </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-card-foreground">
-                                        Remove Member
-                                    </h3>
-                                </div>
-                            </div>
-                            <div className="mb-6">
-                                <p className="text-sm text-muted-foreground">
-                                    Are you sure you want to remove <strong className="text-card-foreground">{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) from the project?
-                                </p>
-                            </div>
-                            <div className="flex justify-end gap-3">
-                                <button
-                                    onClick={handleCancelRemoveMember}
-                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleConfirmRemoveMember}
-                                    className="px-4 py-2 bg-destructive hover:opacity-90 text-destructive-foreground rounded-lg font-medium transition-opacity"
-                                >
-                                    Remove Member
-                                </button>
+                    {showAddMemberModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md border border-border">
+                                <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Add Member</h2>
+                                <form onSubmit={handleAddMember}>
+                                    <input
+                                        type="email"
+                                        value={newMemberEmail}
+                                        onChange={(e) => setNewMemberEmail(e.target.value)}
+                                        placeholder="Enter member's email"
+                                        className="w-full p-3 border border-border rounded-lg mb-4 bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                                        required
+                                    />
+                                    <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAddMemberModal(false)}
+                                            className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground transition-colors border border-border rounded-lg"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
+                                        >
+                                            Add Member
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+
+                    {/* Modal to edit project */}
+                    {showEditProjectModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
+                                <h2 className="text-xl font-bold mb-4 text-card-foreground">Edit Project</h2>
+                                <form onSubmit={handleSaveProject}>
+                                    <div className="mb-4">
+                                        <label htmlFor="editProjectName" className="block text-card-foreground text-sm font-bold mb-2">
+                                            Project Name
+                                        </label>
+                                        <input
+                                            id="editProjectName"
+                                            type="text"
+                                            value={editProjectData.name}
+                                            onChange={(e) => setEditProjectData(prev => ({ ...prev, name: e.target.value }))}
+                                            className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                                            required
+                                            disabled={editingProject}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="editProjectDescription" className="block text-card-foreground text-sm font-bold mb-2">
+                                            Description (optional)
+                                        </label>
+                                        <textarea
+                                            id="editProjectDescription"
+                                            value={editProjectData.description}
+                                            onChange={(e) => setEditProjectData(prev => ({ ...prev, description: e.target.value }))}
+                                            className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                                            rows={3}
+                                            disabled={editingProject}
+                                        />
+                                    </div>
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEditProjectModal(false)}
+                                            className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
+                                            disabled={editingProject}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className={`${editingProject
+                                                ? 'bg-primary opacity-50 cursor-not-allowed'
+                                                : 'bg-primary hover:opacity-90'
+                                                } text-primary-foreground px-4 py-2 rounded-lg transition-opacity flex items-center gap-2`}
+                                            disabled={editingProject}
+                                        >
+                                            {editingProject ? (
+                                                <>
+                                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                'Save Changes'
+                                            )}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Project deletion confirmation modal */}
+                    {showDeleteConfirmModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
+                                <div className="flex items-center mb-4">
+                                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
+                                        <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <div className="ml-4">
+                                        <h3 className="text-lg font-medium text-card-foreground">
+                                            {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div className="mb-6">
+                                    {deleteConfirmStep === 1 ? (
+                                        <p className="text-sm text-muted-foreground">
+                                            Are you sure you want to delete this project? This action cannot be undone and will remove all associated tasks, members, and messages.
+                                        </p>
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">
+                                            <strong className="text-destructive">WARNING:</strong> This action will PERMANENTLY delete the project "{project.name}" and all its data. Continue?
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        onClick={handleCancelDelete}
+                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmDelete}
+                                        className={`px-4 py-2 rounded-lg text-white font-medium transition-opacity ${deleteConfirmStep === 1
+                                            ? 'bg-warning hover:opacity-90'
+                                            : 'bg-destructive hover:opacity-90'
+                                            }`}
+                                    >
+                                        {deleteConfirmStep === 1 ? 'Continue' : 'Delete Permanently'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Confirmation modal to remove member */}
+                    {showRemoveMemberModal && memberToRemove && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
+                                <div className="flex items-center mb-4">
+                                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
+                                        <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <div className="ml-4">
+                                        <h3 className="text-lg font-medium text-card-foreground">
+                                            Remove Member
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div className="mb-6">
+                                    <p className="text-sm text-muted-foreground">
+                                        Are you sure you want to remove <strong className="text-card-foreground">{memberToRemove.user.name}</strong> ({memberToRemove.user.email}) from the project?
+                                    </p>
+                                </div>
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        onClick={handleCancelRemoveMember}
+                                        className="px-4 py-2 text-muted-foreground hover:text-card-foreground border border-border rounded-lg hover:bg-muted transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmRemoveMember}
+                                        className="px-4 py-2 bg-destructive hover:opacity-90 text-destructive-foreground rounded-lg font-medium transition-opacity"
+                                    >
+                                        Remove Member
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
-    );
+            );
 }
 
-ProjectPage.propTypes = {
-    params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+            ProjectPage.propTypes = {
+                params: PropTypes.shape({
+                id: PropTypes.string.isRequired,
     }).isRequired,
 };

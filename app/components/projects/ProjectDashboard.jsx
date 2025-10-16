@@ -120,48 +120,48 @@ export default function ProjectDashboard({ userId }) {
     }
 
     return (
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-background min-h-screen">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-foreground">My Projects</h1>
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Projects</h1>
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                    className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-lg hover:opacity-90 transition-opacity font-medium text-center"
                 >
-                    Create Project
+                    + Create Project
                 </button>
             </div>
 
             {projects.length === 0 ? (
-                <div className="text-center py-12">
-                    <h3 className="text-xl text-muted-foreground mb-4">No projects yet</h3>
+                <div className="text-center py-12 px-4">
+                    <h3 className="text-lg sm:text-xl text-muted-foreground mb-4">No projects yet</h3>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="text-primary hover:opacity-80 transition-opacity"
+                        className="text-primary hover:opacity-80 transition-opacity text-sm sm:text-base"
                     >
                         Create your first project
                     </button>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {projects.map((project) => (
                         <Link
                             key={project.id}
                             href={`/projects/${project.id}`}
-                            className="block bg-card rounded-lg shadow hover:shadow-lg transition-shadow duration-200 border border-border"
+                            className="block bg-card rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-border active:scale-95"
                         >
-                            <div className="p-6">
-                                <h2 className="text-xl font-semibold text-card-foreground mb-2">
+                            <div className="p-4 sm:p-6">
+                                <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
                                     {project.name}
                                 </h2>
                                 {project.description && (
-                                    <p className="text-muted-foreground mb-4 line-clamp-2">
+                                    <p className="text-muted-foreground mb-3 sm:mb-4 line-clamp-2 text-sm sm:text-base">
                                         {project.description}
                                     </p>
                                 )}
-                                <div className="flex justify-between items-center text-sm text-muted-foreground">
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 text-xs sm:text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <svg
-                                            className="w-4 h-4"
+                                            className="w-3 h-3 sm:w-4 sm:h-4"
                                             fill="none"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
@@ -175,7 +175,7 @@ export default function ProjectDashboard({ userId }) {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <svg
-                                            className="w-4 h-4"
+                                            className="w-3 h-3 sm:w-4 sm:h-4"
                                             fill="none"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
@@ -195,9 +195,9 @@ export default function ProjectDashboard({ userId }) {
             )}
 
             {showCreateModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                        <h2 className="text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md border border-border">
+                        <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
                         <form onSubmit={handleCreateProject}>
                             <div className="mb-4">
                                 <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
@@ -208,12 +208,12 @@ export default function ProjectDashboard({ userId }) {
                                     type="text"
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
-                                    className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-base"
                                     required
                                     disabled={creating}
                                 />
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-6">
                                 <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
                                     Description (optional)
                                 </label>
@@ -221,26 +221,26 @@ export default function ProjectDashboard({ userId }) {
                                     id="projectDescription"
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-base resize-none"
                                     rows={3}
                                     disabled={creating}
                                 />
                             </div>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground transition-colors"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground transition-colors border border-border rounded-lg"
                                     disabled={creating}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`${creating
+                                    className={`w-full sm:w-auto ${creating
                                         ? 'bg-primary opacity-50 cursor-not-allowed'
                                         : 'bg-primary hover:opacity-90'
-                                        } text-primary-foreground px-4 py-2 rounded-lg transition-opacity flex items-center gap-2`}
+                                        } text-primary-foreground px-4 py-3 sm:py-2 rounded-lg transition-opacity flex items-center justify-center gap-2 font-medium`}
                                     disabled={creating}
                                 >
                                     {creating ? (

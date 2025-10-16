@@ -21,23 +21,32 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className="font-sans antialiased bg-background text-foreground">
-          <header className="flex justify-end items-center p-4 gap-4 h-16 bg-card border-b border-border">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-primary text-primary-foreground rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:opacity-90 transition-opacity">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton signOutUrl="/" />
-            </SignedIn>
+          <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 h-14 sm:h-16 bg-card border-b border-border">
+            <div className="flex items-center">
+              <h1 className="text-lg sm:text-xl font-bold text-foreground">WER Team</h1>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <SignedOut>
+                <SignInButton>
+                  <button className="text-sm px-3 py-2 rounded-lg border border-border hover:bg-muted transition-colors">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button className="bg-primary text-primary-foreground rounded-lg font-medium text-sm px-3 py-2 cursor-pointer hover:opacity-90 transition-opacity">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton signOutUrl="/" />
+              </SignedIn>
+            </div>
           </header>
           <SignedIn>
             <AuthRedirect />
           </SignedIn>
-          <main className="min-h-[calc(100vh-4rem)]">
+          <main className="min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)]">
             {children}
           </main>
           <ToastContainer
