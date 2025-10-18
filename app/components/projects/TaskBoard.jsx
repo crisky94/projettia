@@ -69,20 +69,19 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             style={style}
             {...attributes}
             {...listeners}
-            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden active:scale-95
-                ${isAdmin ? 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl' : 'cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-105 active:shadow-xl'}
+            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-95 active:shadow-xl
                 ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}
                 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
             `}
         >
-            {/* Delete button */}
+            {/* Delete button - Only for admins */}
             {isAdmin && onDeleteTask && (
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
                         onDeleteTask(task.id);
                     }}
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white rounded-lg w-7 h-7 flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-110"
+                    className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white rounded-lg w-8 h-8 sm:w-7 sm:h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-110 touch-action-manipulation min-h-[32px] min-w-[32px] sm:min-h-[28px] sm:min-w-[28px]"
                     title="Delete task"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,15 +122,14 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                     </div>
                 )}
 
-                {/* Botón Editar para admins */}
-                {isAdmin && (
-                    <button
-                        onClick={() => onUpdateTask('edit', task)}
-                        className="mt-3 w-full sm:w-auto px-3 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-all duration-200"
-                    >
-                        ✏️ Editar
-                    </button>
-                )}
+                {/* Botón Editar para todos los miembros */}
+                <button
+                    onClick={() => onUpdateTask('edit', task)}
+                    className="mt-3 w-full sm:w-auto px-4 py-3 sm:px-3 sm:py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-lg text-sm sm:text-xs md:text-sm font-medium shadow-sm transition-all duration-200 min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2"
+                >
+                    <span className="text-base sm:text-sm">✏️</span>
+                    <span>Editar</span>
+                </button>
 
                 {/* Sprint Assignment */}
                 <div className="mt-4 p-3 bg-muted rounded-lg">
@@ -147,17 +145,15 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                                     ) : (
                                         <span className="text-xs text-muted-foreground italic">No sprint assigned</span>
                                     )}
-                                    {isAdmin && (
-                                        <button
-                                            onClick={() => setIsEditingSprint(true)}
-                                            className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                                            title="Edit sprint assignment"
-                                        >
-                                            <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
-                                    )}
+                                    <button
+                                        onClick={() => setIsEditingSprint(true)}
+                                        className="ml-1 p-2 sm:p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
+                                        title="Edit sprint assignment"
+                                    >
+                                        <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
                                 </div>
                             ) : (
                                 <div className="flex items-center gap-2 flex-1">
@@ -181,7 +177,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                                     </select>
                                     <button
                                         onClick={() => setIsEditingSprint(false)}
-                                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                                        className="p-2 sm:p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
                                         title="Cancel editing"
                                     >
                                         <svg className="w-3 h-3 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,9 +357,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                             }`}>
                             {isOver ? (
                                 <div className="flex flex-col items-center gap-2">
-                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-240 240-480l56-56 144 144v-368h80v368l144-144 56 56-240 240Z" /></svg>
                                     <span className="font-medium">Suelta la tarea aquí</span>
                                 </div>
                             ) : (
@@ -443,6 +437,18 @@ TaskRow.propTypes = {
     onUpdateTask: PropTypes.func
 };
 
+/**
+ * TaskBoard Component
+ * 
+ * PERMISSIONS UPDATED:
+ * - ✅ All members can CREATE tasks (no longer admin-only)
+ * - ✅ All members can EDIT tasks (no longer admin-only)  
+ * - ✅ All members can EDIT sprint assignments (no longer admin-only)
+ * - ❌ Only admins can DELETE tasks (security restriction maintained)
+ * 
+ * This change allows better collaboration where any team member can contribute
+ * by creating and managing tasks, while keeping deletion restricted for data safety.
+ */
 const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
     // Estado para edición de tarea
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
@@ -747,9 +753,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
             setNewTask({ title: '', description: '', assigneeId: '' });
 
             // Show success notification
-            toast.success('Task created successfully!', {
+            toast.success('✅ Task created successfully! You can now manage and track its progress.', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -887,21 +893,17 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
 
                 {/* Right: Actions */}
                 <div className="flex gap-2">
-                    {/* Add Task button */}
-                    {isAdmin && (
-                        <button
-                            onClick={() => setShowAddTaskModal(true)}
-                            className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm hover:opacity-90 transition-opacity"
-                        >
-                            <span className="flex items-center justify-center gap-2">
-                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                </svg>
-                                <span className="hidden sm:inline">New Task</span>
-                                <span className="sm:hidden">Add Task</span>
-                            </span>
-                        </button>
-                    )}
+                    {/* Add Task button - Available to all members */}
+                    <button
+                        onClick={() => setShowAddTaskModal(true)}
+                        className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg font-medium shadow-sm hover:opacity-90 transition-opacity min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2"
+                    >
+                        <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span className="hidden sm:inline text-sm md:text-base">New Task</span>
+                        <span className="sm:hidden text-sm">Add Task</span>
+                    </button>
                 </div>
             </div>
 
@@ -964,7 +966,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     return (
                                         <div
                                             key={member.userId}
-                                            className="group flex items-center bg-muted px-4 py-3 rounded-xl border border-border hover:bg-accent transition-all duration-200 hover:shadow-sm"
+                                            className="group flex items-center bg-muted px-4 py-3 rounded-xl border border-border hover:border-blue-500 transition-all duration-200"
                                         >
                                             <div className={`w-10 h-10 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-3 shadow-sm ring-2 ring-white dark:ring-gray-800`}>
                                                 {initials}
@@ -1097,24 +1099,31 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                    <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
                                         <button
                                             type="button"
                                             onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                            className="px-4 py-2 text-muted-foreground hover:text-card-foreground font-medium"
+                                            className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted transition-colors touch-action-manipulation flex items-center justify-center"
                                             disabled={isSubmitting}
                                         >
                                             Cancelar
                                         </button>
                                         <button
                                             type="submit"
-                                            className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm ${isSubmitting
+                                            className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
                                                 ? 'bg-blue-400 text-white cursor-not-allowed'
                                                 : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
                                                 }`}
                                             disabled={isSubmitting}
                                         >
-                                            {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+                                            {isSubmitting ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                    <span>Guardando...</span>
+                                                </>
+                                            ) : (
+                                                'Guardar Cambios'
+                                            )}
                                         </button>
                                     </div>
                                 </form>
@@ -1143,7 +1152,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation hover:bg-gray-100 dark:hover:bg-gray-800"
                                     disabled={isSubmitting}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1211,31 +1220,31 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                             </div>
 
                             {/* Actions */}
-                            <div className="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '' });
                                     }}
-                                    className="px-4 py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm ${isSubmitting
+                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
                                         ? 'bg-violet-400 text-white cursor-not-allowed'
-                                        : 'bg-violet-500 hover:bg-violet-600 text-white hover:shadow-md'
+                                        : 'bg-violet-500 text-white '
                                         }`}
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? (
-                                        <span className="flex items-center gap-2">
+                                        <>
                                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            Creating...
-                                        </span>
+                                            <span>Creating...</span>
+                                        </>
                                     ) : (
                                         'Create Task'
                                     )}
@@ -1279,18 +1288,21 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                             </div>
 
                             {/* Actions */}
-                            <div className="flex justify-end gap-3">
+                            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
                                 <button
                                     onClick={handleCancelDeleteTask}
-                                    className="px-6 py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200"
+                                    className="w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmDeleteTask}
-                                    className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                    className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
                                 >
-                                    Delete task
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    <span>Delete task</span>
                                 </button>
                             </div>
                         </div>
