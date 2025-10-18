@@ -488,62 +488,62 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                     </div>
 
                     <div className="flex items-center gap-2">
-                        {isAdmin && (
-                            <div className="flex gap-1">
-                                {!isEditing ? (
-                                    <>
-                                        <button
-                                            onClick={() => setShowAddTaskModal(true)}
-                                            className="p-2 hover:bg-white/20 rounded-md transition-colors"
-                                            title="Add new task to this sprint"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            onClick={() => setIsEditing(true)}
-                                            className="p-2 hover:bg-white/20 rounded-md transition-colors"
-                                            title="Edit sprint"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
+                        <div className="flex gap-1">
+                            {!isEditing ? (
+                                <>
+                                    <button
+                                        onClick={() => setShowAddTaskModal(true)}
+                                        className="p-2 hover:bg-white/20 rounded-md transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
+                                        title="Add new task to this sprint"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        onClick={() => setIsEditing(true)}
+                                        className="p-2 hover:bg-white/20 rounded-md transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
+                                        title="Edit sprint"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
+                                    {isAdmin && (
                                         <button
                                             onClick={() => onDeleteSprint(sprint.id)}
-                                            className="p-2 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
-                                            title="Delete sprint"
+                                            className="p-2 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
+                                            title="Delete sprint - Admin only"
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                         </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={handleSaveSprint}
-                                            className="p-2 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
-                                            title="Guardar cambios"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            onClick={handleCancel}
-                                            className="p-2 hover:bg-gray-500/20 rounded-md transition-colors"
-                                            title="Cancel"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        )}
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={handleSaveSprint}
+                                        className="p-2 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
+                                        title="Guardar cambios"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        onClick={handleCancel}
+                                        className="p-2 hover:bg-gray-500/20 rounded-md transition-colors"
+                                        title="Cancel"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </>
+                            )}
+                        </div>
 
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
@@ -605,7 +605,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
-                        {/* Header */}
+                        Header
                         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
@@ -770,7 +770,18 @@ SprintCard.propTypes = {
     onTaskCreate: PropTypes.func.isRequired
 };
 
-// Componente principal para gestión de sprints
+/**
+ * SprintManager Component
+ * 
+ * PERMISSIONS UPDATED:
+ * - ✅ All members can CREATE sprints (no longer admin-only)
+ * - ✅ All members can EDIT sprints (no longer admin-only)
+ * - ✅ All members can CREATE tasks within sprints (no longer admin-only)
+ * - ❌ Only admins can DELETE sprints (security restriction maintained)
+ * 
+ * This enables better team collaboration where any member can organize work
+ * into sprints and manage sprint details, while keeping deletion restricted.
+ */
 const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdate, onTaskDelete, onTaskCreate }) => {
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -1048,33 +1059,33 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">🚀 Sprint Management</h2>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">Organize your tasks into time-boxed sprints</p>
                 </div>
-                {isAdmin && (
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => setShowAddTaskModal(true)}
-                            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            New Task
-                        </button>
-                        <button
-                            onClick={() => setShowAddSprintModal(true)}
-                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            New Sprint
-                        </button>
-                    </div>
-                )}
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowAddTaskModal(true)}
+                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span className="hidden sm:inline">New Task</span>
+                        <span className="sm:hidden">Task</span>
+                    </button>
+                    <button
+                        onClick={() => setShowAddSprintModal(true)}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        <span className="hidden sm:inline">New Sprint</span>
+                        <span className="sm:hidden">Sprint</span>
+                    </button>
+                </div>
             </div>
 
             {/* Sprints */}
@@ -1104,18 +1115,6 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     📋 Tasks without Sprint
                                     <span className="text-sm font-normal">({getTasksWithoutSprint().length})</span>
                                 </h3>
-                                {isAdmin && (
-                                    <button
-                                        onClick={() => setShowAddTaskModal(true)}
-                                        className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
-                                        title="Add new task without sprint"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                        Add Task
-                                    </button>
-                                )}
                             </div>
                         </div>
                         <div className="p-4">
@@ -1186,14 +1185,15 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     <p className="text-gray-500 dark:text-gray-400 mb-6">
                         Create your first sprint to organize tasks by time
                     </p>
-                    {isAdmin && (
-                        <button
-                            onClick={() => setShowAddSprintModal(true)}
-                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200"
-                        >
-                            Crear Primer Sprint
-                        </button>
-                    )}
+                    <button
+                        onClick={() => setShowAddSprintModal(true)}
+                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] touch-action-manipulation flex items-center gap-2"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        <span>Crear Primer Sprint</span>
+                    </button>
                 </div>
             )}
 
@@ -1319,7 +1319,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
                         {/* Header */}
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        {/* <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
                                     <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
@@ -1345,7 +1345,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                                 This task will not be assigned to any sprint initially
                             </p>
-                        </div>
+                        </div> */}
 
                         {/* Form */}
                         <form onSubmit={handleCreateTask} className="p-6 space-y-4">
