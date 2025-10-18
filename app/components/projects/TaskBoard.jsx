@@ -69,7 +69,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             style={style}
             {...attributes}
             {...listeners}
-            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden cursor-grab active:cursor-grabbing hover:scale-[1.02] active:scale-95 active:shadow-xl
+            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden cursor-grab active:cursor-grabbing active:scale-95 active:shadow-xl
                 ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}
                 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
             `}
