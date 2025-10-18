@@ -4,6 +4,7 @@
 
 /* Import mobile-specific utilities */
 @import './mobile-utils.css';
+@import './button-utils.css';
 
 :root {
   /* Tema oscuro forzado con alto contraste */
