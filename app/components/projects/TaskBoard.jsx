@@ -74,8 +74,8 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
             `}
         >
-            {/* Delete button - Only for admins */}
-            {isAdmin && onDeleteTask && (
+            {/* Delete button - Available for all members */}
+            {onDeleteTask && (
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
