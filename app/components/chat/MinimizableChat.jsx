@@ -13,6 +13,13 @@ export default function MinimizableChat({ projectId, user, projectName }) {
     const [isConnected, setIsConnected] = useState(false);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null);
+    const appendIfUnique = (prev, msg) => {
+        if (!msg || !msg.id) return prev;
+        for (let i = prev.length - 1; i >= 0; i--) {
+            if (prev[i]?.id === msg.id) return prev;
+        }
+        return [...prev, msg];
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,7 +67,8 @@ export default function MinimizableChat({ projectId, user, projectName }) {
 
         // Listen for new messages
         socket.on('newMessage', (message) => {
-            setMessages(prev => [...prev, message]);
+            // Avoid duplicates by ID
+            setMessages(prev => appendIfUnique(prev, message));
 
             // If chat is minimized and message is from another user, show unread indicator
             if (isMinimized && message.userId !== user?.id) {
@@ -72,9 +80,14 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         fetchMessages();
 
         return () => {
-            if (socket.connected) {
-                socket.disconnect();
-            }
+            try {
+                socket.off('newMessage');
+                socket.off('connect');
+                socket.off('disconnect');
+                socket.off('connect_error');
+            } catch { }
+            // Always disconnect to prevent lingering sockets/listeners in Strict Mode
+            try { socket.disconnect(); } catch { }
         };
     }, [projectId]);
 
@@ -89,7 +102,16 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                 throw new Error(data.error || 'Error fetching messages');
             }
 
-            setMessages(data);
+            // Ensure no duplicates in initial load
+            const seen = new Set();
+            const unique = [];
+            for (const m of Array.isArray(data) ? data : []) {
+                if (m && m.id && !seen.has(m.id)) {
+                    seen.add(m.id);
+                    unique.push(m);
+                }
+            }
+            setMessages(unique);
         } catch (error) {
             console.error('Error fetching messages:', error);
             setError(error.message || 'Error fetching messages');

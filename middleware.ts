@@ -21,12 +21,12 @@ export default authMiddleware({
         "/sign-in",
         "/sign-up",
         "/api/webhooks/clerk",
-        "/socket.io"
+        "/socket.io(.*)"
     ],
 });
 
 export const config = {
-  matcher: [
-    "/((?!.+\\.[\\w]+$|_next).*)", // páginas y rutas API
-  ],
+    matcher: [
+        "/((?!.+\\.[\\w]+$|_next).*)", // páginas y rutas API
+    ],
 };
