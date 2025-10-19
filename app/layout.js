@@ -8,6 +8,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import AuthRedirect from './components/auth/AuthRedirect';
+import Image from 'next/image';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,8 +24,8 @@ export const metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-icon.png',
+    icon: '/icon.png',
+    apple: '/icon.png',
   },
   formatDetection: {
     telephone: false,
@@ -51,8 +52,8 @@ export default function RootLayout({ children }) {
         </head>
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
           <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top">
-            <div className="flex items-center">
-              <h1 className="text-lg sm:text-xl font-bold text-foreground truncate uppercase">Projettia</h1>
+            <div className="flex items-center gap-2">
+              <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
             </div>
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               <SignedOut>
