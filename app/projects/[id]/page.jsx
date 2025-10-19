@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import TaskBoard from '../../components/projects/TaskBoard';
 import SprintManager from '../../components/projects/SprintManager';
+import MinimizableChat from '../../components/chat/MinimizableChat';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
@@ -833,6 +834,15 @@ export default function ProjectPage({ params }) {
                     )}
                 </div>
             </div>
+
+            {/* Minimizable Chat Component */}
+            {user && (
+                <MinimizableChat
+                    projectId={project.id}
+                    user={user}
+                    projectName={project.name}
+                />
+            )}
         </div>
     );
 }

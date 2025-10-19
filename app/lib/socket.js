@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import prisma from './prisma';
+import prisma from '../../lib/prisma.js';
 
 export function configureSocketServer(server) {
     const io = new Server(server, {
