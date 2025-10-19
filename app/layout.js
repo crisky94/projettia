@@ -12,14 +12,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata = {
-  title: 'WER Team Work',
+  title: 'Projettia',
   description: 'Team collaboration platform',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',
   themeColor: '#0f172a',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'WER Team Work',
+    title: 'Projettia',
   },
   manifest: '/manifest.json',
   icons: {
@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
           <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top">
             <div className="flex items-center">
-              <h1 className="text-lg sm:text-xl font-bold text-foreground truncate">WER Team</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-foreground truncate uppercase">Projettia</h1>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               <SignedOut>

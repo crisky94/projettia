@@ -12,7 +12,7 @@ export default function Navbar({ user }) {
                     <div className="flex">
                         <div className="flex-shrink-0 flex items-center">
                             <Link href="/" className="text-lg sm:text-xl font-bold text-card-foreground">
-                                WER Team
+                                Projettia
                             </Link>
                         </div>
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
