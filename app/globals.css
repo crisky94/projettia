@@ -7,41 +7,56 @@
 @import './button-utils.css';
 
 :root {
-  /* Tema oscuro forzado con alto contraste */
-  --background: 15, 23, 42;
-  /* Fondo principal muy oscuro (slate-900) */
+  /* Tema en tonos: azul, lila, naranja y azul oscuro */
+  --background: 12, 18, 36;
+  /* Azul muy oscuro (navy) para el fondo */
   --foreground: 248, 250, 252;
-  /* Texto principal muy claro (slate-50) */
-  --card: 30, 41, 59;
-  /* Fondo de tarjetas (slate-800) */
+  /* Texto claro */
+
+  --card: 18, 32, 64;
+  /* Azul oscuro para tarjetas */
   --card-foreground: 226, 232, 240;
-  /* Texto en tarjetas (slate-200) */
-  --border: 71, 85, 105;
-  /* Bordes (slate-600) */
-  --input: 71, 85, 105;
-  /* Input borders (slate-600) */
-  --primary: 59, 130, 246;
-  /* Azul brillante para acciones */
+  /* Texto en tarjetas */
+
+  --border: 30, 58, 138;
+  /* Azul profundo para bordes */
+  --input: 30, 58, 138;
+  /* Bordes de inputs */
+
+  --primary: 37, 99, 235;
+  /* Azul principal (blue-600) */
   --primary-foreground: 248, 250, 252;
-  /* Texto en botones primarios */
-  --muted: 51, 65, 85;
-  /* Fondos apagados (slate-700) */
-  --muted-foreground: 148, 163, 184;
-  /* Texto apagado (slate-400) */
+  /* Texto sobre azul */
+
   --accent: 168, 85, 247;
-  /* Púrpura para acentos */
+  /* Lila (violet-500) */
   --accent-foreground: 248, 250, 252;
-  /* Texto en acentos */
+  /* Texto sobre lila */
+
+  --orange: 249, 115, 22;
+  /* Naranja (orange-500) */
+  --orange-foreground: 255, 251, 235;
+  /* Texto sobre naranja, ligeramente marfil */
+
+  --primary-dark: 29, 78, 216;
+  /* Azul oscuro (blue-700) para estados activos/hover) */
+
+  --muted: 51, 65, 85;
+  /* Fondos apagados */
+  --muted-foreground: 148, 163, 184;
+  /* Texto apagado */
+
   --destructive: 239, 68, 68;
   /* Rojo para errores */
   --destructive-foreground: 248, 250, 252;
-  /* Texto en destructive */
+
   --success: 34, 197, 94;
   /* Verde para éxito */
-  --warning: 245, 158, 11;
-  /* Amarillo para advertencias */
-  --ring: 59, 130, 246;
-  /* Color del focus ring */
+  --warning: 249, 115, 22;
+  /* Advertencias en naranja */
+
+  --ring: 37, 99, 235;
+  /* Focus ring basado en azul principal */
 }
 
 /* Base styles for mobile-first design */
@@ -185,5 +200,66 @@ body {
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* Paleta de colores utilitaria */
+  .bg-theme-primary {
+    background-color: rgb(var(--primary));
+  }
+
+  .bg-theme-accent {
+    background-color: rgb(var(--accent));
+  }
+
+  .bg-theme-orange {
+    background-color: rgb(var(--orange));
+  }
+
+  .bg-theme-navy {
+    background-color: rgb(var(--background));
+  }
+
+  .text-theme-primary {
+    color: rgb(var(--primary));
+  }
+
+  .text-theme-accent {
+    color: rgb(var(--accent));
+  }
+
+  .text-theme-orange {
+    color: rgb(var(--orange));
+  }
+
+  .text-theme-navy {
+    color: rgb(var(--primary-dark));
+  }
+
+  .border-theme-primary {
+    border-color: rgb(var(--primary));
+  }
+
+  .border-theme-accent {
+    border-color: rgb(var(--accent));
+  }
+
+  .border-theme-orange {
+    border-color: rgb(var(--orange));
+  }
+
+  .border-theme-navy {
+    border-color: rgb(var(--primary-dark));
+  }
+
+  .hover-theme-primary:hover {
+    background-color: rgb(var(--primary-dark));
+  }
+
+  .hover-theme-accent:hover {
+    filter: brightness(0.9);
+  }
+
+  .hover-theme-orange:hover {
+    filter: brightness(0.9);
   }
 }
