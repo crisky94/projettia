@@ -9,6 +9,8 @@ export default function Chat({ projectId, user }) {
     const [error, setError] = useState(null);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null);
+    const [editingMessageId, setEditingMessageId] = useState(null);
+    const [editText, setEditText] = useState('');
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,7 +23,7 @@ export default function Chat({ projectId, user }) {
     useEffect(() => {
         // Inicializar socket con la configuración correcta
         socketRef.current = io({
-            path: '/socket.io/',
+            path: '/socket.io',
             transports: ['polling', 'websocket'],
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -47,6 +49,13 @@ export default function Chat({ projectId, user }) {
             scrollToBottom();
         });
 
+        // Escuchar ediciones de mensajes
+        socket.on('messageEdited', (payload) => {
+            const updated = payload?.message || payload; // tolerante a distintas cargas
+            if (!updated?.id) return;
+            setMessages(prev => prev.map(m => (m.id === updated.id ? updated : m)));
+        });
+
         // Cargar mensajes iniciales
         fetchMessages();
 
@@ -56,6 +65,51 @@ export default function Chat({ projectId, user }) {
             }
         };
     }, [projectId]);
+
+    const startEdit = (message) => {
+        if (message.userId !== user?.id) return;
+        setEditingMessageId(message.id);
+        setEditText(message.content);
+    };
+
+    const cancelEdit = () => {
+        setEditingMessageId(null);
+        setEditText('');
+    };
+
+    const startEditLast = () => {
+        const ownMessages = messages.filter((m) => m.userId === user?.id);
+        if (ownMessages.length === 0) return;
+    const last = ownMessages.at(-1);
+        setEditingMessageId(last.id);
+        setEditText(last.content);
+    };
+
+    const saveEdit = async (e) => {
+        e?.preventDefault?.();
+        if (!editingMessageId || !editText.trim()) return;
+        try {
+            const res = await fetch(`/api/projects/${projectId}/messages/${editingMessageId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: editText.trim() })
+            });
+            const updated = await res.json();
+            if (!res.ok) throw new Error(updated?.error || 'Error updating message');
+
+            setMessages((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
+            setEditingMessageId(null);
+            setEditText('');
+
+            // Opcional: notificar por socket a otros clientes si existe conexión
+            if (socketRef.current?.connected) {
+                socketRef.current.emit('messageEdited', { projectId, message: updated });
+            }
+        } catch (err) {
+            console.error('Error updating message:', err);
+            setError(err.message || 'Error updating message');
+        }
+    };
 
     const fetchMessages = async () => {
         setError(null);
@@ -115,26 +169,57 @@ export default function Chat({ projectId, user }) {
             </div>
         );
     } else {
-        chatContent = messages.map((message) => (
-            <div
-                key={message.id}
-                className={`mb-4 ${message.userId === user?.id ? 'text-right' : 'text-left'
-                    }`}
-            >
+        chatContent = messages.map((message) => {
+            const isOwn = message.userId === user?.id;
+            const isEditing = editingMessageId === message.id;
+            const wasEdited = message.updatedAt && message.updatedAt !== message.createdAt;
+
+            return (
                 <div
-                    className={`inline-block p-2 rounded-lg ${message.userId === user?.id
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-700'
-                        }`}
+                    key={message.id}
+                    className={`mb-4 ${isOwn ? 'text-right' : 'text-left'}`}
                 >
-                    <p className="text-sm font-semibold">{message.user?.name}</p>
-                    <p>{message.content}</p>
+                    <div
+                        className={`inline-block p-2 rounded-lg ${isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                    >
+                        <div className="flex items-start gap-2">
+                            <div className="flex-1">
+                                <p className="text-sm font-semibold">{message.user?.name}</p>
+                                {isEditing ? (
+                                    <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
+                                        <input
+                                            className={`w-64 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
+                                            value={editText}
+                                            onChange={(e) => setEditText(e.target.value)}
+                                            autoFocus
+                                        />
+                                        <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
+                                        <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
+                                    </form>
+                                ) : (
+                                    <p>
+                                        {message.content}
+                                        {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
+                                    </p>
+                                )}
+                            </div>
+                            {isOwn && !isEditing && (
+                                <button
+                                    onClick={() => startEdit(message)}
+                                    className={`text-xs px-2 py-1 rounded ${isOwn ? 'bg-white/20 hover:bg-white/30' : 'bg-black/10 hover:bg-black/20'}`}
+                                    title="Editar mensaje"
+                                >
+                                    Editar
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                        {new Date(message.createdAt).toLocaleString()}
+                    </p>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                    {new Date(message.createdAt).toLocaleString()}
-                </p>
-            </div>
-        ));
+            );
+        });
     }
 
     return (
@@ -144,14 +229,35 @@ export default function Chat({ projectId, user }) {
                 <div ref={messagesEndRef} />
             </div>
             <form onSubmit={handleSendMessage} className="p-4 border-t">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type your message..."
+                        placeholder={editingMessageId ? "Editando mensaje..." : "Type your message..."}
                         className="flex-1 rounded-lg border p-2"
                     />
+                    {editingMessageId && (
+                        <button
+                            type="button"
+                            onClick={cancelEdit}
+                            className="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50"
+                            title="Cancelar edición"
+                            aria-label="Cancelar edición"
+                        >
+                            Cancelar edición
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        onClick={startEditLast}
+                        disabled={!messages.some((m) => m.userId === user?.id)}
+                        className="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Editar tu último mensaje"
+                        aria-label="Editar tu último mensaje"
+                    >
+                        Editar último
+                    </button>
                     <button
                         type="submit"
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"

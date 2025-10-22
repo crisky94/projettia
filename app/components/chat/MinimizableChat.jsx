@@ -13,6 +13,9 @@ export default function MinimizableChat({ projectId, user, projectName }) {
     const [isConnected, setIsConnected] = useState(false);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null);
+    const messagesRef = useRef([]);
+    const [editingMessageId, setEditingMessageId] = useState(null);
+    const [editText, setEditText] = useState('');
     const appendIfUnique = (prev, msg) => {
         if (!msg || !msg.id) return prev;
         for (let i = prev.length - 1; i >= 0; i--) {
@@ -34,6 +37,11 @@ export default function MinimizableChat({ projectId, user, projectName }) {
             }
         }
     }, [messages, isMinimized]);
+
+    // Keep a ref in sync to avoid nested updater functions for lint rules
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
 
     useEffect(() => {
         // Initialize socket connection
@@ -68,12 +76,29 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         // Listen for new messages
         socket.on('newMessage', (message) => {
             // Avoid duplicates by ID
-            setMessages(prev => appendIfUnique(prev, message));
+            const next = appendIfUnique(messagesRef.current, message);
+            if (next !== messagesRef.current) {
+                setMessages(next);
+                messagesRef.current = next;
+            }
 
             // If chat is minimized and message is from another user, show unread indicator
             if (isMinimized && message.userId !== user?.id) {
                 setHasUnreadMessages(true);
             }
+        });
+
+        // Listen for edited messages (optional if server emits this)
+        socket.on('messageEdited', (payload) => {
+            const updated = payload?.message || payload;
+            if (!updated?.id) return;
+            const current = messagesRef.current;
+            const idx = current.findIndex((m) => m.id === updated.id);
+            if (idx === -1) return;
+            const next = current.slice();
+            next[idx] = updated;
+            setMessages(next);
+            messagesRef.current = next;
         });
 
         // Load initial messages
@@ -82,6 +107,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         return () => {
             try {
                 socket.off('newMessage');
+                socket.off('messageEdited');
                 socket.off('connect');
                 socket.off('disconnect');
                 socket.off('connect_error');
@@ -112,6 +138,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                 }
             }
             setMessages(unique);
+            messagesRef.current = unique;
         } catch (error) {
             console.error('Error fetching messages:', error);
             setError(error.message || 'Error fetching messages');
@@ -158,6 +185,54 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         }
     };
 
+    const startEdit = (message) => {
+        if (message.userId !== user?.id) return;
+        setEditingMessageId(message.id);
+        setEditText(message.content);
+    };
+
+    const cancelEdit = () => {
+        setEditingMessageId(null);
+        setEditText('');
+    };
+
+    const startEditLast = () => {
+        const ownMessages = messages.filter((m) => m.userId === user?.id);
+        if (ownMessages.length === 0) return;
+    const last = ownMessages.at(-1);
+        setEditingMessageId(last.id);
+        setEditText(last.content);
+    };
+
+    const saveEdit = async (e) => {
+        e?.preventDefault?.();
+        if (!editingMessageId || !editText.trim()) return;
+        try {
+            const res = await fetch(`/api/projects/${projectId}/messages/${editingMessageId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: editText.trim() })
+            });
+            const updated = await res.json();
+            if (!res.ok) throw new Error(updated?.error || 'Error updating message');
+
+            const current = messagesRef.current;
+            const idx = current.findIndex((m) => m.id === updated.id);
+            const next = idx === -1 ? current : (() => { const arr = current.slice(); arr[idx] = updated; return arr; })();
+            setMessages(next);
+            messagesRef.current = next;
+            setEditingMessageId(null);
+            setEditText('');
+
+            if (socketRef.current?.connected) {
+                socketRef.current.emit('messageEdited', { projectId, message: updated });
+            }
+        } catch (err) {
+            console.error('Error updating message:', err);
+            setError(err.message || 'Error updating message');
+        }
+    };
+
     let chatContent;
     if (isLoading) {
         chatContent = (
@@ -193,29 +268,59 @@ export default function MinimizableChat({ projectId, user, projectName }) {
     } else {
         chatContent = (
             <div className="flex flex-col space-y-3">
-                {messages.map((message) => (
-                    <div
-                        key={message.id}
-                        className={`flex ${message.userId === user?.id ? 'justify-end' : 'justify-start'}`}
-                    >
-                        <div className={`max-w-[75%] ${message.userId === user?.id ? 'order-1' : 'order-2'}`}>
-                            <div
-                                className={`px-3 py-2 rounded-2xl ${message.userId === user?.id
-                                    ? 'bg-blue-600 text-white rounded-br-md'
-                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
-                                    }`}
-                            >
-                                {message.userId !== user?.id && (
-                                    <p className="text-xs font-semibold mb-1 opacity-70">{message.user?.name}</p>
-                                )}
-                                <p className="text-sm leading-relaxed">{message.content}</p>
+                {messages.map((message) => {
+                    const isOwn = message.userId === user?.id;
+                    const isEditing = editingMessageId === message.id;
+                    const wasEdited = message.updatedAt && message.updatedAt !== message.createdAt;
+                    return (
+                        <div
+                            key={message.id}
+                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                        >
+                            <div className={`max-w-[75%] ${isOwn ? 'order-1' : 'order-2'}`}>
+                                <div
+                                    className={`px-3 py-2 rounded-2xl ${isOwn
+                                        ? 'bg-blue-600 text-white rounded-br-md'
+                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
+                                        }`}
+                                >
+                                    {!isOwn && (
+                                        <p className="text-xs font-semibold mb-1 opacity-70">{message.user?.name}</p>
+                                    )}
+                                    {isEditing ? (
+                                        <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
+                                            <input
+                                                className={`w-56 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
+                                                value={editText}
+                                                onChange={(e) => setEditText(e.target.value)}
+                                                autoFocus
+                                            />
+                                            <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
+                                            <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
+                                        </form>
+                                    ) : (
+                                        <p className="text-sm leading-relaxed">
+                                            {message.content}
+                                            {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className={`mt-1 flex items-center ${isOwn ? 'justify-end' : 'justify-start'} gap-2`}>
+                                    <p className="text-xs text-gray-500">{formatTime(message.createdAt)}</p>
+                                    {isOwn && !isEditing && (
+                                        <button
+                                            onClick={() => startEdit(message)}
+                                            className={`text-[11px] px-2 py-0.5 rounded ${isOwn ? 'bg-blue-600/20 text-blue-100 hover:bg-blue-600/30' : 'bg-black/10 hover:bg-black/20'}`}
+                                            title="Editar mensaje"
+                                        >
+                                            Editar
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                            <p className={`text-xs text-gray-500 mt-1 ${message.userId === user?.id ? 'text-right' : 'text-left'}`}>
-                                {formatTime(message.createdAt)}
-                            </p>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
                 <div ref={messagesEndRef} />
             </div>
         );
@@ -276,15 +381,36 @@ export default function MinimizableChat({ projectId, user, projectName }) {
 
                         {/* Message Input */}
                         <div className="p-3 border-t border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
-                            <form onSubmit={handleSendMessage} className="flex gap-2">
+                            <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                                 <input
                                     type="text"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
-                                    placeholder="Type a message..."
+                                    placeholder={editingMessageId ? "Editando mensaje..." : "Type a message..."}
                                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                                     disabled={isLoading}
                                 />
+                                {editingMessageId && (
+                                    <button
+                                        type="button"
+                                        onClick={cancelEdit}
+                                        className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                        title="Cancelar edición"
+                                        aria-label="Cancelar edición"
+                                    >
+                                        Cancelar edición
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={startEditLast}
+                                    disabled={!messages.some((m) => m.userId === user?.id)}
+                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                    title="Editar tu último mensaje"
+                                    aria-label="Editar tu último mensaje"
+                                >
+                                    Editar último
+                                </button>
                                 <button
                                     type="submit"
                                     disabled={!newMessage.trim() || isLoading}

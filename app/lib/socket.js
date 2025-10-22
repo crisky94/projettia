@@ -64,6 +64,12 @@ export function configureSocketServer(server) {
             }
         });
 
+        // Re-difundir a la sala del proyecto cuando un mensaje fue editado
+        socket.on('messageEdited', ({ projectId, message }) => {
+            if (!projectId || !message?.id) return;
+            io.to(`project:${projectId}`).emit('messageEdited', message);
+        });
+
         socket.on('disconnect', () => {
             const projectId = userProjectMap.get(socket.id);
             if (projectId) {
