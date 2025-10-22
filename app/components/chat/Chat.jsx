@@ -55,6 +55,7 @@ export default function Chat({ projectId, user }) {
             if (!updated?.id) return;
             setMessages(prev => prev.map(m => (m.id === updated.id ? updated : m)));
         });
+        // (Opcional) podríamos escuchar 'messageDeleted' si el servidor emite
 
         // Cargar mensajes iniciales
         fetchMessages();
@@ -66,11 +67,7 @@ export default function Chat({ projectId, user }) {
         };
     }, [projectId]);
 
-    const startEdit = (message) => {
-        if (message.userId !== user?.id) return;
-        setEditingMessageId(message.id);
-        setEditText(message.content);
-    };
+    // Edición ahora solo por 'Editar último'
 
     const cancelEdit = () => {
         setEditingMessageId(null);
@@ -81,8 +78,30 @@ export default function Chat({ projectId, user }) {
         const ownMessages = messages.filter((m) => m.userId === user?.id);
         if (ownMessages.length === 0) return;
         const last = ownMessages.at(-1);
+        // No editar si el último ya está eliminado
+        if (!last.content || !last.content.trim()) return;
         setEditingMessageId(last.id);
         setEditText(last.content);
+    };
+
+    const deleteLast = async () => {
+        const ownMessages = messages.filter((m) => m.userId === user?.id);
+        if (ownMessages.length === 0) return;
+        const last = ownMessages.at(-1);
+        if (!last || !last.id) return;
+        try {
+            const res = await fetch(`/api/projects/${projectId}/messages/${last.id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Error deleting message');
+            setMessages((prev) => prev.map((m) => (m.id === last.id ? { ...m, content: '' } : m)));
+            if (editingMessageId === last.id) {
+                setEditingMessageId(null);
+                setEditText('');
+            }
+        } catch (err) {
+            console.error('Error deleting message:', err);
+            setError(err.message || 'Error deleting message');
+        }
     };
 
     const saveEdit = async (e) => {
@@ -173,6 +192,7 @@ export default function Chat({ projectId, user }) {
             const isOwn = message.userId === user?.id;
             const isEditing = editingMessageId === message.id;
             const wasEdited = message.updatedAt && message.updatedAt !== message.createdAt;
+            const isDeleted = !message.content || !message.content.trim();
 
             return (
                 <div
@@ -185,33 +205,33 @@ export default function Chat({ projectId, user }) {
                         <div className="flex items-start gap-2">
                             <div className="flex-1">
                                 <p className="text-sm font-semibold">{message.user?.name}</p>
-                                {isEditing ? (
-                                    <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
-                                        <input
-                                            className={`w-64 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
-                                            value={editText}
-                                            onChange={(e) => setEditText(e.target.value)}
-                                            autoFocus
-                                        />
-                                        <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
-                                        <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
-                                    </form>
-                                ) : (
-                                    <p>
-                                        {message.content}
-                                        {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
-                                    </p>
-                                )}
+                                {(() => {
+                                    if (isEditing) {
+                                        return (
+                                            <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
+                                                <input
+                                                    className={`w-64 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
+                                                    value={editText}
+                                                    onChange={(e) => setEditText(e.target.value)}
+                                                    autoFocus
+                                                />
+                                                <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
+                                                <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
+                                            </form>
+                                        );
+                                    }
+                                    if (isDeleted) {
+                                        return <p className="italic opacity-80">Mensaje eliminado</p>;
+                                    }
+                                    return (
+                                        <p>
+                                            {message.content}
+                                            {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
+                                        </p>
+                                    );
+                                })()}
                             </div>
-                            {isOwn && !isEditing && (
-                                <button
-                                    onClick={() => startEdit(message)}
-                                    className={`text-xs px-2 py-1 rounded ${isOwn ? 'bg-white/20 hover:bg-white/30' : 'bg-black/10 hover:bg-black/20'}`}
-                                    title="Editar mensaje"
-                                >
-                                    Editar
-                                </button>
-                            )}
+                            {/* Quitar botón por-mensaje: edición solo del último */}
                         </div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -248,16 +268,40 @@ export default function Chat({ projectId, user }) {
                             Cancelar edición
                         </button>
                     )}
-                    <button
-                        type="button"
-                        onClick={startEditLast}
-                        disabled={!messages.some((m) => m.userId === user?.id)}
-                        className="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Editar tu último mensaje"
-                        aria-label="Editar tu último mensaje"
-                    >
-                        Editar último
-                    </button>
+                    {(() => {
+                        const ownMessages = messages.filter((m) => m.userId === user?.id);
+                        const last = ownMessages.at(-1);
+                        const canEditLast = !!last && !!last.content && !!last.content.trim();
+                        return (
+                            <button
+                                type="button"
+                                onClick={startEditLast}
+                                disabled={!canEditLast}
+                                className="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Editar tu último mensaje"
+                                aria-label="Editar tu último mensaje"
+                            >
+                                Editar último
+                            </button>
+                        );
+                    })()}
+                    {(() => {
+                        const ownMessages = messages.filter((m) => m.userId === user?.id);
+                        const last = ownMessages.at(-1);
+                        const canDeleteLast = !!last;
+                        return (
+                            <button
+                                type="button"
+                                onClick={deleteLast}
+                                disabled={!canDeleteLast}
+                                className="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Eliminar tu último mensaje"
+                                aria-label="Eliminar tu último mensaje"
+                            >
+                                Eliminar último
+                            </button>
+                        );
+                    })()}
                     <button
                         type="submit"
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"

@@ -185,11 +185,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         }
     };
 
-    const startEdit = (message) => {
-        if (message.userId !== user?.id) return;
-        setEditingMessageId(message.id);
-        setEditText(message.content);
-    };
+    // Edición ahora solo desde 'Editar último'
 
     const cancelEdit = () => {
         setEditingMessageId(null);
@@ -200,8 +196,36 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         const ownMessages = messages.filter((m) => m.userId === user?.id);
         if (ownMessages.length === 0) return;
         const last = ownMessages.at(-1);
+        if (!last?.content || !last.content.trim()) return; // no editar si está eliminado
         setEditingMessageId(last.id);
         setEditText(last.content);
+    };
+
+    const deleteLast = async () => {
+        const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+        if (ownMessages.length === 0) return;
+        const last = ownMessages.at(-1);
+        if (!last?.id) return;
+        try {
+            const res = await fetch(`/api/projects/${projectId}/messages/${last.id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Error deleting message');
+            const current = messagesRef.current;
+            const idx = current.findIndex((m) => m.id === last.id);
+            if (idx !== -1) {
+                const next = current.slice();
+                next[idx] = { ...next[idx], content: '' };
+                setMessages(next);
+                messagesRef.current = next;
+            }
+            if (editingMessageId === last.id) {
+                setEditingMessageId(null);
+                setEditText('');
+            }
+        } catch (err) {
+            console.error('Error deleting message:', err);
+            setError(err.message || 'Error deleting message');
+        }
     };
 
     const saveEdit = async (e) => {
@@ -287,35 +311,36 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     {!isOwn && (
                                         <p className="text-xs font-semibold mb-1 opacity-70">{message.user?.name}</p>
                                     )}
-                                    {isEditing ? (
-                                        <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
-                                            <input
-                                                className={`w-56 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
-                                                value={editText}
-                                                onChange={(e) => setEditText(e.target.value)}
-                                                autoFocus
-                                            />
-                                            <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
-                                            <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
-                                        </form>
-                                    ) : (
-                                        <p className="text-sm leading-relaxed">
-                                            {message.content}
-                                            {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
-                                        </p>
-                                    )}
+                                    {(() => {
+                                        if (isEditing) {
+                                            return (
+                                                <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
+                                                    <input
+                                                        className={`w-56 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
+                                                        value={editText}
+                                                        onChange={(e) => setEditText(e.target.value)}
+                                                        autoFocus
+                                                    />
+                                                    <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
+                                                    <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
+                                                </form>
+                                            );
+                                        }
+                                        const isDeleted = !message.content || !message.content.trim();
+                                        if (isDeleted) {
+                                            return <p className="text-sm leading-relaxed italic opacity-80">Mensaje eliminado</p>;
+                                        }
+                                        return (
+                                            <p className="text-sm leading-relaxed">
+                                                {message.content}
+                                                {wasEdited && <span className="ml-2 text-[10px] opacity-80 italic">(editado)</span>}
+                                            </p>
+                                        );
+                                    })()}
                                 </div>
                                 <div className={`mt-1 flex items-center ${isOwn ? 'justify-end' : 'justify-start'} gap-2`}>
                                     <p className="text-xs text-gray-500">{formatTime(message.createdAt)}</p>
-                                    {isOwn && !isEditing && (
-                                        <button
-                                            onClick={() => startEdit(message)}
-                                            className={`text-[11px] px-2 py-0.5 rounded ${isOwn ? 'bg-blue-600/20 text-blue-100 hover:bg-blue-600/30' : 'bg-black/10 hover:bg-black/20'}`}
-                                            title="Editar mensaje"
-                                        >
-                                            Editar
-                                        </button>
-                                    )}
+                                    {/* Quitar botón por-mensaje: edición solo del último */}
                                 </div>
                             </div>
                         </div>
@@ -401,16 +426,40 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                         Cancelar edición
                                     </button>
                                 )}
-                                <button
-                                    type="button"
-                                    onClick={startEditLast}
-                                    disabled={!messages.some((m) => m.userId === user?.id)}
-                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                    title="Editar tu último mensaje"
-                                    aria-label="Editar tu último mensaje"
-                                >
-                                    Editar último
-                                </button>
+                                {(() => {
+                                    const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+                                    const last = ownMessages.at(-1);
+                                    const canEditLast = !!last && !!last.content && !!last.content.trim();
+                                    return (
+                                        <button
+                                            type="button"
+                                            onClick={startEditLast}
+                                            disabled={!canEditLast}
+                                            className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                            title="Editar tu último mensaje"
+                                            aria-label="Editar tu último mensaje"
+                                        >
+                                            Editar último
+                                        </button>
+                                    );
+                                })()}
+                                {(() => {
+                                    const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+                                    const last = ownMessages.at(-1);
+                                    const canDeleteLast = !!last;
+                                    return (
+                                        <button
+                                            type="button"
+                                            onClick={deleteLast}
+                                            disabled={!canDeleteLast}
+                                            className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                            title="Eliminar tu último mensaje"
+                                            aria-label="Eliminar tu último mensaje"
+                                        >
+                                            Eliminar último
+                                        </button>
+                                    );
+                                })()}
                                 <button
                                     type="submit"
                                     disabled={!newMessage.trim() || isLoading}
