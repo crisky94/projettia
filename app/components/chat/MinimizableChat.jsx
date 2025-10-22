@@ -199,7 +199,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
     const startEditLast = () => {
         const ownMessages = messages.filter((m) => m.userId === user?.id);
         if (ownMessages.length === 0) return;
-    const last = ownMessages.at(-1);
+        const last = ownMessages.at(-1);
         setEditingMessageId(last.id);
         setEditText(last.content);
     };

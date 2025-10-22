@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 export async function GET(request, { params }) {
     try {
         const { userId } = auth();
-        
+
         if (!userId) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -70,7 +70,7 @@ export async function GET(request, { params }) {
 export async function POST(request, { params }) {
     try {
         const { userId } = auth();
-        
+
         if (!userId) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -105,7 +105,7 @@ export async function POST(request, { params }) {
         }
 
         const { content } = await request.json();
-        
+
         if (!content || !content.trim()) {
             return NextResponse.json(
                 { error: 'Message content is required' },

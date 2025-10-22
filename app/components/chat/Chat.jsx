@@ -29,7 +29,7 @@ export default function Chat({ projectId, user }) {
             reconnectionDelay: 1000,
             withCredentials: true
         });
-        
+
         const socket = socketRef.current;
 
         socket.on('connect', () => {
@@ -80,7 +80,7 @@ export default function Chat({ projectId, user }) {
     const startEditLast = () => {
         const ownMessages = messages.filter((m) => m.userId === user?.id);
         if (ownMessages.length === 0) return;
-    const last = ownMessages.at(-1);
+        const last = ownMessages.at(-1);
         setEditingMessageId(last.id);
         setEditText(last.content);
     };
@@ -117,11 +117,11 @@ export default function Chat({ projectId, user }) {
         try {
             const response = await fetch(`/api/projects/${projectId}/messages`);
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.error || 'Error fetching messages');
             }
-            
+
             setMessages(data);
         } catch (error) {
             console.error('Error fetching messages:', error);
