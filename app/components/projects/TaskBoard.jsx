@@ -147,7 +147,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                                     )}
                                     <button
                                         onClick={() => setIsEditingSprint(true)}
-                                        className="ml-1 p-2 sm:p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
+                                        className="ml-1 p-2 sm:p-1 hover:bg-muted dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
                                         title="Edit sprint assignment"
                                     >
                                         <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,10 +177,10 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                                     </select>
                                     <button
                                         onClick={() => setIsEditingSprint(false)}
-                                        className="p-2 sm:p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
+                                        className="p-2 sm:p-1 hover:bg-muted dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
                                         title="Cancel editing"
                                     >
-                                        <svg className="w-3 h-3 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
@@ -191,27 +191,27 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 </div>
 
                 {/* Task Status Badge */}
-                <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-border dark:border-gray-700">
                     <div className="flex items-center gap-2">
                         {(() => {
                             const statusConfig = {
                                 'PENDING': {
-                                    color: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30',
+                                    color: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/30',
                                     icon: '⏳',
                                     text: 'Pending'
                                 },
                                 'IN_PROGRESS': {
-                                    color: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30',
+                                    color: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/30',
                                     icon: '⚡',
                                     text: 'In Progress'
                                 },
                                 'COMPLETED': {
-                                    color: 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30',
+                                    color: 'text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-500/30',
                                     icon: '✅',
                                     text: 'Completed'
                                 }
                             };
-                            const config = statusConfig[task.status] || { color: 'text-gray-600 bg-gray-100', icon: '❓', text: task.status };
+                            const config = statusConfig[task.status] || { color: 'text-muted-foreground bg-muted', icon: '❓', text: task.status };
 
                             return (
                                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${config.color}`}>
@@ -290,7 +290,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                 case 'IN_PROGRESS':
                     return `${baseStyles} border-blue-300 bg-blue-50 dark:bg-blue-900/20 shadow-lg ring-2 ring-blue-200`;
                 case 'COMPLETED':
-                    return `${baseStyles} border-green-300 bg-green-50 dark:bg-green-900/20 shadow-lg ring-2 ring-green-200`;
+                    return `${baseStyles} border-green-400 bg-green-50 dark:bg-green-900/20 shadow-lg ring-2 ring-green-300`;
                 default:
                     return `${baseStyles} border-border bg-muted`;
             }
@@ -302,9 +302,9 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
             case 'IN_PROGRESS':
                 return `${baseStyles} border-blue-200 dark:border-blue-800 hover:shadow-md`;
             case 'COMPLETED':
-                return `${baseStyles} border-green-200 dark:border-green-800 hover:shadow-md`;
+                return `${baseStyles} border-green-300 dark:border-green-800 hover:shadow-md`;
             default:
-                return `${baseStyles} border-gray-200 dark:border-gray-700 hover:shadow-md`;
+                return `${baseStyles} border-border dark:border-gray-700 hover:shadow-md`;
         }
     };
 
@@ -315,7 +315,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
             case 'IN_PROGRESS':
                 return 'text-blue-700 dark:text-blue-400';
             case 'COMPLETED':
-                return 'text-green-700 dark:text-green-400';
+                return 'text-green-800 dark:text-green-400';
             default:
                 return 'text-gray-700 dark:text-gray-400';
         }
@@ -324,11 +324,11 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
     const getBadgeStyles = (status) => {
         switch (status) {
             case 'PENDING':
-                return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
+                return 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400';
             case 'IN_PROGRESS':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+                return 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300';
             case 'COMPLETED':
-                return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
+                return 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300';
             default:
                 return 'bg-muted text-muted-foreground';
         }
@@ -353,7 +353,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                     {tasks.length === 0 ? (
                         <div className={`text-center py-12 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
                             ? 'border-current text-current bg-current/5'
-                            : 'text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700'
+                            : 'text-muted-foreground dark:text-gray-500 border-border dark:border-gray-700'
                             }`}>
                             {isOver ? (
                                 <div className="flex flex-col items-center gap-2">
@@ -908,7 +908,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
             </div>
 
             {/* Project Members Collapsible Section */}
-            <div className="mb-6 border-b border-gray-200 dark:border-gray-700/60 pb-6">
+            <div className="mb-6 border-b border-border dark:border-gray-700/60 pb-6">
                 <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                     <div className="px-6 py-4">
                         {members.length === 0 ? (

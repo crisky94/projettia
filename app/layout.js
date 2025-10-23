@@ -11,6 +11,7 @@ import AuthRedirect from './components/auth/AuthRedirect';
 import Image from 'next/image';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ThemeToggle from './components/ThemeToggle';
 
 export const metadata = {
   title: 'Projettia',
@@ -44,6 +45,15 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en" className="h-full">
         <head>
+          {/* Set initial theme early to avoid FOUC */}
+          <script dangerouslySetInnerHTML={{ __html: `(() => { try {
+            var t = localStorage.getItem('theme');
+            if (!t) {
+              var m = globalThis.matchMedia ? globalThis.matchMedia('(prefers-color-scheme: dark)') : null;
+              t = m && m.matches ? 'dark' : 'light';
+            }
+            document.documentElement.dataset.theme = t;
+          } catch (e) {} })();` }} />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
           <meta name="theme-color" content="#0f172a" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,6 +66,7 @@ export default function RootLayout({ children }) {
               <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
             </div>
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+              <ThemeToggle />
               <SignedOut>
                 <div className="flex flex-col xs:flex-row gap-2">
                   <SignInButton>
