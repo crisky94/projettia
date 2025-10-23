@@ -46,7 +46,8 @@ export default function RootLayout({ children }) {
       <html lang="en" className="h-full">
         <head>
           {/* Set initial theme early to avoid FOUC */}
-          <script dangerouslySetInnerHTML={{ __html: `(() => { try {
+          <script dangerouslySetInnerHTML={{
+            __html: `(() => { try {
             var t = localStorage.getItem('theme');
             if (!t) {
               var m = globalThis.matchMedia ? globalThis.matchMedia('(prefers-color-scheme: dark)') : null;
