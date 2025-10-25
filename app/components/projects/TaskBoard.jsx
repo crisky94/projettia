@@ -5,11 +5,9 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
-    const [isEditingSprint, setIsEditingSprint] = useState(false);
-
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
-        disabled: false, // Permitir mover tareas a todos los miembros
+        disabled: false,
     });
 
     const style = {
@@ -20,20 +18,8 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
         zIndex: isDragging ? 1000 : 1,
     };
 
-    const handleSprintChange = async (newSprintId) => {
-        try {
-            if (onUpdateTask) {
-                await onUpdateTask(task.id, { sprintId: newSprintId || null });
-                setIsEditingSprint(false);
-            }
-        } catch (error) {
-            console.error('Error updating task sprint:', error);
-            toast.error('Error updating task sprint');
-        }
-    };
-
-    // Function to get avatar color based on initials conflicts
-    const getAvatarColor = (userId, initials, allMembers) => {
+    // Helper: consistent avatar color when initials collide across members
+    const getAvatarColor = (userId, initials, allMembersList) => {
         const colors = [
             'from-blue-500 to-purple-600',
             'from-green-500 to-teal-600',
@@ -44,24 +30,24 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             'from-teal-500 to-cyan-600',
             'from-yellow-500 to-orange-600',
             'from-emerald-500 to-green-600',
-            'from-violet-500 to-purple-600'
+            'from-violet-500 to-purple-600',
         ];
 
-        // Find all members with the same initials
-        const membersWithSameInitials = allMembers.filter(member => {
+        const membersWithSameInitials = allMembersList.filter(member => {
             const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
             return memberInitials === initials;
         });
 
-        if (membersWithSameInitials.length === 1) {
-            // If only one member has these initials, use the default blue-purple
-            return colors[0];
-        }
+        if (membersWithSameInitials.length === 1) return colors[0];
 
-        // If multiple members have the same initials, assign different colors
         const memberIndex = membersWithSameInitials.findIndex(member => member.userId === userId);
         return colors[memberIndex % colors.length];
     };
+
+    const assigneeName = task.assignee?.name || null;
+    const assigneeInitials = assigneeName
+        ? assigneeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+        : null;
 
     return (
         <div
@@ -69,169 +55,65 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             style={style}
             {...attributes}
             {...listeners}
-            className={`group bg-card rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-muted-foreground relative overflow-hidden cursor-grab active:cursor-grabbing active:scale-95 active:shadow-xl
-                ${isDragging ? 'rotate-2 shadow-xl border-violet-400 dark:border-violet-500 scale-105 z-50' : ''}
-                w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl
-            `}
+            className="bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full"
         >
-            {/* Delete button - Available for all members */}
-            {onDeleteTask && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteTask(task.id);
-                    }}
-                    className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white rounded-lg w-8 h-8 sm:w-7 sm:h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-110 touch-action-manipulation min-h-[32px] min-w-[32px] sm:min-h-[28px] sm:min-w-[28px]"
-                    title="Delete task"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            {/* Title + Admin actions */}
+            <div className="flex items-start justify-between gap-2">
+                <h4 className="text-sm sm:text-base font-semibold text-card-foreground line-clamp-2">
+                    {task.title}
+                </h4>
+                {isAdmin && (
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={(e) => { e.stopPropagation?.(); onUpdateTask && onUpdateTask('edit', task); }}
+                            className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-card-foreground transition-colors"
+                            title="Editar tarea"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={(e) => { e.stopPropagation?.(); onDeleteTask && onDeleteTask(task.id); }}
+                            className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                            title="Eliminar tarea"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Description */}
+            {task.description && (
+                <p className="mt-2 text-xs sm:text-sm text-muted-foreground line-clamp-3">{task.description}</p>
             )}
 
-            <div className="p-4 sm:p-5">
-                {/* Task Title */}
-                <h4 className="font-semibold text-card-foreground text-sm sm:text-base mb-2 pr-8 uppercase break-words">{task.title}</h4>
-
-                {/* Task Description */}
-                {task.description && (
-                    <p className="text-muted-foreground text-xs sm:text-sm mb-4 leading-relaxed break-words">
-                        {task.description}
-                    </p>
+            {/* Assignee */}
+            <div className="mt-3 flex items-center gap-2">
+                {assigneeName ? (
+                    <div className={`h-6 w-6 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-[10px] font-bold text-white`}>
+                        {assigneeInitials}
+                    </div>
+                ) : (
+                    <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">--</div>
                 )}
-
-                {/* Task Assignee */}
-                {task.assignee && (
-                    <div className="flex items-center gap-2 sm:gap-3 mt-4 p-2 sm:p-3 bg-muted rounded-lg">
-                        {(() => {
-                            const initials = task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                            const avatarColor = getAvatarColor(task.assignee.id, initials, allMembers);
-                            return (
-                                <div className={`w-8 h-8 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-white dark:ring-gray-700`}>
-                                    {initials}
-                                </div>
-                            );
-                        })()}
-                        <div className="flex-1 min-w-0">
-                            <div className="text-xs sm:text-sm font-medium text-card-foreground truncate">{task.assignee.name}</div>
-                            {task.assignee.email && (
-                                <div className="text-[10px] sm:text-xs text-muted-foreground truncate">{task.assignee.email}</div>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {/* Botón Editar para todos los miembros */}
-                <button
-                    onClick={() => onUpdateTask('edit', task)}
-                    className="mt-3 w-full sm:w-auto px-4 py-3 sm:px-3 sm:py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-lg text-sm sm:text-xs md:text-sm font-medium shadow-sm transition-all duration-200 min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2"
-                >
-                    <span className="text-base sm:text-sm">✏️</span>
-                    <span>Editar</span>
-                </button>
-
-                {/* Sprint Assignment */}
-                <div className="mt-4 p-3 bg-muted rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-muted-foreground">Sprint:</span>
-                            {!isEditingSprint ? (
-                                <div className="flex items-center gap-2">
-                                    {task.sprint ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 rounded-md text-xs font-medium">
-                                            🚀 {task.sprint.name}
-                                        </span>
-                                    ) : (
-                                        <span className="text-xs text-muted-foreground italic">No sprint assigned</span>
-                                    )}
-                                    <button
-                                        onClick={() => setIsEditingSprint(true)}
-                                        className="ml-1 p-2 sm:p-1 hover:bg-muted dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
-                                        title="Edit sprint assignment"
-                                    >
-                                        <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-2 flex-1">
-                                    <select
-                                        value={task.sprintId || ''}
-                                        onChange={(e) => handleSprintChange(e.target.value)}
-                                        className="flex-1 text-xs p-1 border border-input rounded bg-background text-foreground"
-                                    >
-                                        <option value="">No sprint</option>
-                                        {Array.isArray(sprints) && sprints.length > 0 ? (
-                                            sprints
-                                                .filter(sprint => sprint && sprint.status !== 'DELETED')
-                                                .map(sprint => (
-                                                    <option key={sprint.id} value={sprint.id}>
-                                                        {sprint.name}
-                                                    </option>
-                                                ))
-                                        ) : (
-                                            <option disabled>No sprints available</option>
-                                        )}
-                                    </select>
-                                    <button
-                                        onClick={() => setIsEditingSprint(false)}
-                                        className="p-2 sm:p-1 hover:bg-muted dark:hover:bg-gray-600 rounded transition-colors min-h-[32px] min-w-[32px] sm:min-h-[24px] sm:min-w-[24px] flex items-center justify-center touch-action-manipulation"
-                                        title="Cancel editing"
-                                    >
-                                        <svg className="w-3 h-3 text-muted-foreground hover:text-card-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Task Status Badge */}
-                <div className="flex items-center justify-between mt-4 pt-3 border-t border-border dark:border-gray-700">
-                    <div className="flex items-center gap-2">
-                        {(() => {
-                            const statusConfig = {
-                                'PENDING': {
-                                    color: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/30',
-                                    icon: '⏳',
-                                    text: 'Pending'
-                                },
-                                'IN_PROGRESS': {
-                                    color: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/30',
-                                    icon: '⚡',
-                                    text: 'In Progress'
-                                },
-                                'COMPLETED': {
-                                    color: 'text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-500/30',
-                                    icon: '✅',
-                                    text: 'Completed'
-                                }
-                            };
-                            const config = statusConfig[task.status] || { color: 'text-muted-foreground bg-muted', icon: '❓', text: task.status };
-
-                            return (
-                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${config.color}`}>
-                                    <span className="text-sm">{config.icon}</span>
-                                    {config.text}
-                                </span>
-                            );
-                        })()}
-                    </div>
-
-                    {/* Drag indicator for admins */}
-                    {isAdmin && (
-                        <div className="opacity-30 group-hover:opacity-70 transition-opacity">
-                            <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M7 19v-2h2v2H7zM11 19v-2h2v2h-2zM15 19v-2h2v2h-2zM7 15v-2h2v2H7zM11 15v-2h2v2h-2zM15 15v-2h2v2h-2zM7 11V9h2v2H7zM11 11V9h2v2h-2zM15 11V9h2v2h-2z" />
-                            </svg>
-                        </div>
-                    )}
-                </div>
+                <span className="text-xs sm:text-sm text-muted-foreground">{assigneeName || 'Sin asignar'}</span>
             </div>
+
+            {/* Sprint display only (no assignment/change) */}
+            {task.sprint && (
+                <div className="mt-3 p-2 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-muted-foreground">Sprint:</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 rounded-md text-xs font-medium">
+                            🚀 {task.sprint.name}
+                        </span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -441,10 +323,11 @@ TaskRow.propTypes = {
  * TaskBoard Component
  * 
  * PERMISSIONS UPDATED:
- * - ✅ All members can CREATE tasks (no longer admin-only)
- * - ✅ All members can EDIT tasks (no longer admin-only)  
- * - ✅ All members can EDIT sprint assignments (no longer admin-only)
- * - ❌ Only admins can DELETE tasks (security restriction maintained)
+ * - ✅ All members can CREATE tasks
+ * - ✅ All members can MOVE tasks between columns (drag & drop)
+ * - ❌ Only admins can EDIT title/description/assignee
+ * - ❌ Only admins can DELETE tasks
+ * - 🚫 Sprint assignment is disabled in TaskBoard (display-only)
  * 
  * This change allows better collaboration where any team member can contribute
  * by creating and managing tasks, while keeping deletion restricted for data safety.

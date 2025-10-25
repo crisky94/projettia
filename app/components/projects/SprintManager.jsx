@@ -358,7 +358,8 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                     description: newTask.description,
                     assigneeId: newTask.assigneeId || null,
                     sprintId: sprint.id,
-                    estimatedHours: newTask.estimatedHours ? parseFloat(newTask.estimatedHours) : null,
+                    // Convert minutes input to hours (e.g., 30 -> 0.5)
+                    estimatedHours: newTask.estimatedHours ? Number(newTask.estimatedHours) / 60 : null,
                     status: 'PENDING'
                 }),
             });
@@ -689,21 +690,22 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                 </div>
 
                                 <div>
-                                    <label htmlFor="task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Estimated Hours (min: 30min)
+                                    <label htmlFor="task-minutes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Estimated Time (minutes)
                                     </label>
                                     <input
-                                        id="task-hours"
+                                        id="task-minutes"
                                         type="number"
-                                        min="0.5"
-                                        step="0.5"
+                                        min="30"
+                                        step="30"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="0.5 (30 min)"
+                                        placeholder="30, 60, 90..."
+                                        required
                                         disabled={isSubmitting}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Examples: 0.5 = 30min, 1 = 1h, 1.5 = 1.5h</p>
+                                    <p className="text-xs text-gray-500 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
                                 </div>
                             </div>
 
@@ -996,7 +998,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     title: newTask.title,
                     description: newTask.description,
                     assigneeId: newTask.assigneeId || null,
-                    estimatedHours: newTask.estimatedHours ? parseFloat(newTask.estimatedHours) : null,
+                    // Convert minutes input to hours (e.g., 30 -> 0.5)
+                    estimatedHours: newTask.estimatedHours ? Number(newTask.estimatedHours) / 60 : null,
                     status: 'PENDING'
                 }),
             });
@@ -1382,21 +1385,22 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </div>
 
                                 <div>
-                                    <label htmlFor="main-task-hours" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Estimated Hours (min: 30min)
+                                    <label htmlFor="main-task-minutes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Estimated Time (minutes)
                                     </label>
                                     <input
-                                        id="main-task-hours"
+                                        id="main-task-minutes"
                                         type="number"
-                                        min="0.5"
-                                        step="0.5"
+                                        min="30"
+                                        step="30"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="0.5 (30 min)"
+                                        placeholder="30, 60, 90..."
+                                        required
                                         disabled={isSubmitting}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Examples: 0.5 = 30min, 1 = 1h, 1.5 = 1.5h</p>
+                                    <p className="text-xs text-gray-500 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
                                 </div>
                             </div>
 
