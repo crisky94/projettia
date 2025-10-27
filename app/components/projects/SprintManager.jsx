@@ -303,10 +303,10 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
 
     const getSprintStatusStyles = (status) => {
         const styles = {
-            PLANNING: 'bg-gray-100 border-gray-300 text-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200',
-            ACTIVE: 'bg-blue-100 border-blue-300 text-blue-800 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-200',
-            COMPLETED: 'bg-green-100 border-green-300 text-green-800 dark:bg-green-900/30 dark:border-green-600 dark:text-green-200',
-            CANCELLED: 'bg-red-100 border-red-300 text-red-800 dark:bg-red-900/30 dark:border-red-600 dark:text-red-200'
+            PLANNING: 'bg-gray-100 border-gray-300 text-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400',
+            ACTIVE: 'bg-blue-200 border-blue-300 text-blue-900 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-400',
+            COMPLETED: 'bg-green-200 border-green-300 text-green-800 dark:bg-green-900/50 dark:border-green-600 dark:text-green-300',
+            CANCELLED: 'bg-red-100 border-red-300 text-red-800 dark:bg-red-900/30 dark:border-red-600 dark:text-red-400'
         };
         return styles[status] || styles.PLANNING;
     };
@@ -1109,7 +1109,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
                 {/* Tasks without sprint */}
                 {getTasksWithoutSprint().length > 0 && (
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <div className="bg-card rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
                         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
