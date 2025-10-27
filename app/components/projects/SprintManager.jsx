@@ -1062,7 +1062,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Header */}
             <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">🚀 Sprint Management</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-400">🚀 Sprint Management</h2>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">Organize your tasks into time-boxed sprints</p>
                 </div>
                 <div className="flex gap-2">

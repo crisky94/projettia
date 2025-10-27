@@ -108,7 +108,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 <div className="mt-3 p-2 bg-muted rounded-lg">
                     <div className="flex items-center gap-2">
                         <span className="text-xs font-medium text-muted-foreground">Sprint:</span>
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 rounded-md text-xs font-medium">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium">
                             🚀 {task.sprint.name}
                         </span>
                     </div>
