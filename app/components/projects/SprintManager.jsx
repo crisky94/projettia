@@ -601,13 +601,12 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             {/* Add Task Modal */}
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
-                        Header
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
+                                    <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     </div>
@@ -618,7 +617,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
                                     disabled={isSubmitting}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -632,7 +631,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-6 space-y-4">
+                        <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                             <div>
                                 <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Task Title *
@@ -642,7 +641,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     type="text"
                                     value={newTask.title}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     placeholder="Enter task title..."
                                     required
                                     disabled={isSubmitting}
@@ -657,7 +656,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     id="task-description"
                                     value={newTask.description}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                     rows="3"
                                     placeholder="Describe the task details..."
                                     disabled={isSubmitting}
@@ -673,7 +672,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         id="task-assignee"
                                         value={newTask.assigneeId}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         disabled={isSubmitting}
                                     >
                                         <option value="">Unassigned</option>
@@ -700,7 +699,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         step="30"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="30, 60, 90..."
                                         required
                                         disabled={isSubmitting}
@@ -717,16 +716,16 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                     }}
-                                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                        ? 'bg-blue-400 text-white cursor-not-allowed'
-                                        : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
+                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
+                                        ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        : 'bg-violet-500 text-white '
                                         }`}
                                     disabled={isSubmitting}
                                 >
@@ -1069,17 +1068,17 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 <div className="flex gap-2">
                     <button
                         onClick={() => setShowAddTaskModal(true)}
-                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
+                        className="px-4 py-2 bg-violet-400 text-primary-foreground hover:opacity-90  rounded-lg font-medium shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                         <span className="hidden sm:inline">New Task</span>
                         <span className="sm:hidden">Task</span>
                     </button>
                     <button
                         onClick={() => setShowAddSprintModal(true)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
+                        className="px-4 py-2 rounded-lg font-medium shadow-sm bg-primary text-primary-foreground hover:opacity-90 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1142,7 +1141,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Modal de confirmación para eliminar sprint */}
             {showDeleteSprintModal && sprintToDelete && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
                         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
@@ -1151,7 +1150,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Eliminar Sprint</h3>
+                                    <h3 className="text-lg font-bold text-card-foreground">Eliminar Sprint</h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">¿Seguro que quieres eliminar el sprint "{sprintToDelete.name}"? Las tareas se moverán a "Sin sprint".</p>
                                 </div>
                             </div>
@@ -1159,14 +1158,14 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                         <div className="px-6 py-4 flex justify-end gap-3">
                             <button
                                 onClick={cancelDeleteSprint}
-                                className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                 disabled={isSubmitting}
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={confirmDeleteSprint}
-                                className={`px-4 py-2 rounded-lg text-white font-medium ${isSubmitting ? 'bg-red-400' : 'bg-red-500 hover:bg-red-600'}`}
+                                className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-white font-medium min-h-[44px] sm:min-h-[36px] ${isSubmitting ? 'bg-red-400' : 'bg-red-500 hover:bg-red-600'}`}
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Eliminando...' : 'Eliminar'}
@@ -1179,18 +1178,23 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Add Sprint Modal */}
             {showAddSprintModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    🚀 New Sprint
+                                <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
+                                    <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                    </div>
+                                    New Sprint
                                 </h2>
                                 <button
                                     onClick={() => {
                                         setShowAddSprintModal(false);
                                         setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1198,7 +1202,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </button>
                             </div>
                         </div>
-                        <form onSubmit={handleCreateSprint} className="p-6 space-y-4">
+                        <form onSubmit={handleCreateSprint} className="p-4 space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Sprint Name *
@@ -1207,7 +1211,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     type="text"
                                     value={newSprint.name}
                                     onChange={(e) => setNewSprint({ ...newSprint, name: e.target.value })}
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     placeholder="e.g.: Sprint 1 - Basic Features"
                                     required
                                     disabled={isSubmitting}
@@ -1220,7 +1224,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 <textarea
                                     value={newSprint.description}
                                     onChange={(e) => setNewSprint({ ...newSprint, description: e.target.value })}
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                     rows="3"
                                     placeholder="Optional sprint description..."
                                     disabled={isSubmitting}
@@ -1245,7 +1249,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
                                             setNewSprint({ ...newSprint, ...updates });
                                         }}
-                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
                                     />
@@ -1259,7 +1263,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         value={newSprint.endDate}
                                         onChange={(e) => setNewSprint({ ...newSprint, endDate: e.target.value })}
                                         min={newSprint.startDate || undefined}
-                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         required
                                         disabled={isSubmitting}
                                     />
@@ -1272,16 +1276,16 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         setShowAddSprintModal(false);
                                         setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                                     }}
-                                    className="px-6 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                        ? 'bg-blue-400 text-white cursor-not-allowed'
-                                        : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'
+                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
+                                        ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        : 'bg-violet-500 text-white '
                                         }`}
                                     disabled={isSubmitting || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
                                 >
@@ -1296,24 +1300,23 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Add Task Modal (for tasks without sprint) */}
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
-                        {/* Header */}
-                        {/* <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                                        <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
+                                    <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     </div>
-                                    Create New Task
+                                    New Task
                                 </h2>
                                 <button
                                     onClick={() => {
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
                                     disabled={isSubmitting}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1321,13 +1324,10 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     </svg>
                                 </button>
                             </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                                This task will not be assigned to any sprint initially
-                            </p>
-                        </div> */}
+                        </div>
 
                         {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-6 space-y-4">
+                        <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                             <div>
                                 <label htmlFor="main-task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Task Title *
@@ -1337,7 +1337,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     type="text"
                                     value={newTask.title}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     placeholder="Enter task title..."
                                     required
                                     disabled={isSubmitting}
@@ -1352,7 +1352,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     id="main-task-description"
                                     value={newTask.description}
                                     onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                     rows="3"
                                     placeholder="Describe the task details..."
                                     disabled={isSubmitting}
@@ -1368,7 +1368,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         id="main-task-assignee"
                                         value={newTask.assigneeId}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         disabled={isSubmitting}
                                     >
                                         <option value="">Unassigned</option>
@@ -1395,7 +1395,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         step="30"
                                         value={newTask.estimatedHours}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="30, 60, 90..."
                                         required
                                         disabled={isSubmitting}
@@ -1412,16 +1412,16 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                     }}
-                                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium transition-colors"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`px-6 py-2 rounded-lg font-medium shadow-sm transition-all duration-200 ${isSubmitting
-                                        ? 'bg-gray-400 text-white cursor-not-allowed'
-                                        : 'bg-gray-600 hover:bg-gray-700 text-white hover:shadow-md'
+                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
+                                        ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        : 'bg-violet-500 text-white '
                                         }`}
                                     disabled={isSubmitting}
                                 >
