@@ -226,7 +226,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                     onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
-                    <option value="">Unassigned</option>
+                    <option value="">unasigned</option>
                     {allMembers.map(member => (
                         <option key={member.userId} value={member.userId}>
                             {member.user?.name || 'Unknown user'}
@@ -675,7 +675,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         disabled={isSubmitting}
                                     >
-                                        <option value="">Unassigned</option>
+                                        <option value="">unasigned</option>
                                         {!Array.isArray(allMembers) || allMembers.length === 0 ? (
                                             <option disabled>Loading members...</option>
                                         ) : (
@@ -1371,7 +1371,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         disabled={isSubmitting}
                                     >
-                                        <option value="">Unassigned</option>
+                                        <option value="">unasigned</option>
                                         {!Array.isArray(allMembers) || allMembers.length === 0 ? (
                                             <option disabled>Loading members...</option>
                                         ) : (

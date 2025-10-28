@@ -100,7 +100,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
                 ) : (
                     <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">--</div>
                 )}
-                <span className="text-xs sm:text-sm text-muted-foreground">{assigneeName || 'Sin asignar'}</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">{assigneeName || 'unasigned'}</span>
             </div>
 
             {/* Sprint display only (no assignment/change) */}
@@ -974,7 +974,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
                                             disabled={isSubmitting}
                                         >
-                                            <option value="">Sin asignar</option>
+                                            <option value="">unasigned</option>
                                             {members.map((member) => (
                                                 <option key={member.userId} value={member.userId}>
                                                     {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
@@ -1089,7 +1089,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                     disabled={isSubmitting}
                                 >
-                                    <option value="">Unassigned</option>
+                                    <option value="">unasigned</option>
                                     {!Array.isArray(members) || members.length === 0 ? (
                                         <option disabled>Loading members...</option>
                                     ) : (
