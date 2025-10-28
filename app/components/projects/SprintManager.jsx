@@ -47,7 +47,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 text: 'Cancelled'
             }
         };
-    return statusConfig[status] || { color: 'text-gray-700 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
+        return statusConfig[status] || { color: 'text-gray-700 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
     };
 
     const handleSave = async () => {
