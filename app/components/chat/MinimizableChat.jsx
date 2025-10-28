@@ -351,18 +351,31 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         );
     }
 
+    if (isMinimized) {
+        return (
+            <button
+                onClick={toggleChat}
+                aria-label="Open chat"
+                className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                {hasUnreadMessages && (
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full ring-2 ring-white"></span>
+                )}
+            </button>
+        );
+    }
+
     return (
-        <div className={`fixed bottom-0 right-4 z-50 transition-all duration-300 ease-in-out ${isMinimized
-            ? 'w-80 h-14'
-            : 'w-80 h-96 md:w-96 md:h-[500px]'
-            }`}>
-            {/* Chat Container */}
-            <div className="bg-white dark:bg-gray-800 rounded-t-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="fixed bottom-4 right-4 z-50 w-80 h-80 md:w-96 md:h-96">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col">
                 {/* Chat Header */}
                 <button
                     className="flex items-center justify-between p-3 bg-blue-600 hover:bg-blue-700 text-white w-full text-left transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
                     onClick={toggleChat}
-                    aria-label={isMinimized ? "Open chat" : "Minimize chat"}
+                    aria-label="Minimize chat"
                 >
                     <div className="flex items-center space-x-2">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -371,109 +384,86 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         <span className="font-medium text-sm truncate">
                             {projectName ? `${projectName} Chat` : 'Team Chat'}
                         </span>
-
-                        {/* Connection Status Indicator */}
-                        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}
-                            title={isConnected ? 'Conectado' : 'Desconectado'}>
-                        </div>
-
-                        {hasUnreadMessages && isMinimized && (
-                            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-                        )}
+                        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`} title={isConnected ? 'Conectado' : 'Desconectado'} />
                     </div>
-                    <button
-                        className="hover:bg-blue-700 p-1 rounded transition-colors"
-                        title={isMinimized ? "Open chat" : "Minimize chat"}
-                    >
-                        <svg
-                            className={`w-4 h-4 transition-transform duration-200 ${isMinimized ? 'rotate-180' : ''}`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                 </button>
 
-                {/* Chat Body - Only show when not minimized */}
-                {!isMinimized && (
-                    <>
-                        {/* Messages Area */}
-                        <div className="flex-1 overflow-y-auto p-3 h-80 md:h-96 bg-gray-50 dark:bg-gray-900">
-                            {chatContent}
-                        </div>
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-3 bg-gray-50 dark:bg-gray-900">
+                    {chatContent}
+                </div>
 
-                        {/* Message Input */}
-                        <div className="p-3 border-t border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
-                            <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
-                                <input
-                                    type="text"
-                                    value={newMessage}
-                                    onChange={(e) => setNewMessage(e.target.value)}
-                                    placeholder={editingMessageId ? "Editando mensaje..." : "Type a message..."}
-                                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-                                    disabled={isLoading}
-                                />
-                                {editingMessageId && (
-                                    <button
-                                        type="button"
-                                        onClick={cancelEdit}
-                                        className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                        title="Cancelar edición"
-                                        aria-label="Cancelar edición"
-                                    >
-                                        Cancelar edición
-                                    </button>
-                                )}
-                                {(() => {
-                                    const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
-                                    const last = ownMessages.at(-1);
-                                    const canEditLast = !!last && !!last.content && !!last.content.trim();
-                                    return (
-                                        <button
-                                            type="button"
-                                            onClick={startEditLast}
-                                            disabled={!canEditLast}
-                                            className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                            title="Editar tu último mensaje"
-                                            aria-label="Editar tu último mensaje"
-                                        >
-                                            Editar último
-                                        </button>
-                                    );
-                                })()}
-                                {(() => {
-                                    const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
-                                    const last = ownMessages.at(-1);
-                                    const canDeleteLast = !!last;
-                                    return (
-                                        <button
-                                            type="button"
-                                            onClick={deleteLast}
-                                            disabled={!canDeleteLast}
-                                            className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                            title="Eliminar tu último mensaje"
-                                            aria-label="Eliminar tu último mensaje"
-                                        >
-                                            Eliminar último
-                                        </button>
-                                    );
-                                })()}
+                {/* Message Input */}
+                <div className="p-3 border-t border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
+                    <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
+                        <input
+                            type="text"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder={editingMessageId ? "Editando mensaje..." : "Type a message..."}
+                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                            disabled={isLoading}
+                        />
+                        {editingMessageId && (
+                            <button
+                                type="button"
+                                onClick={cancelEdit}
+                                className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                title="Cancelar edición"
+                                aria-label="Cancelar edición"
+                            >
+                                Cancelar edición
+                            </button>
+                        )}
+                        {(() => {
+                            const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+                            const last = ownMessages.at(-1);
+                            const canEditLast = !!last && !!last.content && !!last.content.trim();
+                            return (
                                 <button
-                                    type="submit"
-                                    disabled={!newMessage.trim() || isLoading}
-                                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-full transition-colors flex items-center justify-center min-w-[36px] min-h-[36px]"
-                                    title="Send message"
+                                    type="button"
+                                    onClick={startEditLast}
+                                    disabled={!canEditLast}
+                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                    title="Editar tu último mensaje"
+                                    aria-label="Editar tu último mensaje"
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                    </svg>
+                                    Editar último
                                 </button>
-                            </form>
-                        </div>
-                    </>
-                )}
+                            );
+                        })()}
+                        {(() => {
+                            const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+                            const last = ownMessages.at(-1);
+                            const canDeleteLast = !!last;
+                            return (
+                                <button
+                                    type="button"
+                                    onClick={deleteLast}
+                                    disabled={!canDeleteLast}
+                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                    title="Eliminar tu último mensaje"
+                                    aria-label="Eliminar tu último mensaje"
+                                >
+                                    Eliminar último
+                                </button>
+                            );
+                        })()}
+                        <button
+                            type="submit"
+                            disabled={!newMessage.trim() || isLoading}
+                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-full transition-colors flex items-center justify-center min-w-[32px] min-h-[32px]"
+                            title="Send message"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );

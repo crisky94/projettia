@@ -601,7 +601,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             {/* Add Task Modal */}
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                         <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
@@ -1141,7 +1141,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Modal de confirmación para eliminar sprint */}
             {showDeleteSprintModal && sprintToDelete && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-sm border border-border">
+                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
                         <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
@@ -1178,7 +1178,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Add Sprint Modal */}
             {showAddSprintModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                         <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
@@ -1300,7 +1300,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Add Task Modal (for tasks without sprint) */}
             {showAddTaskModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                         <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
