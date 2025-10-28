@@ -795,7 +795,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                 <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                     <div className="px-6 py-4">
                         {members.length === 0 ? (
-                            <div className="flex items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center justify-center py-8 text-gray-700 dark:text-gray-400">
                                 {isLoadingMembers ? (
                                     <div className="flex items-center gap-2">
                                         <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -856,7 +856,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-semibold text-foreground">{member.user.name}</span>
-                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                <span className="text-xs text-gray-700 dark:text-gray-400">
                                                     {member.role === 'ADMIN' ? (
                                                         <span className="inline-flex items-center gap-1">
                                                             <svg className="w-3 h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20">
@@ -1035,7 +1035,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation hover:bg-gray-100 dark:hover:bg-gray-800"
                                     disabled={isSubmitting}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1141,9 +1141,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
             {/* Task deletion confirmation modal */}
             {showDeleteTaskModal && taskToDelete && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
+                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-sm border border-border">
                         {/* Header */}
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
                                     <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1154,7 +1154,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                                     <h3 className="text-xl font-bold text-card-foreground">
                                         Delete task
                                     </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                         This action cannot be undone
                                     </p>
                                 </div>
@@ -1162,9 +1162,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         </div>
 
                         {/* Content */}
-                        <div className="p-6">
+                        <div className="p-4">
                             <div className="mb-6">
-                                <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                                <p className="text-gray-700 dark:text-gray-400 text-base leading-relaxed">
                                     Are you sure you want to delete the task{' '}
                                     <span className="font-semibold text-card-foreground">"{taskToDelete.title}"</span>?
                                 </p>

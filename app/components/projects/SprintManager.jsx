@@ -16,10 +16,10 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
 
     const getStatusStyles = (status) => {
         const styles = {
-            PENDING: 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200',
-            IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200',
-            COMPLETED: 'bg-green-50 border-green-200 text-green-300 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200',
-            CANCELLED: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200'
+            PENDING: 'bg-amber-30 border-amber-200 text-amber-400  dark:border-amber-800 ',
+            IN_PROGRESS: 'bg-blue-30 border-blue-200 text-blue-400 dark:border-blue-800 ',
+            COMPLETED: 'bg-green-30 border-green-200 text-green-400  dark:border-green-800 ',
+            CANCELLED: 'bg-red-30 border-red-200 text-red-400  dark:border-red-800'
         };
         return styles[status] || styles.PENDING;
     };
@@ -27,27 +27,27 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     const getStatusBadge = (status) => {
         const statusConfig = {
             'PENDING': {
-                color: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30',
+                color: 'text-amber-600 bg-amber-200',
                 icon: '⏳',
                 text: 'Pending'
             },
             'IN_PROGRESS': {
-                color: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30',
+                color: 'text-blue-600 bg-blue-200',
                 icon: '⚡',
                 text: 'In Progress'
             },
             'COMPLETED': {
-                color: 'text-green-600 dark:text-green-300 bg-green-100 dark:bg-green-900/30',
+                color: 'text-green-600 bg-green-100',
                 icon: '✅',
                 text: 'Completed'
             },
             'CANCELLED': {
-                color: 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30',
+                color: 'text-red-600 bg-red-100',
                 icon: '❌',
                 text: 'Cancelled'
             }
         };
-        return statusConfig[status] || { color: 'text-gray-600 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
+    return statusConfig[status] || { color: 'text-gray-700 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
     };
 
     const handleSave = async () => {
@@ -574,7 +574,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             {isExpanded && (
                 <div className="p-4">
                     {tasks.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <div className="text-center py-8 text-gray-700 dark:text-gray-400">
                             <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -600,9 +600,9 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
 
             {/* Add Task Modal */}
             {showAddTaskModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
-                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                        <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
                                     <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
@@ -617,7 +617,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         setShowAddTaskModal(false);
                                         setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
                                     disabled={isSubmitting}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -625,13 +625,13 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     </svg>
                                 </button>
                             </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                            <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
                                 Creating task for: <span className="font-semibold">{sprint.name}</span>
                             </p>
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-4 space-y-4">
+                        <form onSubmit={handleCreateTask} className="p-3 space-y-3">
                             <div>
                                 <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Task Title *
@@ -704,7 +704,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         required
                                         disabled={isSubmitting}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
+                                    <p className="text-xs text-gray-700 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
                                 </div>
                             </div>
 
@@ -1140,9 +1140,9 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
             {/* Modal de confirmación para eliminar sprint */}
             {showDeleteSprintModal && sprintToDelete && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
+                    <div className="bg-card rounded-2xl shadow-2xl w-full max-w-sm border border-border">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
                                     <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1151,11 +1151,11 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-card-foreground">Eliminar Sprint</h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">¿Seguro que quieres eliminar el sprint "{sprintToDelete.name}"? Las tareas se moverán a "Sin sprint".</p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">¿Seguro que quieres eliminar el sprint "{sprintToDelete.name}"? Las tareas se moverán a "Sin sprint".</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="px-6 py-4 flex justify-end gap-3">
+                        <div className="px-4 py-3 flex justify-end gap-3">
                             <button
                                 onClick={cancelDeleteSprint}
                                 className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
@@ -1177,9 +1177,9 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
             {/* Add Sprint Modal */}
             {showAddSprintModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
-                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                        <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
                                     <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
@@ -1194,7 +1194,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         setShowAddSprintModal(false);
                                         setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1202,7 +1202,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </button>
                             </div>
                         </div>
-                        <form onSubmit={handleCreateSprint} className="p-4 space-y-4">
+                        <form onSubmit={handleCreateSprint} className="p-3 space-y-3">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Sprint Name *
@@ -1269,7 +1269,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     />
                                 </div>
                             </div>
-                            <div className="flex justify-end gap-3 pt-4">
+                            <div className="flex justify-end gap-3 pt-3">
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -1299,9 +1299,9 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
             {/* Add Task Modal (for tasks without sprint) */}
             {showAddTaskModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
-                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
+                        <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
                                     <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
@@ -1327,7 +1327,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-4 space-y-4">
+                        <form onSubmit={handleCreateTask} className="p-3 space-y-3">
                             <div>
                                 <label htmlFor="main-task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Task Title *
@@ -1359,7 +1359,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label htmlFor="main-task-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Assign to
@@ -1400,12 +1400,12 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         required
                                         disabled={isSubmitting}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
+                                    <p className="text-xs text-gray-700 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
                                 </div>
                             </div>
 
                             {/* Actions */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                                 <button
                                     type="button"
                                     onClick={() => {

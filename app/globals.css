@@ -8,7 +8,7 @@
 
 :root {
   /* Tema pastel: tonos suaves y alta legibilidad */
-  --background: 250, 250, 255;
+  --background: 246, 248, 252;
   /* Fondo muy claro (casi blanco con tinte azul) */
   --foreground: 17, 24, 39;
   /* Texto oscuro (slate-900) */
@@ -18,45 +18,45 @@
   --card-foreground: 17, 24, 39;
   /* Texto oscuro en tarjetas */
 
-  --border: 241, 245, 249;
+  --border: 226, 232, 240;
   /* Borde más claro (slate-100) */
-  --input: 241, 245, 249;
+  --input: 226, 232, 240;
   /* Mismo tono para inputs */
 
-  --primary: 191, 219, 254;
+  --primary: 147, 197, 253;
   /* Azul pastel (blue-200) */
   --primary-foreground: 17, 24, 39;
   /* Texto oscuro sobre azul pastel */
 
-  --accent: 221, 214, 254;
+  --accent: 196, 181, 253;
   /* Lila pastel (violet-200) */
   --accent-foreground: 17, 24, 39;
   /* Texto oscuro sobre lila pastel */
 
-  --orange: 254, 215, 170;
+  --orange: 253, 186, 116;
   /* Naranja pastel (orange-200) */
   --orange-foreground: 17, 24, 39;
   /* Texto oscuro sobre naranja pastel */
 
-  --primary-dark: 147, 197, 253;
+  --primary-dark: 96, 165, 250;
   /* Azul un poco más intenso (blue-300) para hover */
 
-  --muted: 241, 245, 249;
+  --muted: 226, 232, 240;
   /* Fondo apagado más claro (slate-100) */
-  --muted-foreground: 148, 163, 184;
+  --muted-foreground: 100, 116, 139;
   /* Texto apagado más claro (slate-400) */
 
-  --destructive: 254, 202, 202;
+  --destructive: 252, 165, 165;
   /* Rojo pastel (red-200) */
   --destructive-foreground: 17, 24, 39;
   /* Texto oscuro sobre rojo pastel */
 
   --success: 34, 197, 94;
   /* Verde más oscuro (green-500) */
-  --warning: 254, 240, 138;
+  --warning: 253, 224, 71;
   /* Amarillo pastel (yellow-200) */
 
-  --ring: 147, 197, 253;
+  --ring: 96, 165, 250;
   /* Anillo de foco azul pastel (blue-300) */
 }
 
