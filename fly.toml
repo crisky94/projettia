@@ -1,15 +1,17 @@
 app = "projettia"
+primary_region = "ams"
 
 [build]
-  builder = "heroku/buildpacks:20"
+  image = "ghcr.io/vercel/nextjs-docker:latest"
 
 [env]
-  NODE_ENV = "production"
+  PORT = "8080"
+  DATABASE_URL = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza181RGRWMFBFVHFMSjRfekNfYXVDMFgiLCJhcGlfa2V5IjoiMDFLODNUWERTRkI4OTMyTkMxQkg3NFYzU0siLCJ0ZW5hbnRfaWQiOiI4OGQ5OTI4YjZmNzVjMTBlMmRmY2UyODBiYTRhZmYwNWM1YzJmMjRjNDhkZWQyYmQwNjU0MzZhYTQ3NmE1ZDA0IiwiaW50ZXJuYWxfc2VjcmV0IjoiYWZmMWMxNzItMjRjMC00ZDVmLWFhODItODlkMGExYWY3YjFiIn0.V-iorSBnr-47am01AkWFvMr25TOAJM1FNioGY8qwFPw"
 
 [[services]]
-  internal_port = 3000
-  processes = ["app"]
+  internal_port = 8080
   protocol = "tcp"
+  processes = ["app"]
 
   [[services.ports]]
     port = 80
