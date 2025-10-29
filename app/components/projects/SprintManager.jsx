@@ -15,11 +15,12 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     });
 
     const getStatusStyles = (status) => {
+        // Background adapts to light/dark; borders darken in dark mode for contrast
         const styles = {
-            PENDING: 'bg-amber-30 border-amber-200 text-amber-400  dark:border-amber-800 ',
-            IN_PROGRESS: 'bg-blue-30 border-blue-200 text-blue-400 dark:border-blue-800 ',
-            COMPLETED: 'bg-green-30 border-green-200 text-green-400  dark:border-green-800 ',
-            CANCELLED: 'bg-red-30 border-red-200 text-red-400  dark:border-red-800'
+            PENDING: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/10 dark:border-amber-800 dark:text-amber-400',
+            IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/10 dark:border-blue-800 dark:text-blue-400',
+            COMPLETED: 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/10 dark:border-green-800 dark:text-green-400',
+            CANCELLED: 'bg-red-50 border-red-200 text-red-700 dark:bg-red-900/10 dark:border-red-800 dark:text-red-400'
         };
         return styles[status] || styles.PENDING;
     };
@@ -302,11 +303,12 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     });
 
     const getSprintStatusStyles = (status) => {
+        // Darker, higher-contrast colors for sprint states in light and dark mode
         const styles = {
-            PLANNING: 'bg-gray-100 border-gray-300 text-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400',
-            ACTIVE: 'bg-blue-200 border-blue-300 text-blue-900 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-400',
-            COMPLETED: 'bg-green-200 border-green-300 text-green-800 dark:bg-green-900/50 dark:border-green-600 dark:text-green-300',
-            CANCELLED: 'bg-red-100 border-red-300 text-red-800 dark:bg-red-900/30 dark:border-red-600 dark:text-red-400'
+            PLANNING: 'bg-gray-200 border-gray-400 text-gray-900 dark:bg-gray-800/70 dark:border-gray-500 dark:text-gray-200',
+            ACTIVE: 'bg-blue-300 border-blue-500 text-blue-900 dark:bg-blue-900/60 dark:border-blue-700 dark:text-blue-300',
+            COMPLETED: 'bg-green-300 border-green-500 text-green-900 dark:bg-green-900/60 dark:border-green-700 dark:text-green-300',
+            CANCELLED: 'bg-red-300 border-red-500 text-red-900 dark:bg-red-900/60 dark:border-red-700 dark:text-red-300'
         };
         return styles[status] || styles.PLANNING;
     };
@@ -1062,8 +1064,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             {/* Header */}
             <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                 <div>
-                    <h2 className="text-2xl font-bold dark:text-gray-400">🚀 Sprint Management</h2>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">Organize your tasks into time-boxed sprints</p>
+                    <h2 className="text-2xl font-bold dark:text-gray-600">🚀 Sprint Management</h2>
+                    <p className="text-gray-600 dark:text-gray-600 mt-1">Organize your tasks into time-boxed sprints</p>
                 </div>
                 <div className="flex gap-2">
                     <button

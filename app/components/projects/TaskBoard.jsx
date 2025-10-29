@@ -4,16 +4,17 @@ import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
-const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+    const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
-        disabled: false,
+        disabled: !canDrag,
     });
 
     const style = {
         transform: CSS.Translate.toString(transform),
         transition,
-        cursor: 'grab',
+        cursor: canDrag ? 'grab' : 'default',
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 1000 : 1,
     };
@@ -55,7 +56,7 @@ const TaskCard = ({ task, isAdmin, allMembers = [], sprints = [], onDeleteTask, 
             style={style}
             {...attributes}
             {...listeners}
-            className="bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full"
+            className={`bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full ${!canDrag ? 'opacity-95' : ''}`}
         >
             {/* Title + Admin actions */}
             <div className="flex items-start justify-between gap-2">
@@ -137,6 +138,7 @@ TaskCard.propTypes = {
         })
     }).isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    currentUserId: PropTypes.string,
     allMembers: PropTypes.arrayOf(
         PropTypes.shape({
             userId: PropTypes.string.isRequired,
@@ -156,7 +158,7 @@ TaskCard.propTypes = {
     onUpdateTask: PropTypes.func
 };
 
-const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -230,7 +232,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                     </span>
                 </div>
 
-                {/* Tasks Container - Horizontal Scroll */}
+                {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
                 <div className="relative">
                     {tasks.length === 0 ? (
                         <div className={`text-center py-12 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
@@ -252,13 +254,14 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
                             )}
                         </div>
                     ) : (
-                        /* Mobile: Grid layout, Desktop: Horizontal scroll */
-                        <div className="grid grid-cols-1 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-2 gap-4">
+                        /* Responsive grid that wraps items to next row */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {tasks.filter(task => task && task.id).map((task) => (
-                                <div key={task.id} className="w-full sm:flex-shrink-0 sm:w-80">
+                                <div key={task.id} className="w-full">
                                     <TaskCard
                                         task={task}
                                         isAdmin={isAdmin}
+                                        currentUserId={currentUserId}
                                         allMembers={allMembers}
                                         sprints={sprints}
                                         onDeleteTask={onDeleteTask}
@@ -269,7 +272,7 @@ const TaskRow = ({ title, tasks, isAdmin, status, allMembers = [], sprints = [],
 
                             {/* Drop zone indicator when dragging */}
                             {isOver && tasks.length > 0 && (
-                                <div className="w-full sm:flex-shrink-0 sm:w-80 h-24 sm:h-full flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
+                                <div className="w-full h-24 flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
                                     <div className="flex flex-col items-center gap-2">
                                         <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -300,6 +303,7 @@ TaskRow.propTypes = {
         })
     ).isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    currentUserId: PropTypes.string,
     allMembers: PropTypes.arrayOf(
         PropTypes.shape({
             userId: PropTypes.string.isRequired,
@@ -332,7 +336,7 @@ TaskRow.propTypes = {
  * This change allows better collaboration where any team member can contribute
  * by creating and managing tasks, while keeping deletion restricted for data safety.
  */
-const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
+const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
     // Estado para edición de tarea
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
@@ -899,6 +903,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         status="PENDING"
                         tasks={tasks.filter(task => task.status === 'PENDING')}
                         isAdmin={isAdmin}
+                        currentUserId={currentUserId}
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
@@ -911,6 +916,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         status="IN_PROGRESS"
                         tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
                         isAdmin={isAdmin}
+                        currentUserId={currentUserId}
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
@@ -923,6 +929,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, onTaskUpdate, onTaskDelet
                         status="COMPLETED"
                         tasks={tasks.filter(task => task.status === 'COMPLETED')}
                         isAdmin={isAdmin}
+                        currentUserId={currentUserId}
                         allMembers={members}
                         sprints={sprints}
                         onDeleteTask={handleDeleteTask}
@@ -1210,6 +1217,7 @@ TaskBoard.propTypes = {
         })
     ).isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    currentUserId: PropTypes.string,
     sprints: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,

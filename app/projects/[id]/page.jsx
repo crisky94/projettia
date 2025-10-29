@@ -521,7 +521,7 @@ export default function ProjectPage({ params }) {
                             <button
                                 onClick={() => setActiveTab('kanban')}
                                 className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'kanban'
-                                    ? 'border-primary text-primary'
+                                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
                                     : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                                     }`}
                             >
@@ -534,7 +534,7 @@ export default function ProjectPage({ params }) {
                             <button
                                 onClick={() => setActiveTab('sprints')}
                                 className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'sprints'
-                                    ? 'border-primary text-primary'
+                                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
                                     : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                                     }`}
                             >
@@ -555,6 +555,7 @@ export default function ProjectPage({ params }) {
                                     projectId={project.id}
                                     initialTasks={tasks}
                                     isAdmin={canManageMembers}
+                                    currentUserId={user.id}
                                     sprints={sprints}
                                     onTaskUpdate={handleTaskUpdate}
                                     onTaskDelete={handleTaskDelete}
