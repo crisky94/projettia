@@ -18,7 +18,7 @@ export default function Home() {
     <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-8">
       <div className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          Welcome to Projjetia
+          Welcome to Projettia
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
           Collaborate with your team in real-time, manage tasks efficiently, and communicate seamlessly.
