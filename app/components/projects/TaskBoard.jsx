@@ -885,8 +885,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden">
-            <div className="w-full">
+        <div className="w-full max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="w-full max-w-none mx-auto" style={{ width: '100%', maxWidth: 'none' }}>
 
                 {/* Page header */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
