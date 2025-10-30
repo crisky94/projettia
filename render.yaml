@@ -11,9 +11,9 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: werteamwork-db
-          property: connectionString
+        # Use an external database connection string set in the Render Dashboard.
+        # Paste your Prisma Accelerate URL there. Do NOT commit secrets to git.
+        sync: false
       # Set these in Render Dashboard after first deploy or now if you prefer
       - key: CLERK_SECRET_KEY
         sync: false
