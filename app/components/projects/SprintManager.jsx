@@ -303,12 +303,12 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     });
 
     const getSprintStatusStyles = (status) => {
-        // Darker, higher-contrast colors for sprint states in light and dark mode
+        // Only the border reflects the sprint status color; content stays neutral (black in light, white in dark)
         const styles = {
-            PLANNING: 'bg-gray-200 border-gray-400 text-gray-900 dark:bg-gray-800/70 dark:border-gray-500 dark:text-gray-200',
-            ACTIVE: 'bg-blue-300 border-blue-500 text-blue-900 dark:bg-blue-900/60 dark:border-blue-700 dark:text-blue-300',
-            COMPLETED: 'bg-green-300 border-green-500 text-green-900 dark:bg-green-900/60 dark:border-green-700 dark:text-green-300',
-            CANCELLED: 'bg-red-300 border-red-500 text-red-900 dark:bg-red-900/60 dark:border-red-700 dark:text-red-300'
+            PLANNING: 'border-gray-400 dark:border-gray-500',
+            ACTIVE: 'border-blue-500 dark:border-blue-400',
+            COMPLETED: 'border-green-500 dark:border-green-400',
+            CANCELLED: 'border-red-500 dark:border-red-400'
         };
         return styles[status] || styles.PLANNING;
     };
@@ -421,7 +421,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     };
 
     return (
-        <div className={`rounded-xl border-2 transition-all duration-200 ${getSprintStatusStyles(sprint.status)}`}>
+    <div className={`rounded-xl border-2 bg-card text-slate-400  transition-all duration-200 ${getSprintStatusStyles(sprint.status)}`}>
             {/* Sprint Header */}
             <div className="p-4 border-b border-current/20">
                 <div className="flex items-center justify-between">

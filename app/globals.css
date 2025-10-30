@@ -133,7 +133,8 @@ html {
 /* Slightly larger base font size on desktop to improve readability */
 @media (min-width: 768px) {
   html {
-    font-size: 17px; /* ~6% bigger than default 16px */
+    font-size: 17px;
+    /* ~6% bigger than default 16px */
   }
 }
 
