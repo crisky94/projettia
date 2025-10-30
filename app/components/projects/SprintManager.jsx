@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 // Component to display a task card with sprint information
 const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], sprints = [] }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const [editingTask, setEditingTask] = useState({
         title: task.title,
         description: task.description || '',
@@ -91,10 +92,20 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
         return `${hours}h`;
     };
 
+    // Helper functions to determine if content is too long
+    const isTitleLong = task.title && task.title.length > 50;
+    const isDescriptionLong = task.description && task.description.length > 100;
+    const shouldShowViewMore = isTitleLong || isDescriptionLong;
+
+    const truncateText = (text, maxLength) => {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
     return (
-        <div className={`p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md group ${getStatusStyles(task.status)}`}>
+        <div className={`p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md group w-full break-words relative ${getStatusStyles(task.status)}`}>
             {/* Header */}
-            <div className="flex items-start justify-between mb-3">
+            <div className="mb-3">
                 <div className="flex-1">
                     {isEditing ? (
                         <input
@@ -105,52 +116,19 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             placeholder="Task title"
                         />
                     ) : (
-                        <h3 className="font-semibold text-sm mb-1">{task.title}</h3>
-                    )}
-                </div>
-
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {!isEditing ? (
-                        <>
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                className="p-1.5 hover:bg-white/20 rounded-md transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
-                                title="Edit task"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => onDeleteTask(task.id)}
-                                className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
-                                title="Delete task"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </>
-                    ) : (
-                        <div className="flex gap-1">
-                            <button
-                                onClick={handleSave}
-                                className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
-                                title="Save changes"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
-                                title="Cancel"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                        <div>
+                            <h3 className="font-semibold text-sm mb-1 break-words overflow-hidden">
+                                {isTitleLong ? truncateText(task.title, 50) : task.title}
+                            </h3>
+                            {shouldShowViewMore && (
+                                <button
+                                    onClick={() => setShowViewModal(true)}
+                                    className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 block"
+                                    title="Ver tarea completa"
+                                >
+                                    Ver más
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -165,7 +143,9 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 />
             ) : (
                 task.description && (
-                    <p className="text-sm opacity-80 mb-3 line-clamp-2">{task.description}</p>
+                    <p className="text-sm opacity-80 mb-3 line-clamp-2">
+                        {isDescriptionLong ? truncateText(task.description, 100) : task.description}
+                    </p>
                 )
             )}
 
@@ -243,6 +223,156 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         <span className="text-sm font-medium">{task.assignee.name}</span>
                     </div>
                 )
+            )}
+
+            {/* Action buttons positioned at bottom right */}
+            {!isEditing && (
+                <div className="absolute bottom-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                        onClick={() => setIsEditing(true)}
+                        className="p-1.5 hover:bg-white/20 rounded-md transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation"
+                        title="Edit task"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => onDeleteTask(task.id)}
+                        className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400 min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation"
+                        title="Delete task"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {isEditing && (
+                <div className="absolute bottom-3 right-3 flex gap-1">
+                    <button
+                        onClick={handleSave}
+                        className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
+                        title="Save changes"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={handleCancel}
+                        className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
+                        title="Cancel"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {/* Modal de vista completa */}
+            {showViewModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-border">
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-card">
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-xl font-bold text-card-foreground mb-2 break-words word-wrap overflow-wrap-anywhere">
+                                        {task.title}
+                                    </h2>
+                                    <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                                        {(() => {
+                                            const statusBadge = getStatusBadge(task.status);
+                                            return (
+                                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}>
+                                                    <span className="text-xs">{statusBadge.icon}</span>
+                                                    {statusBadge.text}
+                                                </span>
+                                            );
+                                        })()}
+                                        {task.estimatedHours && (
+                                            <span className="bg-muted px-2 py-1 rounded-full text-xs">
+                                                ⏱️ {formatEstimatedTime(task.estimatedHours)}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowViewModal(false)}
+                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-muted rounded-lg transition-colors flex-shrink-0"
+                                    title="Cerrar"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 space-y-6">
+                            {/* Description */}
+                            {task.description && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Descripción</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                        {task.description}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Sprint Info */}
+                            {task.sprint && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Sprint</h3>
+                                    <div className="flex items-center gap-2">
+                                        <span className="bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 px-3 py-1 rounded-full text-sm font-medium">
+                                            🚀 {task.sprint.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Assignee */}
+                            {task.assignee && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Asignado a</h3>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                                            {task.assignee.name?.charAt(0)?.toUpperCase() || '?'}
+                                        </div>
+                                        <span className="text-sm font-medium text-card-foreground">{task.assignee.name}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Estimated Time */}
+                            {task.estimatedHours && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Tiempo estimado</h3>
+                                    <span className="text-sm text-muted-foreground">
+                                        {formatEstimatedTime(task.estimatedHours)}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-muted/50">
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={() => setShowViewModal(false)}
+                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
@@ -421,7 +551,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     };
 
     return (
-        <div className={`rounded-xl border-2 bg-card text-slate-400  transition-all duration-200 ${getSprintStatusStyles(sprint.status)}`}>
+        <div className={`rounded-xl border-2 bg-card text-slate-400 transition-all duration-200 w-full overflow-hidden ${getSprintStatusStyles(sprint.status)}`}>
             {/* Sprint Header */}
             <div className="p-4 border-b border-current/20">
                 <div className="flex items-center justify-between">
@@ -583,7 +713,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <span>No hay tareas en este sprint</span>
                         </div>
                     ) : (
-                        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                             {tasks.map(task => (
                                 <TaskCard
                                     key={task.id}
@@ -1060,9 +1190,10 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden">
+            <div className="space-y-6 w-full">
+                {/* Header */}
+                <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                 <div>
                     <h2 className="text-2xl font-bold dark:text-gray-600">🚀 Sprint Management</h2>
                     <p className="text-gray-600 dark:text-gray-600 mt-1">Organize your tasks into time-boxed sprints</p>
@@ -1121,7 +1252,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                             </div>
                         </div>
                         <div className="p-4">
-                            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                                 {getTasksWithoutSprint().map(task => (
                                     <TaskCard
                                         key={task.id}
@@ -1441,6 +1572,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 };

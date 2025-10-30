@@ -130,11 +130,24 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Slightly larger base font size on desktop to improve readability */
+/* Larger base font size on desktop to improve readability */
 @media (min-width: 768px) {
   html {
-    font-size: 17px;
-    /* ~6% bigger than default 16px */
+    font-size: 18px;
+  }
+}
+
+/* Further increase on large desktops */
+@media (min-width: 1024px) {
+  html {
+    font-size: 19px;
+  }
+}
+
+/* Extra-large screens get a slight bump */
+@media (min-width: 1536px) {
+  html {
+    font-size: 20px;
   }
 }
 

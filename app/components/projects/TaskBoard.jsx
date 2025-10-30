@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
+    const [showViewModal, setShowViewModal] = useState(false);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
         disabled: !canDrag,
@@ -50,46 +51,48 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         ? assigneeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
         : null;
 
+    // Helper functions to determine if content is too long
+    const isTitleLong = task.title && task.title.length > 50;
+    const isDescriptionLong = task.description && task.description.length > 100;
+    const shouldShowViewMore = isTitleLong || isDescriptionLong;
+
+    const truncateText = (text, maxLength) => {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
     return (
         <div
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
-            className={`bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full ${!canDrag ? 'opacity-95' : ''}`}
+            className={`bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full break-words relative group ${!canDrag ? 'opacity-95' : ''}`}
         >
-            {/* Title + Admin actions */}
-            <div className="flex items-start justify-between gap-2">
-                <h4 className="text-sm sm:text-base font-semibold text-card-foreground line-clamp-2">
-                    {task.title}
+            {/* Title */}
+            <div className="mb-2">
+                <h4 className="text-sm sm:text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden">
+                    {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
-                {isAdmin && (
-                    <div className="flex items-center gap-1">
-                        <button
-                            onClick={(e) => { e.stopPropagation?.(); onUpdateTask && onUpdateTask('edit', task); }}
-                            className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-card-foreground transition-colors"
-                            title="Editar tarea"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                        <button
-                            onClick={(e) => { e.stopPropagation?.(); onDeleteTask && onDeleteTask(task.id); }}
-                            className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
-                            title="Eliminar tarea"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
+                {shouldShowViewMore && (
+                    <button
+                        onClick={(e) => { 
+                            e.stopPropagation?.(); 
+                            setShowViewModal(true); 
+                        }}
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 block"
+                        title="Ver tarea completa"
+                    >
+                        Ver más
+                    </button>
                 )}
             </div>
 
             {/* Description */}
             {task.description && (
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground line-clamp-3">{task.description}</p>
+                <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+                    {isDescriptionLong ? truncateText(task.description, 100) : task.description}
+                </p>
             )}
 
             {/* Assignee */}
@@ -112,6 +115,120 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium">
                             🚀 {task.sprint.name}
                         </span>
+                    </div>
+                </div>
+            )}
+
+            {/* Action buttons positioned at bottom right */}
+            {isAdmin && (
+                <div className="absolute bottom-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                        onClick={(e) => { e.stopPropagation?.(); onUpdateTask && onUpdateTask('edit', task); }}
+                        className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-card-foreground transition-colors"
+                        title="Editar tarea"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={(e) => { e.stopPropagation?.(); onDeleteTask && onDeleteTask(task.id); }}
+                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                        title="Eliminar tarea"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {/* Modal de vista completa */}
+            {showViewModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-border">
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-card">
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-xl font-bold text-card-foreground mb-2 break-words word-wrap overflow-wrap-anywhere">
+                                        {task.title}
+                                    </h2>
+                                    <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                            task.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
+                                            task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
+                                            task.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
+                                            'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
+                                        }`}>
+                                            {task.status === 'PENDING' ? '📋 Pendiente' :
+                                             task.status === 'IN_PROGRESS' ? '⚡ En progreso' :
+                                             task.status === 'COMPLETED' ? '✅ Completado' :
+                                             task.status}
+                                        </span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowViewModal(false)}
+                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-muted rounded-lg transition-colors flex-shrink-0"
+                                    title="Cerrar"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 space-y-6">
+                            {/* Description */}
+                            {task.description && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Descripción</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                        {task.description}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Sprint Info */}
+                            {task.sprint && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Sprint</h3>
+                                    <div className="flex items-center gap-2">
+                                        <span className="bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 px-3 py-1 rounded-full text-sm font-medium">
+                                            🚀 {task.sprint.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Assignee */}
+                            {assigneeName && (
+                                <div>
+                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Asignado a</h3>
+                                    <div className="flex items-center gap-3">
+                                        <div className={`h-8 w-8 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-white text-sm font-bold`}>
+                                            {assigneeInitials}
+                                        </div>
+                                        <span className="text-sm font-medium text-card-foreground">{assigneeName}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-muted/50">
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={() => setShowViewModal(false)}
+                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -165,7 +282,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
 
     // Define row styles based on status
     const getRowStyles = (status, isOver) => {
-        const baseStyles = "w-full bg-card rounded-xl shadow-sm border transition-all duration-200";
+        const baseStyles = "w-full bg-card rounded-xl shadow-sm border transition-all duration-200 overflow-hidden";
 
         if (isOver) {
             switch (status) {
@@ -255,7 +372,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     ) : (
                         /* Responsive grid that wraps items to next row */
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard
@@ -769,9 +886,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden">
+            <div className="w-full">
 
-            {/* Page header */}
+                {/* Page header */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
                 {/* Left: Title */}
                 <div>
@@ -890,13 +1008,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             >
                 {/* Cards - Kanban Board en Filas */}
                 <div className="space-y-6">
-                    {/* {process.env.NODE_ENV === 'development' && (
-                        <div className="fixed top-16 right-4 bg-card p-3 rounded-lg shadow-lg text-xs border border-border z-50">
-                            <div className="font-semibold text-gray-700 dark:text-gray-300">Debug Info:</div>
-                            <div className="text-gray-600 dark:text-gray-400">Total tasks: {tasks.length}</div>
-                        </div>
-                    )} */}
-
                     {/* Pending Row */}
                     <TaskRow
                         title="📋 To Do's"
@@ -1173,7 +1284,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             <div className="mb-6">
                                 <p className="text-gray-700 dark:text-gray-400 text-base leading-relaxed">
                                     Are you sure you want to delete the task{' '}
-                                    <span className="font-semibold text-card-foreground">"{taskToDelete.title}"</span>?
+                                    <span className="font-semibold text-card-foreground break-words">"{taskToDelete.title}"</span>?
                                 </p>
                             </div>
 
@@ -1199,6 +1310,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 };
