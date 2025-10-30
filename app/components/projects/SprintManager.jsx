@@ -421,7 +421,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     };
 
     return (
-    <div className={`rounded-xl border-2 bg-card text-slate-400  transition-all duration-200 ${getSprintStatusStyles(sprint.status)}`}>
+        <div className={`rounded-xl border-2 bg-card text-slate-400  transition-all duration-200 ${getSprintStatusStyles(sprint.status)}`}>
             {/* Sprint Header */}
             <div className="p-4 border-b border-current/20">
                 <div className="flex items-center justify-between">
