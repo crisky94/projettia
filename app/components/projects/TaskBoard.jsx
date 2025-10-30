@@ -156,9 +156,9 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                     </h2>
                                     <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${task.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
-                                                task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
-                                                    task.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
+                                            task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
+                                                task.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
+                                                    'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
                                             }`}>
                                             {task.status === 'PENDING' ? '📋 Pendiente' :
                                                 task.status === 'IN_PROGRESS' ? '⚡ En progreso' :

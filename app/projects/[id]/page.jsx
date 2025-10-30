@@ -551,36 +551,36 @@ export default function ProjectPage({ params }) {
                     <div className="w-full max-w-7xl mx-auto">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
                             <div className="lg:col-span-2 w-full max-w-none mx-auto">
-                            {activeTab === 'kanban' && (
-                                <TaskBoard
-                                    projectId={project.id}
-                                    initialTasks={tasks}
-                                    isAdmin={canManageMembers}
-                                    currentUserId={user.id}
-                                    sprints={sprints}
-                                    onTaskUpdate={handleTaskUpdate}
-                                    onTaskDelete={handleTaskDelete}
-                                    onTaskCreate={handleTaskCreate}
-                                />
-                            )}
-                            {activeTab === 'sprints' && (
-                                <SprintManager
-                                    projectId={project.id}
-                                    isAdmin={canManageMembers}
-                                    allMembers={members}
-                                    tasks={tasks}
-                                    onTaskUpdate={handleTaskUpdate}
-                                    onTaskDelete={handleTaskDelete}
-                                    onTaskCreate={handleTaskCreate}
-                                    onRefreshTasks={refreshTasks}
-                                    onRefreshSprints={refreshSprints}
-                                    onDeleteSprint={handleDeleteSprint}
-                                />
-                            )}
-                        </div>
-                        <div>
-                            {/* <Chat projectId={project.id} user={user} /> */}
-                        </div>
+                                {activeTab === 'kanban' && (
+                                    <TaskBoard
+                                        projectId={project.id}
+                                        initialTasks={tasks}
+                                        isAdmin={canManageMembers}
+                                        currentUserId={user.id}
+                                        sprints={sprints}
+                                        onTaskUpdate={handleTaskUpdate}
+                                        onTaskDelete={handleTaskDelete}
+                                        onTaskCreate={handleTaskCreate}
+                                    />
+                                )}
+                                {activeTab === 'sprints' && (
+                                    <SprintManager
+                                        projectId={project.id}
+                                        isAdmin={canManageMembers}
+                                        allMembers={members}
+                                        tasks={tasks}
+                                        onTaskUpdate={handleTaskUpdate}
+                                        onTaskDelete={handleTaskDelete}
+                                        onTaskCreate={handleTaskCreate}
+                                        onRefreshTasks={refreshTasks}
+                                        onRefreshSprints={refreshSprints}
+                                        onDeleteSprint={handleDeleteSprint}
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                {/* <Chat projectId={project.id} user={user} /> */}
+                            </div>
                         </div>
                     </div>
 
