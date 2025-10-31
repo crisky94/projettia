@@ -1190,8 +1190,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-            <div className="space-y-6 w-full max-w-none mx-auto" style={{ width: '100%', maxWidth: 'none' }}>
+        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden">
+            <div className="space-y-6 w-full max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                     <div>
