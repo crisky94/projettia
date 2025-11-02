@@ -71,7 +71,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         >
             {/* Priority indicator */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
-            
+
             {/* Title */}
             <div className="mb-3 pl-2">
                 <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1 break-words overflow-hidden leading-tight">
@@ -349,12 +349,11 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-                            status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                            status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
-                            'bg-gradient-to-br from-gray-500 to-gray-600'
-                        }`}>
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
+                                status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                                    status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                                        'bg-gradient-to-br from-gray-500 to-gray-600'
+                            }`}>
                             <span className="text-white text-lg">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
@@ -365,9 +364,9 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 {status === 'PENDING' ? 'Pending tasks to start' :
-                                 status === 'IN_PROGRESS' ? 'Tasks in active development' :
-                                 status === 'COMPLETED' ? 'Successfully completed tasks' :
-                                 'Task status'}
+                                    status === 'IN_PROGRESS' ? 'Tasks in active development' :
+                                        status === 'COMPLETED' ? 'Successfully completed tasks' :
+                                            'Task status'}
                             </p>
                         </div>
                     </div>
@@ -408,9 +407,9 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                         <p className="font-medium text-base text-gray-700 dark:text-gray-300">No tasks here</p>
                                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                             {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
-                                             status === 'IN_PROGRESS' ? 'Drag tasks from "To Do\'s" to start' :
-                                             status === 'COMPLETED' ? 'Completed tasks will appear here' :
-                                             'Drag tasks to organize them'}
+                                                status === 'IN_PROGRESS' ? 'Drag tasks from "To Do\'s" to start' :
+                                                    status === 'COMPLETED' ? 'Completed tasks will appear here' :
+                                                        'Drag tasks to organize them'}
                                         </p>
                                     </div>
                                 </div>
@@ -1055,11 +1054,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 <div className="flex flex-col flex-1">
                                                     <span className="text-base font-semibold text-gray-900 dark:text-white">{member.user.name}</span>
                                                     <div className="flex items-center gap-2 mt-1">
-                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                                            member.role === 'ADMIN' 
-                                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' 
+                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.role === 'ADMIN'
+                                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
                                                                 : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                                                        }`}>
+                                                            }`}>
                                                             {member.role === 'ADMIN' ? '👑 Administrator' : '👤 Member'}
                                                         </span>
                                                         <span className="text-xs text-gray-500 dark:text-gray-400">
