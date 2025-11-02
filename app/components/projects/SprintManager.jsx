@@ -713,7 +713,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <span>No hay tareas en este sprint</span>
                         </div>
                     ) : (
-                        <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                        <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             {tasks.map(task => (
                                 <TaskCard
                                     key={task.id}
@@ -1190,8 +1190,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen overflow-x-hidden">
-            <div className="space-y-6 w-full max-w-6xl mx-auto">
+        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background min-h-screen overflow-x-hidden">
+            <div className="space-y-6 w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
                 {/* Header */}
                 <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                     <div>
@@ -1252,7 +1252,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </div>
                             </div>
                             <div className="p-4">
-                                <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                                <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                                     {getTasksWithoutSprint().map(task => (
                                         <TaskCard
                                             key={task.id}
