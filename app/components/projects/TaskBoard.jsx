@@ -67,11 +67,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`bg-card rounded-xl border shadow-sm p-3 sm:p-4 w-full break-words relative group ${!canDrag ? 'opacity-95' : ''}`}
+            className={`bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg p-4 w-full break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
         >
+            {/* Priority indicator */}
+            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
+            
             {/* Title */}
-            <div className="mb-2">
-                <h4 className="text-sm sm:text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden">
+            <div className="mb-3 pl-2">
+                <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1 break-words overflow-hidden leading-tight">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
                 {shouldShowViewMore && (
@@ -80,10 +83,13 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             e.stopPropagation?.();
                             setShowViewModal(true);
                         }}
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 block"
-                        title="Ver tarea completa"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium inline-flex items-center gap-1 hover:underline"
+                        title="View complete task"
                     >
-                        Ver más
+                        <span>View more</span>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
                     </button>
                 )}
             </div>
@@ -125,7 +131,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     <button
                         onClick={(e) => { e.stopPropagation?.(); onUpdateTask && onUpdateTask('edit', task); }}
                         className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-card-foreground transition-colors"
-                        title="Editar tarea"
+                        title="Edit task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -134,7 +140,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     <button
                         onClick={(e) => { e.stopPropagation?.(); onDeleteTask && onDeleteTask(task.id); }}
                         className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
-                        title="Eliminar tarea"
+                        title="Delete task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -160,9 +166,9 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                                 task.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
                                             }`}>
-                                            {task.status === 'PENDING' ? '📋 Pendiente' :
-                                                task.status === 'IN_PROGRESS' ? '⚡ En progreso' :
-                                                    task.status === 'COMPLETED' ? '✅ Completado' :
+                                            {task.status === 'PENDING' ? '📋 Pending' :
+                                                task.status === 'IN_PROGRESS' ? '⚡ In Progress' :
+                                                    task.status === 'COMPLETED' ? '✅ Completed' :
                                                         task.status}
                                         </span>
                                     </div>
@@ -170,7 +176,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                 <button
                                     onClick={() => setShowViewModal(false)}
                                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-muted rounded-lg transition-colors flex-shrink-0"
-                                    title="Cerrar"
+                                    title="Close"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -281,30 +287,30 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
 
     // Define row styles based on status
     const getRowStyles = (status, isOver) => {
-        const baseStyles = "w-full bg-card rounded-xl shadow-sm border transition-all duration-200 overflow-hidden";
+        const baseStyles = "w-full bg-white dark:bg-gray-900 rounded-xl shadow-sm border transition-all duration-200 overflow-hidden";
 
         if (isOver) {
             switch (status) {
                 case 'PENDING':
-                    return `${baseStyles} border-amber-300 bg-amber-50 dark:bg-amber-900/20 shadow-lg ring-2 ring-amber-200`;
+                    return `${baseStyles} border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 shadow-lg ring-2 ring-amber-200`;
                 case 'IN_PROGRESS':
-                    return `${baseStyles} border-blue-300 bg-blue-50 dark:bg-blue-900/20 shadow-lg ring-2 ring-blue-200`;
+                    return `${baseStyles} border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 shadow-lg ring-2 ring-blue-200`;
                 case 'COMPLETED':
-                    return `${baseStyles} border-green-400 bg-green-50 dark:bg-green-900/20 shadow-lg ring-2 ring-green-300`;
+                    return `${baseStyles} border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 shadow-lg ring-2 ring-green-300`;
                 default:
-                    return `${baseStyles} border-border bg-muted`;
+                    return `${baseStyles} border-gray-200 dark:border-gray-800`;
             }
         }
 
         switch (status) {
             case 'PENDING':
-                return `${baseStyles} border-amber-200 dark:border-amber-800 hover:shadow-md`;
+                return `${baseStyles} border-amber-200 dark:border-amber-800 hover:shadow-md hover:border-amber-300`;
             case 'IN_PROGRESS':
-                return `${baseStyles} border-blue-200 dark:border-blue-800 hover:shadow-md`;
+                return `${baseStyles} border-blue-200 dark:border-blue-800 hover:shadow-md hover:border-blue-300`;
             case 'COMPLETED':
-                return `${baseStyles} border-green-300 dark:border-green-800 hover:shadow-md`;
+                return `${baseStyles} border-green-300 dark:border-green-800 hover:shadow-md hover:border-green-400`;
             default:
-                return `${baseStyles} border-border dark:border-gray-700 hover:shadow-md`;
+                return `${baseStyles} border-gray-200 dark:border-gray-800 hover:shadow-md`;
         }
     };
 
@@ -339,33 +345,74 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             ref={setNodeRef}
             className={getRowStyles(status, isOver)}
         >
-            <div className="p-6">
+            <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className={`text-lg font-bold ${getHeaderStyles(status)}`}>{title}</h3>
-                    <span className={`${getBadgeStyles(status)} px-3 py-1 rounded-full text-sm font-medium`}>
-                        {tasks.length}
-                    </span>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
+                            status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                            status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                            'bg-gradient-to-br from-gray-500 to-gray-600'
+                        }`}>
+                            <span className="text-white text-lg">
+                                {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
+                            </span>
+                        </div>
+                        <div>
+                            <h3 className={`text-xl font-bold ${getHeaderStyles(status)}`}>
+                                {title.replace(/^[📋⚡✅📝]\s*/, '')}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {status === 'PENDING' ? 'Pending tasks to start' :
+                                 status === 'IN_PROGRESS' ? 'Tasks in active development' :
+                                 status === 'COMPLETED' ? 'Successfully completed tasks' :
+                                 'Task status'}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className={`${getBadgeStyles(status)} px-3 py-2 rounded-lg text-sm font-semibold shadow-sm`}>
+                            {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+                        </span>
+                    </div>
                 </div>
+            </div>
+            <div className="p-6">
 
                 {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
                 <div className="relative">
                     {tasks.length === 0 ? (
-                        <div className={`text-center py-12 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
+                        <div className={`text-center py-16 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
                             ? 'border-current text-current bg-current/5'
-                            : 'text-muted-foreground dark:text-gray-500 border-border dark:border-gray-700'
+                            : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400'
                             }`}>
                             {isOver ? (
-                                <div className="flex flex-col items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-240 240-480l56-56 144 144v-368h80v368l144-144 56 56-240 240Z" /></svg>
-                                    <span className="font-medium">Suelta la tarea aquí</span>
+                                <div className="flex flex-col items-center gap-3">
+                                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                                        <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7-7-7m14-8l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <span className="font-semibold text-lg text-blue-700 dark:text-blue-300">Drop task here</span>
+                                    <p className="text-sm text-blue-600 dark:text-blue-400">Task will move to this status</p>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center gap-2">
-                                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                    <span>not tasks</span>
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-base text-gray-700 dark:text-gray-300">No tasks here</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                            {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
+                                             status === 'IN_PROGRESS' ? 'Drag tasks from "To Do\'s" to start' :
+                                             status === 'COMPLETED' ? 'Completed tasks will appear here' :
+                                             'Drag tasks to organize them'}
+                                        </p>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -889,45 +936,75 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
 
                 {/* Page header */}
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
-                    {/* Left: Title */}
-                    <div>
-                        <h1 className="text-xl sm:text-2xl md:text-3xl text-foreground font-bold">Tablero de Tareas</h1>
-                    </div>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-8">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                        {/* Left: Title and description */}
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
+                                    </svg>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm">Manage and organize project tasks efficiently</p>
+                        </div>
 
-                    {/* Right: Actions */}
-                    <div className="flex gap-2">
-                        {/* Add Task button - Available to all members */}
-                        <button
-                            onClick={() => setShowAddTaskModal(true)}
-                            className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg font-medium shadow-sm hover:opacity-90 transition-opacity min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2"
-                        >
-                            <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                            </svg>
-                            <span className="hidden sm:inline text-sm md:text-base">New Task</span>
-                            <span className="sm:hidden text-sm">Add Task</span>
-                        </button>
+                        {/* Right: Actions */}
+                        <div className="flex gap-3">
+                            {/* Add Task button - Available to all members */}
+                            <button
+                                onClick={() => setShowAddTaskModal(true)}
+                                className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2 transform hover:scale-105"
+                            >
+                                <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span className="hidden sm:inline text-sm md:text-base">New Task</span>
+                                <span className="sm:hidden text-sm">Add Task</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {/* Project Members Collapsible Section */}
-                <div className="mb-6 border-b border-border dark:border-gray-700/60 pb-6">
-                    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+                {/* Project Members Section */}
+                <div className="mb-8">
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+                        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Team Members</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        {members.length} {members.length === 1 ? 'member' : 'members'} in the project
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                         <div className="px-6 py-4">
                             {members.length === 0 ? (
-                                <div className="flex items-center justify-center py-8 text-gray-700 dark:text-gray-400">
+                                <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                                     {isLoadingMembers ? (
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                                            <span>Loading members...</span>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                            <span className="text-base">Loading team members...</span>
                                         </div>
                                     ) : (
-                                        <div className="text-center">
-                                            <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                            </svg>
-                                            <span>No members in this project</span>
+                                        <div className="text-center space-y-3">
+                                            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+                                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p className="text-base font-medium text-gray-700 dark:text-gray-300">No members in this project</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Invite people to start collaborating</p>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -970,25 +1047,25 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         return (
                                             <div
                                                 key={member.userId}
-                                                className="group flex items-center bg-muted px-4 py-3 rounded-xl border border-border hover:border-blue-500 transition-all duration-200"
+                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800"
                                             >
-                                                <div className={`w-10 h-10 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-3 shadow-sm ring-2 ring-white dark:ring-gray-800`}>
+                                                <div className={`w-12 h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200`}>
                                                     {initials}
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-semibold text-foreground">{member.user.name}</span>
-                                                    <span className="text-xs text-gray-700 dark:text-gray-400">
-                                                        {member.role === 'ADMIN' ? (
-                                                            <span className="inline-flex items-center gap-1">
-                                                                <svg className="w-3 h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                                </svg>
-                                                                Admin
-                                                            </span>
-                                                        ) : (
-                                                            'Miembro'
-                                                        )}
-                                                    </span>
+                                                <div className="flex flex-col flex-1">
+                                                    <span className="text-base font-semibold text-gray-900 dark:text-white">{member.user.name}</span>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                                            member.role === 'ADMIN' 
+                                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' 
+                                                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                                        }`}>
+                                                            {member.role === 'ADMIN' ? '👑 Administrator' : '👤 Member'}
+                                                        </span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                            {member.user.email}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         );

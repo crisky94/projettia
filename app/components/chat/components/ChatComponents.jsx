@@ -34,7 +34,7 @@ export const MessageItem = ({ message, isOwn, isEditing, editText, setEditText, 
         }
 
         if (isDeleted) {
-            return <p className="italic opacity-80">Mensaje eliminado</p>;
+            return <p className="italic opacity-80">Message deleted</p>;
         }
 
         return (

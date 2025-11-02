@@ -104,7 +104,7 @@ export default function Chat({ projectId, user }) {
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder={editingMessageId ? "Editando mensaje..." : "Type your message..."}
+                        placeholder={editingMessageId ? "Editing message..." : "Type your message..."}
                         className="flex-1 rounded-lg border p-2"
                     />
 
@@ -121,7 +121,7 @@ export default function Chat({ projectId, user }) {
                     <ActionButton
                         onClick={startEditLast}
                         disabled={!canEditLast}
-                        title="Editar tu último mensaje"
+                        title="Edit your last message"
                     >
                         Editar último
                     </ActionButton>
@@ -129,14 +129,14 @@ export default function Chat({ projectId, user }) {
                     <ActionButton
                         onClick={() => handleEditAction(deleteLast)}
                         disabled={!canDeleteLast}
-                        title="Eliminar tu último mensaje"
+                        title="Delete your last message"
                     >
                         Eliminar último
                     </ActionButton>
 
                     <ActionButton
                         variant="primary"
-                        title="Enviar mensaje"
+                        title="Send message"
                     >
                         Send
                     </ActionButton>

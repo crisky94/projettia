@@ -328,7 +328,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                         }
                                         const isDeleted = !message.content || !message.content.trim();
                                         if (isDeleted) {
-                                            return <p className="text-sm leading-relaxed italic opacity-80">Mensaje eliminado</p>;
+                                            return <p className="text-sm leading-relaxed italic opacity-80">Message deleted</p>;
                                         }
                                         return (
                                             <p className="text-sm leading-relaxed">
@@ -403,7 +403,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                             type="text"
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder={editingMessageId ? "Editando mensaje..." : "Type a message..."}
+                            placeholder={editingMessageId ? "Editing message..." : "Type a message..."}
                             className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             disabled={isLoading}
                         />
@@ -428,8 +428,8 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     onClick={startEditLast}
                                     disabled={!canEditLast}
                                     className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                    title="Editar tu último mensaje"
-                                    aria-label="Editar tu último mensaje"
+                                    title="Edit your last message"
+                                    aria-label="Edit your last message"
                                 >
                                     Editar último
                                 </button>
@@ -445,8 +445,8 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     onClick={deleteLast}
                                     disabled={!canDeleteLast}
                                     className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
-                                    title="Eliminar tu último mensaje"
-                                    aria-label="Eliminar tu último mensaje"
+                                    title="Delete your last message"
+                                    aria-label="Delete your last message"
                                 >
                                     Eliminar último
                                 </button>
