@@ -260,9 +260,9 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-                                status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                                    status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
-                                        'bg-gradient-to-br from-gray-500 to-gray-600'
+                            status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                                status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                                    'bg-gradient-to-br from-gray-500 to-gray-600'
                             }`}>
                             <span className="text-white text-lg">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
@@ -979,8 +979,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                     <span className="text-base font-semibold text-gray-900 dark:text-white">{member.user.name}</span>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.role === 'ADMIN'
-                                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                                                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                                                            : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                                             }`}>
                                                             {member.role === 'ADMIN' ? '👑 Administrator' : '👤 Member'}
                                                         </span>
@@ -1314,11 +1314,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Full-Screen View Task Modal */}
                 {showViewModal && taskToView && (
-                    <div 
+                    <div
                         className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
                         onClick={handleCloseViewModal}
                     >
-                        <div 
+                        <div
                             className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden border border-gray-200 dark:border-gray-700"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -1330,25 +1330,24 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                             {taskToView.title}
                                         </h1>
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
-                                                taskToView.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
-                                                taskToView.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
-                                                taskToView.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
-                                                'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
-                                            }`}>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${taskToView.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
+                                                    taskToView.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
+                                                        taskToView.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
+                                                            'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
+                                                }`}>
                                                 {taskToView.status === 'PENDING' ? '📋 Pending' :
-                                                taskToView.status === 'IN_PROGRESS' ? '⚡ In Progress' :
-                                                taskToView.status === 'COMPLETED' ? '✅ Completed' :
-                                                taskToView.status}
+                                                    taskToView.status === 'IN_PROGRESS' ? '⚡ In Progress' :
+                                                        taskToView.status === 'COMPLETED' ? '✅ Completed' :
+                                                            taskToView.status}
                                             </span>
                                         </div>
                                     </div>
                                     <button
                                         onClick={handleCloseViewModal}
-                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 flex-shrink-0"
+                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200 flex-shrink-0"
                                         title="Close"
                                     >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
@@ -1367,7 +1366,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 </svg>
                                                 Description
                                             </h3>
-                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line">
+                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line break-words word-wrap max-w-full overflow-hidden">
                                                 {taskToView.description}
                                             </div>
                                         </div>
