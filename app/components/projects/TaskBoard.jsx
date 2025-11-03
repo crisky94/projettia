@@ -66,14 +66,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg p-4 w-full break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
+            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-4 w-full break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
         >
             {/* Priority indicator */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
 
             {/* Title */}
             <div className="mb-3 pl-2">
-                <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1 break-words overflow-hidden leading-tight">
+                <h4 className="text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
                 {shouldShowViewMore && (
@@ -82,7 +82,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             e.stopPropagation?.();
                             onViewTask && onViewTask(task);
                         }}
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium inline-flex items-center gap-1 hover:underline"
+                        className="text-xs text-primary hover:opacity-80 font-medium inline-flex items-center gap-1 hover:underline"
                         title="View complete task"
                     >
                         <span>View more</span>
@@ -197,16 +197,16 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
     });
     // Define row styles based on status
     const getRowStyles = (status, isOver) => {
-        const baseStyles = "w-full bg-white dark:bg-gray-900 rounded-xl shadow-sm border transition-all duration-200 overflow-hidden";
+        const baseStyles = "w-full card-professional shadow-theme-sm hover:shadow-theme-md rounded-xl border transition-all duration-200 overflow-hidden";
 
         if (isOver) {
             switch (status) {
                 case 'PENDING':
-                    return `${baseStyles} border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 shadow-lg ring-2 ring-amber-200`;
+                    return `${baseStyles} border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 shadow-theme-lg ring-2 ring-amber-200`;
                 case 'IN_PROGRESS':
-                    return `${baseStyles} border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 shadow-lg ring-2 ring-blue-200`;
+                    return `${baseStyles} border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 shadow-theme-lg ring-2 ring-blue-200`;
                 case 'COMPLETED':
-                    return `${baseStyles} border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 shadow-lg ring-2 ring-green-300`;
+                    return `${baseStyles} border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 shadow-theme-lg ring-2 ring-green-300`;
                 default:
                     return `${baseStyles} border-gray-200 dark:border-gray-800`;
             }
@@ -214,13 +214,13 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
 
         switch (status) {
             case 'PENDING':
-                return `${baseStyles} border-amber-200 dark:border-amber-800 hover:shadow-md hover:border-amber-300`;
+                return `${baseStyles} border-amber-200 dark:border-amber-800 hover:border-amber-300`;
             case 'IN_PROGRESS':
-                return `${baseStyles} border-blue-200 dark:border-blue-800 hover:shadow-md hover:border-blue-300`;
+                return `${baseStyles} border-blue-200 dark:border-blue-800 hover:border-blue-300`;
             case 'COMPLETED':
-                return `${baseStyles} border-green-300 dark:border-green-800 hover:shadow-md hover:border-green-400`;
+                return `${baseStyles} border-green-300 dark:border-green-800 hover:border-green-400`;
             default:
-                return `${baseStyles} border-gray-200 dark:border-gray-800 hover:shadow-md`;
+                return `${baseStyles} border-gray-200 dark:border-gray-800`;
         }
     };
 
@@ -255,7 +255,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             ref={setNodeRef}
             className={getRowStyles(status, isOver)}
         >
-            <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+            <div className="px-6 py-5 border-b border-border">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -272,7 +272,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             <h3 className={`text-xl font-bold ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-muted-foreground">
                                 {status === 'PENDING' ? 'Pending tasks to start' :
                                     status === 'IN_PROGRESS' ? 'Tasks in active development' :
                                         status === 'COMPLETED' ? 'Successfully completed tasks' :
@@ -294,28 +294,28 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                     {tasks.length === 0 ? (
                         <div className={`text-center py-16 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
                             ? 'border-current text-current bg-current/5'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400'
+                            : 'border-border text-muted-foreground'
                             }`}>
                             {isOver ? (
                                 <div className="flex flex-col items-center gap-3">
-                                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                                        <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                                        <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7-7-7m14-8l-7 7-7-7" />
                                         </svg>
                                     </div>
-                                    <span className="font-semibold text-lg text-blue-700 dark:text-blue-300">Drop task here</span>
-                                    <p className="text-sm text-blue-600 dark:text-blue-400">Task will move to this status</p>
+                                    <span className="font-semibold text-lg text-primary">Drop task here</span>
+                                    <p className="text-sm text-primary/80">Task will move to this status</p>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                                        <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="font-medium text-base text-gray-700 dark:text-gray-300">No tasks here</p>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                        <p className="font-medium text-base text-card-foreground">No tasks here</p>
+                                        <p className="text-sm text-muted-foreground mt-1">
                                             {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
                                                 status === 'IN_PROGRESS' ? 'Drag tasks from "To Do\'s" to start' :
                                                     status === 'COMPLETED' ? 'Completed tasks will appear here' :
@@ -1137,7 +1137,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {showAddTaskModal && (
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center justify-between">
@@ -1175,7 +1175,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         type="text"
                                         value={newTask.title}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
+                                        className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="Enter task title..."
                                         required
                                         disabled={isSubmitting}
@@ -1190,7 +1190,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         id="description"
                                         value={newTask.description}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                        className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                         rows="2"
                                         placeholder="Describe the task details..."
                                         disabled={isSubmitting}
@@ -1229,16 +1229,16 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                             setShowAddTaskModal(false);
                                             setNewTask({ title: '', description: '', assigneeId: '' });
                                         }}
-                                        className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
+                                        className="input-professional w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
                                         disabled={isSubmitting}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
+                                        className={`button-professional w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-theme-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
                                             ? 'bg-violet-400 text-white cursor-not-allowed'
-                                            : 'bg-violet-500 text-white '
+                                            : 'bg-violet-500 text-white hover:shadow-theme-md'
                                             }`}
                                         disabled={isSubmitting}
                                     >
@@ -1260,7 +1260,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
+                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center gap-4">
@@ -1293,13 +1293,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
                                     <button
                                         onClick={handleCancelDeleteTask}
-                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
+                                        className="input-professional w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleConfirmDeleteTask}
-                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
+                                        className="button-professional w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-theme-sm hover:shadow-theme-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -1319,7 +1319,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                         onClick={handleCloseViewModal}
                     >
                         <div
-                            className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden border border-gray-200 dark:border-gray-700"
+                            className="card-professional shadow-theme-xl rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Header */}

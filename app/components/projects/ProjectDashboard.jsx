@@ -111,7 +111,7 @@ export default function ProjectDashboard({ userId }) {
                 <div className="text-destructive mb-4">{error}</div>
                 <button
                     onClick={fetchProjects}
-                    className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-opacity font-medium min-h-[44px] touch-action-manipulation flex items-center justify-center gap-2"
+                    className="button-professional min-h-[44px] touch-action-manipulation flex items-center justify-center gap-2"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -128,7 +128,7 @@ export default function ProjectDashboard({ userId }) {
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Projects</h1>
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="w-full sm:w-auto bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-lg hover:opacity-90 transition-opacity font-medium text-center"
+                    className="button-professional"
                 >
                     + Create Project
                 </button>
@@ -150,7 +150,7 @@ export default function ProjectDashboard({ userId }) {
                         <Link
                             key={project.id}
                             href={`/projects/${project.id}`}
-                            className="block bg-card rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-border active:scale-95"
+                            className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95"
                         >
                             <div className="p-4 sm:p-6">
                                 <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
@@ -199,7 +199,7 @@ export default function ProjectDashboard({ userId }) {
 
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md border border-border">
+                    <div className="card-professional p-4 sm:p-6 w-full max-w-md shadow-theme-xl">
                         <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
                         <form onSubmit={handleCreateProject}>
                             <div className="mb-4">
@@ -211,7 +211,7 @@ export default function ProjectDashboard({ userId }) {
                                     type="text"
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
-                                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-base"
+                                    className="input-professional"
                                     required
                                     disabled={creating}
                                 />
@@ -224,7 +224,7 @@ export default function ProjectDashboard({ userId }) {
                                     id="projectDescription"
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-base resize-none"
+                                    className="input-professional resize-none"
                                     rows={3}
                                     disabled={creating}
                                 />
@@ -233,17 +233,14 @@ export default function ProjectDashboard({ userId }) {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground transition-colors border border-border rounded-lg"
+                                    className="button-professional-secondary"
                                     disabled={creating}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`w-full sm:w-auto ${creating
-                                        ? 'bg-primary opacity-50 cursor-not-allowed'
-                                        : 'bg-primary hover:opacity-90'
-                                        } text-primary-foreground px-4 py-3 sm:py-2 rounded-lg transition-opacity flex items-center justify-center gap-2 font-medium`}
+                                    className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     disabled={creating}
                                 >
                                     {creating ? (

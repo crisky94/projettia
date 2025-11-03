@@ -7,70 +7,77 @@
 @import './button-utils.css';
 
 :root {
-  /* Tema pastel: tonos suaves y alta legibilidad */
-  --background: 246, 248, 252;
-  /* Fondo muy claro (casi blanco con tinte azul) */
-  --foreground: 17, 24, 39;
-  /* Texto oscuro (slate-900) */
+  /* Tema light profesional: colores elegantes y sofisticados */
+  --background: 250, 251, 254;
+  /* Fondo muy claro con tinte azul profesional */
+  --foreground: 15, 23, 42;
+  /* Texto oscuro profesional (slate-900) */
 
   --card: 255, 255, 255;
-  /* Tarjetas blancas */
-  --card-foreground: 17, 24, 39;
+  /* Tarjetas blancas con sombras sutiles */
+  --card-foreground: 15, 23, 42;
   /* Texto oscuro en tarjetas */
 
-  --border: 226, 232, 240;
-  /* Borde más claro (slate-100) */
-  --input: 226, 232, 240;
-  /* Mismo tono para inputs */
+  --border: 203, 213, 225;
+  /* Borde profesional (slate-300) */
+  --input: 203, 213, 225;
+  /* Bordes de inputs elegantes */
 
-  --primary: 147, 197, 253;
-  /* Azul pastel (blue-200) */
-  --primary-foreground: 17, 24, 39;
-  /* Texto oscuro sobre azul pastel */
+  --primary: 59, 130, 246;
+  /* Azul profesional (blue-500) */
+  --primary-foreground: 255, 255, 255;
+  /* Texto blanco sobre azul */
 
-  --accent: 196, 181, 253;
-  /* Lila pastel (violet-200) */
-  --accent-foreground: 17, 24, 39;
-  /* Texto oscuro sobre lila pastel */
+  --accent: 139, 92, 246;
+  /* Lila profesional (violet-500) */
+  --accent-foreground: 255, 255, 255;
+  /* Texto blanco sobre lila */
 
-  --orange: 253, 186, 116;
-  /* Naranja pastel (orange-200) */
-  --orange-foreground: 17, 24, 39;
-  /* Texto oscuro sobre naranja pastel */
+  --orange: 249, 115, 22;
+  /* Naranja profesional (orange-500) */
+  --orange-foreground: 255, 255, 255;
+  /* Texto blanco sobre naranja */
 
-  --primary-dark: 96, 165, 250;
-  /* Azul un poco más intenso (blue-300) para hover */
+  --primary-dark: 37, 99, 235;
+  /* Azul más intenso para hover (blue-600) */
 
-  --muted: 226, 232, 240;
-  /* Fondo apagado más claro (slate-100) */
-  --muted-foreground: 100, 116, 139;
-  /* Texto apagado más claro (slate-400) */
+  --muted: 241, 245, 249;
+  /* Fondo apagado elegante (slate-50) */
+  --muted-foreground: 71, 85, 105;
+  /* Texto apagado profesional (slate-600) */
 
-  --destructive: 252, 165, 165;
-  /* Rojo pastel (red-200) */
-  --destructive-foreground: 17, 24, 39;
-  /* Texto oscuro sobre rojo pastel */
+  --destructive: 239, 68, 68;
+  /* Rojo profesional (red-500) */
+  --destructive-foreground: 255, 255, 255;
+  /* Texto blanco sobre rojo */
 
   --success: 34, 197, 94;
-  /* Verde más oscuro (green-500) */
-  --warning: 253, 224, 71;
-  /* Amarillo pastel (yellow-200) */
+  /* Verde profesional (green-500) */
+  --warning: 245, 158, 11;
+  /* Amarillo profesional (amber-500) */
 
-  --ring: 96, 165, 250;
-  /* Anillo de foco azul pastel (blue-300) */
+  --ring: 59, 130, 246;
+  /* Anillo de foco azul profesional (blue-500) */
+
+  /* Sombras profesionales para el modo light */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Dark theme variables applied when <html data-theme="dark"> */
 :root[data-theme="dark"] {
   --background: 12, 18, 36;
-  /* Navy oscuro */
+  /* Navy oscuro profesional */
   --foreground: 248, 250, 252;
-  /* Texto claro */
+  /* Texto claro y limpio */
 
   --card: 18, 32, 64;
-  /* Azul oscuro para tarjetas */
+  /* Azul oscuro profesional para tarjetas */
   --card-foreground: 226, 232, 240;
-  /* Texto en tarjetas */
+  /* Texto elegante en tarjetas */
 
   --border: 30, 58, 138;
   /* Azul profundo para bordes */
@@ -80,35 +87,42 @@
   --primary: 147, 197, 253;
   /* Azul suave para dark (blue-300) */
   --primary-foreground: 17, 24, 39;
-  /* Texto oscuro sobre fondos claros puntuales */
+  /* Texto oscuro sobre fondos claros */
 
   --accent: 196, 181, 253;
-  /* Lila suave (violet-300) */
+  /* Lila suave profesional (violet-300) */
   --accent-foreground: 17, 24, 39;
 
   --orange: 253, 230, 138;
-  /* Naranja suave (amber-300) */
+  /* Naranja suave profesional (amber-300) */
   --orange-foreground: 17, 24, 39;
 
   --primary-dark: 96, 165, 250;
-  /* Hover un poco más vivo (blue-400) */
+  /* Hover más vivo (blue-400) */
 
   --muted: 51, 65, 85;
-  /* Fondos apagados */
+  /* Fondos apagados elegantes */
   --muted-foreground: 148, 163, 184;
-  /* Texto apagado */
+  /* Texto apagado profesional */
 
   --destructive: 248, 113, 113;
-  /* Rojo suave (red-400) */
+  /* Rojo suave profesional (red-400) */
   --destructive-foreground: 248, 250, 252;
 
   --success: 74, 222, 128;
-  /* Verde (green-400) */
+  /* Verde profesional (green-400) */
   --warning: 250, 204, 21;
-  /* Amarillo (yellow-400) */
+  /* Amarillo profesional (yellow-400) */
 
   --ring: 96, 165, 250;
-  /* Focus ring en azul */
+  /* Focus ring azul profesional */
+
+  /* Sombras para modo oscuro con mejor contraste */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
 }
 
 /* Smooth theme transitions */
@@ -341,5 +355,72 @@ body {
 
   .hover-theme-orange:hover {
     filter: brightness(0.9);
+  }
+
+  /* Sombras profesionales adaptativas al tema */
+  .shadow-theme-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-theme {
+    box-shadow: var(--shadow);
+  }
+
+  .shadow-theme-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-theme-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-theme-xl {
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Efectos profesionales para tarjetas y elementos */
+  .card-professional {
+    background-color: rgb(var(--card));
+    border: 1px solid rgb(var(--border));
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+  }
+
+  .card-professional:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .button-professional {
+    background-color: rgb(var(--primary));
+    color: rgb(var(--primary-foreground));
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+  }
+
+  .button-professional:hover {
+    background-color: rgb(var(--primary-dark));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .input-professional {
+    background-color: rgb(var(--card));
+    border: 1px solid rgb(var(--border));
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: rgb(var(--foreground));
+    transition: all 0.2s ease;
+  }
+
+  .input-professional:focus {
+    border-color: rgb(var(--primary));
+    box-shadow: 0 0 0 3px rgba(var(--primary), 0.1);
+    outline: none;
   }
 }

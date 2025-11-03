@@ -92,20 +92,20 @@ export default function Chat({ projectId, user }) {
     };
 
     return (
-        <div className="flex flex-col h-[600px] bg-white rounded-lg shadow">
+        <div className="card-professional flex flex-col h-[600px] shadow-theme-lg">
             <div className="flex-1 overflow-y-auto p-4">
                 {renderChatContent()}
                 <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSendMessage} className="p-4 border-t">
+            <form onSubmit={handleSendMessage} className="p-4 border-t border-border">
                 <div className="flex gap-2 items-center">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder={editingMessageId ? "Editing message..." : "Type your message..."}
-                        className="flex-1 rounded-lg border p-2"
+                        className="input-professional flex-1"
                     />
 
                     {editingMessageId && (

@@ -10,8 +10,7 @@ export const MessageItem = ({ message, isOwn, isEditing, editText, setEditText, 
             return (
                 <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
                     <input
-                        className={`w-64 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'
-                            }`}
+                        className="input-professional w-64 max-w-full text-sm"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
                         autoFocus
@@ -49,7 +48,7 @@ export const MessageItem = ({ message, isOwn, isEditing, editText, setEditText, 
 
     return (
         <div className={`mb-4 ${isOwn ? 'text-right' : 'text-left'}`}>
-            <div className={`inline-block p-2 rounded-lg ${isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+            <div className={`inline-block p-2 rounded-lg ${isOwn ? 'bg-primary text-primary-foreground' : 'bg-card text-card-foreground border border-border'
                 }`}>
                 <div className="flex items-start gap-2">
                     <div className="flex-1">
@@ -58,7 +57,7 @@ export const MessageItem = ({ message, isOwn, isEditing, editText, setEditText, 
                     </div>
                 </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
                 {new Date(message.createdAt).toLocaleString()}
             </p>
         </div>
@@ -78,14 +77,14 @@ MessageItem.propTypes = {
 // Loading component
 export const LoadingState = () => (
     <div className="flex items-center justify-center h-full">
-        <p className="text-gray-500">Loading messages...</p>
+        <p className="text-muted-foreground">Loading messages...</p>
     </div>
 );
 
 // Error component
 export const ErrorState = ({ error }) => (
     <div className="flex items-center justify-center h-full">
-        <p className="text-red-500">{error}</p>
+        <p className="text-destructive">{error}</p>
     </div>
 );
 
@@ -96,17 +95,16 @@ ErrorState.propTypes = {
 // Empty state component
 export const EmptyState = () => (
     <div className="flex items-center justify-center h-full">
-        <p className="text-gray-500">No messages yet. Start a conversation!</p>
+        <p className="text-muted-foreground">No messages yet. Start a conversation!</p>
     </div>
 );
 
 // Action button component
 export const ActionButton = ({ onClick, disabled, title, children, variant = 'default' }) => {
-    const baseClasses = "px-3 py-2 rounded-lg border text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
     const variantClasses = {
-        default: "hover:bg-gray-50",
-        primary: "bg-blue-500 text-white border-blue-500 hover:bg-blue-600",
-        cancel: "hover:bg-gray-50"
+        default: "button-professional-secondary",
+        primary: "button-professional",
+        cancel: "button-professional-secondary"
     };
 
     return (
@@ -114,7 +112,7 @@ export const ActionButton = ({ onClick, disabled, title, children, variant = 'de
             type={variant === 'primary' ? 'submit' : 'button'}
             onClick={onClick}
             disabled={disabled}
-            className={`${baseClasses} ${variantClasses[variant]}`}
+            className={`${variantClasses[variant]} text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
             title={title}
             aria-label={title}
         >

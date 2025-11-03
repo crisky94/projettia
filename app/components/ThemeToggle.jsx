@@ -31,7 +31,7 @@ export default function ThemeToggle() {
         <button
             type="button"
             onClick={toggle}
-            className="px-3 py-2 rounded-md border border-border bg-card text-card-foreground hover:bg-muted transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
+            className="button-professional-secondary min-h-[36px] min-w-[36px] flex items-center justify-center"
             aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >

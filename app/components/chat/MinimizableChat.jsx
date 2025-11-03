@@ -261,32 +261,32 @@ export default function MinimizableChat({ projectId, user, projectName }) {
     if (isLoading) {
         chatContent = (
             <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
             </div>
         );
     } else if (error) {
         chatContent = (
-            <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                <svg className="w-8 h-8 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                <svg className="w-8 h-8 text-destructive mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-red-500 text-sm">{error}</p>
+                <p className="text-destructive text-sm">{error}</p>
                 <button
-                    onClick={fetchMessages}
-                    className="mt-2 text-blue-600 hover:text-blue-800 text-xs underline"
+                    onClick={() => globalThis.location.reload()}
+                    className="mt-2 text-primary hover:opacity-80 text-xs underline"
                 >
-                    Retry
+                    Refresh page
                 </button>
             </div>
         );
     } else if (messages.length === 0) {
         chatContent = (
             <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-muted-foreground mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <p className="text-gray-500 text-sm">No messages yet</p>
-                <p className="text-gray-400 text-xs">Start a conversation with your team!</p>
+                <p className="text-muted-foreground text-sm">No messages yet</p>
+                <p className="text-muted-foreground text-xs">Start a conversation with your team!</p>
             </div>
         );
     } else {
@@ -304,8 +304,8 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                             <div className={`max-w-[75%] ${isOwn ? 'order-1' : 'order-2'}`}>
                                 <div
                                     className={`px-3 py-2 rounded-2xl ${isOwn
-                                        ? 'bg-blue-600 text-white rounded-br-md'
-                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
+                                        ? 'bg-primary text-primary-foreground rounded-br-md'
+                                        : 'bg-card text-card-foreground border border-border rounded-bl-md'
                                         }`}
                                 >
                                     {!isOwn && (
@@ -316,7 +316,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                             return (
                                                 <form onSubmit={saveEdit} className="mt-1 flex items-center gap-2">
                                                     <input
-                                                        className={`w-56 max-w-full rounded px-2 py-1 text-sm ${isOwn ? 'text-gray-900' : 'text-gray-800'}`}
+                                                        className="input-professional w-56 max-w-full text-sm"
                                                         value={editText}
                                                         onChange={(e) => setEditText(e.target.value)}
                                                         autoFocus
@@ -356,7 +356,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
             <button
                 onClick={toggleChat}
                 aria-label="Open chat"
-                className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-primary hover:opacity-90 text-primary-foreground shadow-theme-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary"
             >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -370,10 +370,10 @@ export default function MinimizableChat({ projectId, user, projectName }) {
 
     return (
         <div className="fixed bottom-4 right-4 z-50 w-80 h-80 md:w-96 md:h-96">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col">
+            <div className="card-professional shadow-theme-xl overflow-hidden h-full flex flex-col">
                 {/* Chat Header */}
                 <button
-                    className="flex items-center justify-between p-3 bg-blue-600 hover:bg-blue-700 text-white w-full text-left transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+                    className="flex items-center justify-between p-3 bg-primary hover:opacity-90 text-primary-foreground w-full text-left transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
                     onClick={toggleChat}
                     aria-label="Minimize chat"
                 >
@@ -384,7 +384,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         <span className="font-medium text-sm truncate">
                             {projectName ? `${projectName} Chat` : 'Team Chat'}
                         </span>
-                        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`} title={isConnected ? 'Conectado' : 'Desconectado'} />
+                    <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-destructive'}`} title={isConnected ? 'Conectado' : 'Desconectado'} />
                     </div>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -392,26 +392,26 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                 </button>
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-3 bg-gray-50 dark:bg-gray-900">
+                <div className="flex-1 overflow-y-auto p-3 bg-background">
                     {chatContent}
                 </div>
 
                 {/* Message Input */}
-                <div className="p-3 border-t border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
+                <div className="p-3 border-t border-border bg-card">
                     <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                         <input
                             type="text"
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder={editingMessageId ? "Editing message..." : "Type a message..."}
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                            className="input-professional flex-1 text-sm"
                             disabled={isLoading}
                         />
                         {editingMessageId && (
                             <button
                                 type="button"
                                 onClick={cancelEdit}
-                                className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                className="button-professional-secondary text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Cancelar edición"
                                 aria-label="Cancelar edición"
                             >
@@ -427,7 +427,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     type="button"
                                     onClick={startEditLast}
                                     disabled={!canEditLast}
-                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                    className="button-professional-secondary text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Edit your last message"
                                     aria-label="Edit your last message"
                                 >
@@ -444,7 +444,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     type="button"
                                     onClick={deleteLast}
                                     disabled={!canDeleteLast}
-                                    className="px-3 py-2 rounded-full border text-xs hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                                    className="button-professional-secondary text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Delete your last message"
                                     aria-label="Delete your last message"
                                 >
@@ -455,7 +455,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         <button
                             type="submit"
                             disabled={!newMessage.trim() || isLoading}
-                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-full transition-colors flex items-center justify-center min-w-[32px] min-h-[32px]"
+                            className="bg-primary hover:opacity-90 disabled:opacity-50 text-primary-foreground p-2 rounded-full transition-opacity flex items-center justify-center min-w-[32px] min-h-[32px]"
                             title="Send message"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
