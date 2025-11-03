@@ -266,7 +266,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
         );
     } else if (error) {
         chatContent = (
-                        <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+            <div className="flex flex-col items-center justify-center h-full p-4 text-center">
                 <svg className="w-8 h-8 text-destructive mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -384,7 +384,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         <span className="font-medium text-sm truncate">
                             {projectName ? `${projectName} Chat` : 'Team Chat'}
                         </span>
-                    <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-destructive'}`} title={isConnected ? 'Conectado' : 'Desconectado'} />
+                        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-destructive'}`} title={isConnected ? 'Conectado' : 'Desconectado'} />
                     </div>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
