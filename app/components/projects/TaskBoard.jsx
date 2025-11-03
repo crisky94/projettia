@@ -4,9 +4,8 @@ import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
-const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
-    const [showViewModal, setShowViewModal] = useState(false);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
         disabled: !canDrag,
@@ -81,7 +80,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     <button
                         onClick={(e) => {
                             e.stopPropagation?.();
-                            setShowViewModal(true);
+                            onViewTask && onViewTask(task);
                         }}
                         className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium inline-flex items-center gap-1 hover:underline"
                         title="View complete task"
@@ -148,95 +147,6 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     </button>
                 </div>
             )}
-
-            {/* Modal de vista completa */}
-            {showViewModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-border">
-                        {/* Header */}
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-card">
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1 min-w-0">
-                                    <h2 className="text-xl font-bold text-card-foreground mb-2 break-words word-wrap overflow-wrap-anywhere">
-                                        {task.title}
-                                    </h2>
-                                    <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${task.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
-                                            task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
-                                                task.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
-                                                    'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
-                                            }`}>
-                                            {task.status === 'PENDING' ? '📋 Pending' :
-                                                task.status === 'IN_PROGRESS' ? '⚡ In Progress' :
-                                                    task.status === 'COMPLETED' ? '✅ Completed' :
-                                                        task.status}
-                                        </span>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setShowViewModal(false)}
-                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-muted rounded-lg transition-colors flex-shrink-0"
-                                    title="Close"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 space-y-6">
-                            {/* Description */}
-                            {task.description && (
-                                <div>
-                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Descripción</h3>
-                                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                                        {task.description}
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Sprint Info */}
-                            {task.sprint && (
-                                <div>
-                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Sprint</h3>
-                                    <div className="flex items-center gap-2">
-                                        <span className="bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 px-3 py-1 rounded-full text-sm font-medium">
-                                            🚀 {task.sprint.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Assignee */}
-                            {assigneeName && (
-                                <div>
-                                    <h3 className="text-sm font-semibold text-card-foreground mb-2">Asignado a</h3>
-                                    <div className="flex items-center gap-3">
-                                        <div className={`h-8 w-8 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-white text-sm font-bold`}>
-                                            {assigneeInitials}
-                                        </div>
-                                        <span className="text-sm font-medium text-card-foreground">{assigneeName}</span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Footer */}
-                        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-muted/50">
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={() => setShowViewModal(false)}
-                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                                >
-                                    Cerrar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -277,14 +187,14 @@ TaskCard.propTypes = {
         })
     ),
     onDeleteTask: PropTypes.func,
-    onUpdateTask: PropTypes.func
+    onUpdateTask: PropTypes.func,
+    onViewTask: PropTypes.func
 };
 
-const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask }) => {
+const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
-
     // Define row styles based on status
     const getRowStyles = (status, isOver) => {
         const baseStyles = "w-full bg-white dark:bg-gray-900 rounded-xl shadow-sm border transition-all duration-200 overflow-hidden";
@@ -428,6 +338,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                         sprints={sprints}
                                         onDeleteTask={onDeleteTask}
                                         onUpdateTask={onUpdateTask}
+                                        onViewTask={onViewTask}
                                     />
                                 </div>
                             ))}
@@ -482,7 +393,8 @@ TaskRow.propTypes = {
         })
     ),
     onDeleteTask: PropTypes.func,
-    onUpdateTask: PropTypes.func
+    onUpdateTask: PropTypes.func,
+    onViewTask: PropTypes.func
 };
 
 /**
@@ -543,6 +455,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState(null);
     const [activeId, setActiveId] = useState(null);
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [taskToView, setTaskToView] = useState(null);
 
     // Debug logs
     useEffect(() => {
@@ -930,6 +844,16 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         setTaskToDelete(null);
     };
 
+    const handleViewTask = (task) => {
+        setTaskToView(task);
+        setShowViewModal(true);
+    };
+
+    const handleCloseViewModal = () => {
+        setShowViewModal(false);
+        setTaskToView(null);
+    };
+
     return (
         <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background min-h-screen overflow-x-hidden">
             <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
@@ -1093,6 +1017,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             sprints={sprints}
                             onDeleteTask={handleDeleteTask}
                             onUpdateTask={handleOpenEditTask}
+                            onViewTask={handleViewTask}
                         />
 
                         {/* In Progress Row */}
@@ -1106,6 +1031,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             sprints={sprints}
                             onDeleteTask={handleDeleteTask}
                             onUpdateTask={handleOpenEditTask}
+                            onViewTask={handleViewTask}
                         />
 
                         {/* Completed Row */}
@@ -1119,6 +1045,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             sprints={sprints}
                             onDeleteTask={handleDeleteTask}
                             onUpdateTask={handleOpenEditTask}
+                            onViewTask={handleViewTask}
                         />
                         {/* Modal de edición de tarea */}
                         {showEditTaskModal && taskToEdit && (
@@ -1378,6 +1305,124 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                         <span>Delete task</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Full-Screen View Task Modal */}
+                {showViewModal && taskToView && (
+                    <div 
+                        className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
+                        onClick={handleCloseViewModal}
+                    >
+                        <div 
+                            className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden border border-gray-200 dark:border-gray-700"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Header */}
+                            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight">
+                                            {taskToView.title}
+                                        </h1>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
+                                                taskToView.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
+                                                taskToView.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
+                                                taskToView.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
+                                                'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
+                                            }`}>
+                                                {taskToView.status === 'PENDING' ? '📋 Pending' :
+                                                taskToView.status === 'IN_PROGRESS' ? '⚡ In Progress' :
+                                                taskToView.status === 'COMPLETED' ? '✅ Completed' :
+                                                taskToView.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleCloseViewModal}
+                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 flex-shrink-0"
+                                        title="Close"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Content - Scrollable */}
+                            <div className="flex-1 overflow-y-auto max-h-[calc(80vh-140px)]">
+                                <div className="p-6 space-y-6">
+                                    {/* Description Section */}
+                                    {taskToView.description && (
+                                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                Description
+                                            </h3>
+                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line">
+                                                {taskToView.description}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {/* Sprint Info */}
+                                        {taskToView.sprint && (
+                                            <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-violet-200 dark:border-violet-800">
+                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                    <svg className="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                    </svg>
+                                                    Sprint
+                                                </h3>
+                                                <span className="bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 px-3 py-1 rounded-md text-sm font-medium inline-flex items-center gap-2">
+                                                    🚀 {taskToView.sprint.name}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Assignee */}
+                                        {taskToView.assignee && (
+                                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                    Assigned to
+                                                </h3>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                                                        {taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{taskToView.assignee.name}</span>
+                                                        {taskToView.assignee.email && (
+                                                            <p className="text-xs text-gray-600 dark:text-gray-400">{taskToView.assignee.email}</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                                <div className="flex justify-end">
+                                    <button
+                                        onClick={handleCloseViewModal}
+                                        className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                                    >
+                                        Close
                                     </button>
                                 </div>
                             </div>
