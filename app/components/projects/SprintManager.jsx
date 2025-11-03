@@ -920,7 +920,9 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
+    const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
     const [sprintToDelete, setSprintToDelete] = useState(null);
+    const [taskToDelete, setTaskToDelete] = useState(null);
     const [newSprint, setNewSprint] = useState({
         name: '',
         description: '',
@@ -1088,23 +1090,29 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     };
 
     const handleDeleteTask = async (taskId) => {
-        if (!confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
-            return;
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            setTaskToDelete(task);
+            setShowDeleteTaskModal(true);
         }
+    };
+
+    const handleConfirmDeleteTask = async () => {
+        if (!taskToDelete) return;
 
         try {
-            const response = await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+            const response = await fetch(`/api/projects/${projectId}/tasks/${taskToDelete.id}`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
-                // Find the task being deleted
-                const deletedTask = tasks.find(t => t.id === taskId);
                 // Notify parent component to update shared state
-                if (onTaskDelete && deletedTask) {
-                    onTaskDelete(deletedTask);
+                if (onTaskDelete && taskToDelete) {
+                    onTaskDelete(taskToDelete);
                 }
                 toast.success('Task deleted successfully!');
+                setShowDeleteTaskModal(false);
+                setTaskToDelete(null);
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Error deleting task');
@@ -1113,6 +1121,11 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             console.error('Error deleting task:', error);
             toast.error('Error deleting task');
         }
+    };
+
+    const handleCancelDeleteTask = () => {
+        setShowDeleteTaskModal(false);
+        setTaskToDelete(null);
     };
 
     const handleCreateTask = async (e) => {
@@ -1282,36 +1295,57 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
                 {/* Modal de confirmación para eliminar sprint */}
                 {showDeleteSprintModal && sprintToDelete && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                         <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
+                            {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                                        <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-card-foreground">Eliminar Sprint</h3>
-                                        <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">Are you sure you want to delete the sprint "{sprintToDelete.name}"? Tasks will be moved to "No sprint".</p>
+                                        <h3 className="text-xl font-bold text-card-foreground">
+                                            Delete sprint
+                                        </h3>
+                                        <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
+                                            This action cannot be undone
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="px-4 py-3 flex justify-end gap-3">
-                                <button
-                                    onClick={cancelDeleteSprint}
-                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
-                                    disabled={isSubmitting}
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={confirmDeleteSprint}
-                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-white font-medium min-h-[44px] sm:min-h-[36px] ${isSubmitting ? 'bg-red-400' : 'bg-red-500 hover:bg-red-600'}`}
-                                    disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? 'Eliminando...' : 'Eliminar'}
-                                </button>
+
+                            {/* Content */}
+                            <div className="p-4">
+                                <div className="mb-6">
+                                    <p className="text-gray-700 dark:text-gray-400 text-base leading-relaxed">
+                                        Are you sure you want to delete the sprint{' '}
+                                        <span className="font-semibold text-card-foreground break-words">"{sprintToDelete.name}"</span>?
+                                        {' '}Tasks will be moved to "No sprint".
+                                    </p>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
+                                    <button
+                                        onClick={cancelDeleteSprint}
+                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirmDeleteSprint}
+                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
+                                        disabled={isSubmitting}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        <span>{isSubmitting ? 'Deleting...' : 'Delete sprint'}</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1578,6 +1612,61 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Task deletion confirmation modal */}
+                {showDeleteTaskModal && taskToDelete && (
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md border border-border">
+                            {/* Header */}
+                            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                                        <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-card-foreground">
+                                            Delete task
+                                        </h3>
+                                        <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
+                                            This action cannot be undone
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-4">
+                                <div className="mb-6">
+                                    <p className="text-gray-700 dark:text-gray-400 text-base leading-relaxed">
+                                        Are you sure you want to delete the task{' '}
+                                        <span className="font-semibold text-card-foreground break-words">"{taskToDelete.title}"</span>?
+                                    </p>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
+                                    <button
+                                        onClick={handleCancelDeleteTask}
+                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmDeleteTask}
+                                        className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        <span>Delete task</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
