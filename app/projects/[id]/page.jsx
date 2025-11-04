@@ -345,28 +345,6 @@ export default function ProjectPage({ params }) {
         setDeleteConfirmStep(1);
     };
 
-    // Eliminar sprint y actualizar tareas que lo tenían asignado
-    const handleDeleteSprint = async (sprintId) => {
-        try {
-            const response = await fetch(`/api/projects/${project.id}/sprints/${sprintId}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error deleting sprint');
-            }
-            // Actualizar sprints
-            await refreshSprints();
-            // Quitar el sprint de las tareas que lo tenían asignado
-            setTasks(prevTasks => prevTasks.map(task =>
-                task.sprintId === sprintId ? { ...task, sprintId: null, sprint: null } : task
-            ));
-            toast.success('Sprint deleted and tasks updated!');
-        } catch (error) {
-            console.error('Error deleting sprint:', error);
-            toast.error(error.message || 'Error deleting sprint');
-        }
-    };
     const handleTaskUpdate = (updatedTask) => {
         const oldTask = tasks.find(task => task.id === updatedTask.id);
 
@@ -574,7 +552,6 @@ export default function ProjectPage({ params }) {
                                         onTaskCreate={handleTaskCreate}
                                         onRefreshTasks={refreshTasks}
                                         onRefreshSprints={refreshSprints}
-                                        onDeleteSprint={handleDeleteSprint}
                                     />
                                 )}
                             </div>

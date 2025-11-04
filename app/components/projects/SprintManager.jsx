@@ -914,7 +914,7 @@ SprintCard.propTypes = {
  * into sprints, manage sprint details, and handle task management completely,
  * while keeping sprint deletion restricted for project integrity.
  */
-const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdate, onTaskDelete, onTaskCreate }) => {
+const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdate, onTaskDelete, onTaskCreate, onRefreshTasks, onRefreshSprints }) => {
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
@@ -1020,10 +1020,31 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
         setIsSubmitting(true);
         try {
             const response = await fetch(`/api/projects/${projectId}/sprints/${sprintToDelete.id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             });
+            
+            console.log('Delete sprint response status:', response.status);
+            console.log('Delete sprint response ok:', response.ok);
+            
             if (response.ok) {
                 setSprints(sprints.filter(s => s.id !== sprintToDelete.id));
+                
+                // Notify parent component to refresh tasks so they appear in "No Sprint" section
+                try {
+                    if (onRefreshTasks && typeof onRefreshTasks === 'function') {
+                        await onRefreshTasks();
+                    }
+                    if (onRefreshSprints && typeof onRefreshSprints === 'function') {
+                        await onRefreshSprints();
+                    }
+                } catch (updateError) {
+                    console.warn('Error refreshing tasks/sprints after sprint deletion:', updateError);
+                    // Don't show error to user since sprint was successfully deleted
+                }
+                
                 toast.success(`Sprint "${sprintToDelete.name}" was deleted. Tasks were moved to "No sprint".`, {
                     position: 'top-right',
                     autoClose: 4000,
@@ -1033,8 +1054,26 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     draggable: true,
                 });
             } else {
-                const error = await response.json();
-                toast.error(error.error || 'Error eliminando sprint', {
+                // Try to parse error response
+                let errorMessage = 'Error eliminando sprint';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorData.message || errorMessage;
+                } catch (parseError) {
+                    console.warn('Could not parse error response:', parseError);
+                    if (response.status === 401) {
+                        errorMessage = 'Not authorized to delete this sprint';
+                    } else if (response.status === 403) {
+                        errorMessage = 'Forbidden - Only admins can delete sprints';
+                    } else if (response.status === 404) {
+                        errorMessage = 'Sprint not found';
+                    } else {
+                        errorMessage = `Server error: ${response.status}`;
+                    }
+                }
+                
+                console.error('Delete sprint API error - Status:', response.status, 'Message:', errorMessage);
+                toast.error(errorMessage, {
                     position: 'top-right',
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -1044,8 +1083,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 });
             }
         } catch (error) {
-            console.error('Error eliminando sprint:', error);
-            toast.error('Error eliminando sprint', {
+            console.error('Error eliminando sprint (network/other):', error);
+            toast.error(`Network error: ${error.message || 'Failed to delete sprint'}`, {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -1682,7 +1721,9 @@ SprintManager.propTypes = {
     tasks: PropTypes.array,
     onTaskUpdate: PropTypes.func,
     onTaskDelete: PropTypes.func,
-    onTaskCreate: PropTypes.func
+    onTaskCreate: PropTypes.func,
+    onRefreshTasks: PropTypes.func,
+    onRefreshSprints: PropTypes.func
 };
 
 export default SprintManager;
