@@ -81,11 +81,17 @@ html {
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
   scroll-behavior: smooth;
-  /* Consistent font size across all devices */
-  font-size: 16px;
+  /* Force larger font size for production */
+  font-size: 18px !important;
   /* Prevent zoom issues in production */
   height: 100%;
   min-height: 100%;
+  /* Force minimum zoom level */
+  zoom: 1.2 !important;
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  transform: scale(1.2);
+  transform-origin: 0 0;
 }
 
 body {
@@ -101,10 +107,14 @@ body {
   /* Ensure consistent sizing in production */
   min-height: 100vh;
   min-height: 100dvh;
+  /* Force minimum scale for small deployments */
+  min-width: 100vw;
   /* Prevent zoom issues */
-  zoom: 1;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
+  zoom: 1.2 !important;
+  -webkit-text-size-adjust: 120% !important;
+  -ms-text-size-adjust: 120% !important;
+  /* Force larger base font size */
+  font-size: 18px !important;
 }
 
 /* Mobile-first touch targets */
@@ -398,10 +408,78 @@ body {
 
   /* Force consistent sizing in production environments */
   .production-safe {
-    transform: scale(1);
+    transform: scale(1.2) !important;
     transform-origin: top left;
     width: 100vw;
     min-width: 100vw;
     max-width: 100vw;
+  }
+
+  /* Force minimum sizes for all containers */
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl,
+  .max-w-lg,
+  .max-w-md,
+  .max-w-sm {
+    font-size: 18px !important;
+    transform: scale(1.1);
+  }
+
+  /* Force larger text for all elements */
+  p,
+  span,
+  div,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  button,
+  input,
+  textarea,
+  select {
+    font-size: inherit !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Force minimum button and input sizes */
+  button, input, textarea, select {
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+  }
+
+  /* Special rules for small screens or production deployments */
+  @media screen and (max-width: 1200px) {
+    html {
+      font-size: 20px !important;
+      zoom: 1.3 !important;
+    }
+    
+    body {
+      font-size: 20px !important;
+      zoom: 1.3 !important;
+      transform: scale(1.3) !important;
+      transform-origin: 0 0 !important;
+    }
+    
+    .max-w-7xl, .container, main {
+      transform: scale(1.2) !important;
+      transform-origin: 0 0 !important;
+    }
+  }
+
+  /* Emergency scaling for very small viewports */
+  @media screen and (max-width: 800px) {
+    html, body {
+      font-size: 22px !important;
+      zoom: 1.5 !important;
+    }
   }
 }
