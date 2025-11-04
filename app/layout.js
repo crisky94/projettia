@@ -85,7 +85,7 @@ export default function RootLayout({ children }) {
           fontSize: '17px',
           minHeight: '100vh'
         }}>
-          <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top">
+          <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top relative w-full z-50">
             <div className="flex items-center gap-2">
               <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
             </div>
@@ -120,7 +120,7 @@ export default function RootLayout({ children }) {
           <SignedIn>
             <AuthRedirect />
           </SignedIn>
-          <main className="min-h-screen-safe flex-1 safe-area-inset-bottom">
+          <main className="min-h-screen-safe flex-1 safe-area-inset-bottom relative z-10 pt-4">
             {children}
           </main>
           <ToastContainer

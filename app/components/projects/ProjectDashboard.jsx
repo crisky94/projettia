@@ -99,7 +99,7 @@ export default function ProjectDashboard({ userId }) {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-background">
+            <div className="flex items-center justify-center py-20 bg-background">
                 <LoadingSpinner />
             </div>
         );
@@ -107,7 +107,7 @@ export default function ProjectDashboard({ userId }) {
 
     if (error && !loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+            <div className="flex flex-col items-center justify-center py-20 bg-background">
                 <div className="text-destructive mb-4">{error}</div>
                 <button
                     onClick={fetchProjects}
@@ -123,7 +123,7 @@ export default function ProjectDashboard({ userId }) {
     }
 
     return (
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background min-h-screen">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Projects</h1>
                 <button

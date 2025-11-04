@@ -402,7 +402,7 @@ export default function ProjectPage({ params }) {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+            <div className="bg-background py-20 flex flex-col items-center justify-center">
                 <div className="text-destructive mb-4">{error}</div>
                 <button
                     onClick={() => window.location.reload()}
@@ -416,14 +416,14 @@ export default function ProjectPage({ params }) {
 
     if (!project || !user) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="bg-background py-20 flex items-center justify-center">
                 <div className="text-muted-foreground">Project not found</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="bg-background">
             <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-4 mb-6">
                     <div className="flex items-center justify-between">

@@ -1242,7 +1242,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background min-h-screen overflow-x-hidden">
+        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background overflow-x-hidden">
             <div className="space-y-8 w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
                 {/* Header */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">

@@ -28,7 +28,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="bg-background">
             <ProjectDashboard userId={userId} />
         </div>
     );

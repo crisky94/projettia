@@ -489,4 +489,39 @@ body {
       zoom: 1.2 !important;
     }
   }
+
+  /* Fix layout issues caused by scaling */
+  header {
+    position: relative !important;
+    z-index: 1000 !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  main {
+    position: relative !important;
+    z-index: 1 !important;
+    margin-top: 0 !important;
+    padding-top: 1rem !important;
+    transform: none !important;
+  }
+
+  /* Ensure proper spacing between header and main content */
+  body > header + * main,
+  body > header ~ * main {
+    margin-top: 0 !important;
+    padding-top: 1rem !important;
+  }
+
+  /* Prevent content from overlapping with header due to scaling */
+  .page-content {
+    margin-top: 1rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Override any min-h-screen classes that might cause overlap */
+  .min-h-screen {
+    min-height: auto !important;
+  }
 }
