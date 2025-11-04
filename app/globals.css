@@ -81,16 +81,16 @@ html {
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
   scroll-behavior: smooth;
-  /* Conservative font size for production */
-  font-size: 16px !important;
+  /* Smaller font size for general content */
+  font-size: 15px !important;
   /* Prevent zoom issues in production */
   height: 100%;
   min-height: 100%;
-  /* Minimal zoom level */
-  zoom: 1.05 !important;
-  -webkit-transform: scale(1.05);
-  -moz-transform: scale(1.05);
-  transform: scale(1.05);
+  /* Smaller zoom level for general content */
+  zoom: 1.02 !important;
+  -webkit-transform: scale(1.02);
+  -moz-transform: scale(1.02);
+  transform: scale(1.02);
   transform-origin: 0 0;
 }
 
@@ -107,14 +107,14 @@ body {
   /* Ensure consistent sizing in production */
   min-height: 100vh;
   min-height: 100dvh;
-  /* Conservative scale for deployments */
+  /* Smaller scale for general content */
   min-width: 100vw;
-  /* Minimal zoom level */
-  zoom: 1.05 !important;
-  -webkit-text-size-adjust: 105% !important;
-  -ms-text-size-adjust: 105% !important;
-  /* Conservative base font size */
-  font-size: 16px !important;
+  /* Smaller zoom level */
+  zoom: 1.02 !important;
+  -webkit-text-size-adjust: 102% !important;
+  -ms-text-size-adjust: 102% !important;
+  /* Smaller base font size */
+  font-size: 15px !important;
 }
 
 /* Mobile-first touch targets */
@@ -426,8 +426,8 @@ body {
   .max-w-lg,
   .max-w-md,
   .max-w-sm {
-    font-size: 16px !important;
-    transform: scale(1.02);
+    font-size: 15px !important;
+    transform: scale(1.01);
   }
 
   /* Force larger text for all elements */
@@ -461,22 +461,32 @@ body {
   /* Special rules for small screens or production deployments */
   @media screen and (max-width: 1200px) {
     html {
-      font-size: 16px !important;
-      zoom: 1.03 !important;
+      font-size: 15px !important;
+      zoom: 1.01 !important;
     }
 
     body {
-      font-size: 16px !important;
-      zoom: 1.03 !important;
-      transform: scale(1.03) !important;
+      font-size: 15px !important;
+      zoom: 1.01 !important;
+      transform: scale(1.01) !important;
       transform-origin: 0 0 !important;
     }
 
     .max-w-7xl,
     .container,
     main {
-      transform: scale(1.02) !important;
+      transform: scale(1.01) !important;
       transform-origin: 0 0 !important;
+    }
+
+    /* Keep task boards readable on smaller screens */
+    [class*="TaskBoard"],
+    [class*="SprintManager"],
+    .task-card,
+    .board-column,
+    table {
+      zoom: 1.03 !important;
+      font-size: 16px !important;
     }
   }
 
@@ -485,8 +495,17 @@ body {
 
     html,
     body {
-      font-size: 16px !important;
+      font-size: 15px !important;
+      zoom: 1.02 !important;
+    }
+
+    /* Ensure task boards remain usable on mobile */
+    [class*="TaskBoard"],
+    [class*="SprintManager"],
+    .task-card,
+    .board-column {
       zoom: 1.05 !important;
+      font-size: 16px !important;
     }
   }
 
@@ -523,5 +542,34 @@ body {
   /* Override any min-h-screen classes that might cause overlap */
   .min-h-screen {
     min-height: auto !important;
+  }
+
+  /* Maintain proper size for task boards and tables */
+  [class*="TaskBoard"],
+  [class*="task-board"],
+  [class*="SprintManager"],
+  [class*="sprint"],
+  .task-card,
+  .board-column,
+  .kanban,
+  table,
+  .table,
+  .grid,
+  .task-item,
+  .project-card {
+    zoom: 1.05 !important;
+    font-size: 16px !important;
+    transform: scale(1.05) !important;
+    transform-origin: center !important;
+  }
+
+  /* Ensure task/sprint content remains readable */
+  .task-title,
+  .task-description,
+  .sprint-name,
+  .member-name,
+  .project-title {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
   }
 }
