@@ -1,7 +1,7 @@
-// Viewport configuration for mobile-first design with moderate scaling
+// Viewport configuration for mobile-first design with minimal scaling
 export const viewport = {
     width: 'device-width',
-    initialScale: 1.1,
+    initialScale: 1.05,
     maximumScale: 2,
     userScalable: true,
     viewportFit: 'cover',

@@ -81,16 +81,16 @@ html {
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
   scroll-behavior: smooth;
-  /* Moderate font size for production */
-  font-size: 17px !important;
+  /* Conservative font size for production */
+  font-size: 16px !important;
   /* Prevent zoom issues in production */
   height: 100%;
   min-height: 100%;
-  /* Moderate zoom level */
-  zoom: 1.1 !important;
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  transform: scale(1.1);
+  /* Minimal zoom level */
+  zoom: 1.05 !important;
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  transform: scale(1.05);
   transform-origin: 0 0;
 }
 
@@ -107,14 +107,14 @@ body {
   /* Ensure consistent sizing in production */
   min-height: 100vh;
   min-height: 100dvh;
-  /* Moderate scale for deployments */
+  /* Conservative scale for deployments */
   min-width: 100vw;
-  /* Moderate zoom level */
-  zoom: 1.1 !important;
-  -webkit-text-size-adjust: 110% !important;
-  -ms-text-size-adjust: 110% !important;
-  /* Moderate base font size */
-  font-size: 17px !important;
+  /* Minimal zoom level */
+  zoom: 1.05 !important;
+  -webkit-text-size-adjust: 105% !important;
+  -ms-text-size-adjust: 105% !important;
+  /* Conservative base font size */
+  font-size: 16px !important;
 }
 
 /* Mobile-first touch targets */
@@ -426,8 +426,8 @@ body {
   .max-w-lg,
   .max-w-md,
   .max-w-sm {
-    font-size: 18px !important;
-    transform: scale(1.1);
+    font-size: 16px !important;
+    transform: scale(1.02);
   }
 
   /* Force larger text for all elements */
@@ -461,21 +461,21 @@ body {
   /* Special rules for small screens or production deployments */
   @media screen and (max-width: 1200px) {
     html {
-      font-size: 18px !important;
-      zoom: 1.15 !important;
+      font-size: 16px !important;
+      zoom: 1.03 !important;
     }
 
     body {
-      font-size: 18px !important;
-      zoom: 1.15 !important;
-      transform: scale(1.15) !important;
+      font-size: 16px !important;
+      zoom: 1.03 !important;
+      transform: scale(1.03) !important;
       transform-origin: 0 0 !important;
     }
 
     .max-w-7xl,
     .container,
     main {
-      transform: scale(1.1) !important;
+      transform: scale(1.02) !important;
       transform-origin: 0 0 !important;
     }
   }
@@ -485,8 +485,8 @@ body {
 
     html,
     body {
-      font-size: 19px !important;
-      zoom: 1.2 !important;
+      font-size: 16px !important;
+      zoom: 1.05 !important;
     }
   }
 
