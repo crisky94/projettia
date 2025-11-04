@@ -199,7 +199,7 @@ export default function ProjectDashboard({ userId }) {
 
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="card-professional p-4 sm:p-6 w-full max-w-md shadow-theme-xl">
+                    <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
                         <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
                         <form onSubmit={handleCreateProject}>
                             <div className="mb-4">
@@ -211,7 +211,7 @@ export default function ProjectDashboard({ userId }) {
                                     type="text"
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
-                                    className="input-professional"
+                                    className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
                                     required
                                     disabled={creating}
                                 />
@@ -224,8 +224,8 @@ export default function ProjectDashboard({ userId }) {
                                     id="projectDescription"
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="input-professional resize-none"
-                                    rows={3}
+                                    className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
+                                    rows={4}
                                     disabled={creating}
                                 />
                             </div>

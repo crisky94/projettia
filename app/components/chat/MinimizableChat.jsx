@@ -321,8 +321,8 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                                         onChange={(e) => setEditText(e.target.value)}
                                                         autoFocus
                                                     />
-                                                    <button type="submit" className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30">Guardar</button>
-                                                    <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20">Cancelar</button>
+                                                    <button type="submit" className="text-xs px-2 py-1 rounded bg-primary/20 hover:bg-primary/30 text-card-foreground">Guardar</button>
+                                                    <button type="button" onClick={cancelEdit} className="text-xs px-2 py-1 rounded bg-muted/50 hover:bg-muted/70 text-muted-foreground">Cancelar</button>
                                                 </form>
                                             );
                                         }

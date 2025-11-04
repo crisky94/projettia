@@ -17,14 +17,14 @@ export const MessageItem = ({ message, isOwn, isEditing, editText, setEditText, 
                     />
                     <button
                         type="submit"
-                        className="text-xs px-2 py-1 rounded bg-white/20 hover:bg-white/30"
+                        className="text-xs px-2 py-1 rounded bg-primary/20 hover:bg-primary/30 text-card-foreground"
                     >
                         Guardar
                     </button>
                     <button
                         type="button"
                         onClick={cancelEdit}
-                        className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20"
+                        className="text-xs px-2 py-1 rounded bg-muted/50 hover:bg-muted/70 text-muted-foreground"
                     >
                         Cancelar
                     </button>

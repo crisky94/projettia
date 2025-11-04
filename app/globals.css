@@ -7,68 +7,7 @@
 @import './button-utils.css';
 
 :root {
-  /* Tema light profesional: colores elegantes y sofisticados */
-  --background: 250, 251, 254;
-  /* Fondo muy claro con tinte azul profesional */
-  --foreground: 15, 23, 42;
-  /* Texto oscuro profesional (slate-900) */
-
-  --card: 255, 255, 255;
-  /* Tarjetas blancas con sombras sutiles */
-  --card-foreground: 15, 23, 42;
-  /* Texto oscuro en tarjetas */
-
-  --border: 203, 213, 225;
-  /* Borde profesional (slate-300) */
-  --input: 203, 213, 225;
-  /* Bordes de inputs elegantes */
-
-  --primary: 59, 130, 246;
-  /* Azul profesional (blue-500) */
-  --primary-foreground: 255, 255, 255;
-  /* Texto blanco sobre azul */
-
-  --accent: 139, 92, 246;
-  /* Lila profesional (violet-500) */
-  --accent-foreground: 255, 255, 255;
-  /* Texto blanco sobre lila */
-
-  --orange: 249, 115, 22;
-  /* Naranja profesional (orange-500) */
-  --orange-foreground: 255, 255, 255;
-  /* Texto blanco sobre naranja */
-
-  --primary-dark: 37, 99, 235;
-  /* Azul más intenso para hover (blue-600) */
-
-  --muted: 241, 245, 249;
-  /* Fondo apagado elegante (slate-50) */
-  --muted-foreground: 71, 85, 105;
-  /* Texto apagado profesional (slate-600) */
-
-  --destructive: 239, 68, 68;
-  /* Rojo profesional (red-500) */
-  --destructive-foreground: 255, 255, 255;
-  /* Texto blanco sobre rojo */
-
-  --success: 34, 197, 94;
-  /* Verde profesional (green-500) */
-  --warning: 245, 158, 11;
-  /* Amarillo profesional (amber-500) */
-
-  --ring: 59, 130, 246;
-  /* Anillo de foco azul profesional (blue-500) */
-
-  /* Sombras profesionales para el modo light */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Dark theme variables applied when <html data-theme="dark"> */
-:root[data-theme="dark"] {
+  /* Dark theme only - professional dark mode */
   --background: 12, 18, 36;
   /* Navy oscuro profesional */
   --foreground: 248, 250, 252;
@@ -123,13 +62,6 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-}
-
-/* Smooth theme transitions */
-html,
-body,
-[data-theme] {
-  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }
 
 /* Base styles for mobile-first design */
