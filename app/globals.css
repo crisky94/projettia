@@ -81,16 +81,16 @@ html {
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
   scroll-behavior: smooth;
-  /* Force larger font size for production */
-  font-size: 18px !important;
+  /* Moderate font size for production */
+  font-size: 17px !important;
   /* Prevent zoom issues in production */
   height: 100%;
   min-height: 100%;
-  /* Force minimum zoom level */
-  zoom: 1.2 !important;
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  transform: scale(1.2);
+  /* Moderate zoom level */
+  zoom: 1.1 !important;
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  transform: scale(1.1);
   transform-origin: 0 0;
 }
 
@@ -107,14 +107,14 @@ body {
   /* Ensure consistent sizing in production */
   min-height: 100vh;
   min-height: 100dvh;
-  /* Force minimum scale for small deployments */
+  /* Moderate scale for deployments */
   min-width: 100vw;
-  /* Prevent zoom issues */
-  zoom: 1.2 !important;
-  -webkit-text-size-adjust: 120% !important;
-  -ms-text-size-adjust: 120% !important;
-  /* Force larger base font size */
-  font-size: 18px !important;
+  /* Moderate zoom level */
+  zoom: 1.1 !important;
+  -webkit-text-size-adjust: 110% !important;
+  -ms-text-size-adjust: 110% !important;
+  /* Moderate base font size */
+  font-size: 17px !important;
 }
 
 /* Mobile-first touch targets */
@@ -461,21 +461,21 @@ body {
   /* Special rules for small screens or production deployments */
   @media screen and (max-width: 1200px) {
     html {
-      font-size: 20px !important;
-      zoom: 1.3 !important;
+      font-size: 18px !important;
+      zoom: 1.15 !important;
     }
 
     body {
-      font-size: 20px !important;
-      zoom: 1.3 !important;
-      transform: scale(1.3) !important;
+      font-size: 18px !important;
+      zoom: 1.15 !important;
+      transform: scale(1.15) !important;
       transform-origin: 0 0 !important;
     }
 
     .max-w-7xl,
     .container,
     main {
-      transform: scale(1.2) !important;
+      transform: scale(1.1) !important;
       transform-origin: 0 0 !important;
     }
   }
@@ -485,8 +485,8 @@ body {
 
     html,
     body {
-      font-size: 22px !important;
-      zoom: 1.5 !important;
+      font-size: 19px !important;
+      zoom: 1.2 !important;
     }
   }
 }

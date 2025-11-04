@@ -16,7 +16,7 @@ import ThemeToggle from './components/ThemeToggle';
 export const metadata = {
   title: 'Projettia',
   description: 'Team collaboration platform',
-  viewport: 'width=device-width, initial-scale=1.2, maximum-scale=2, user-scalable=yes, viewport-fit=cover',
+  viewport: 'width=device-width, initial-scale=1.1, maximum-scale=2, user-scalable=yes, viewport-fit=cover',
   themeColor: '#0f172a',
   appleWebApp: {
     capable: true,
@@ -55,7 +55,7 @@ export default function RootLayout({ children }) {
             }
             document.documentElement.dataset.theme = t;
           } catch (e) {} })();` }} />
-          <meta name="viewport" content="width=device-width, initial-scale=1.2, maximum-scale=2, user-scalable=yes, viewport-fit=cover" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.1, maximum-scale=2, user-scalable=yes, viewport-fit=cover" />
           <meta name="theme-color" content="#0f172a" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -63,26 +63,26 @@ export default function RootLayout({ children }) {
           <style dangerouslySetInnerHTML={{
             __html: `
               html { 
-                font-size: 18px !important; 
-                zoom: 1.2 !important; 
-                -webkit-text-size-adjust: 120% !important;
+                font-size: 17px !important; 
+                zoom: 1.1 !important; 
+                -webkit-text-size-adjust: 110% !important;
               }
               body { 
-                font-size: 18px !important; 
-                zoom: 1.2 !important; 
-                transform: scale(1.2) !important;
+                font-size: 17px !important; 
+                zoom: 1.1 !important; 
+                transform: scale(1.1) !important;
                 transform-origin: 0 0 !important;
               }
             `
           }} />
         </head>
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden" style={{
-          zoom: '1.2',
-          WebkitTransform: 'scale(1.2)',
-          MozTransform: 'scale(1.2)',
-          transform: 'scale(1.2)',
+          zoom: '1.1',
+          WebkitTransform: 'scale(1.1)',
+          MozTransform: 'scale(1.1)',
+          transform: 'scale(1.1)',
           transformOrigin: '0 0',
-          fontSize: '18px',
+          fontSize: '17px',
           minHeight: '100vh'
         }}>
           <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top">
