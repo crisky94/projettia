@@ -1025,13 +1025,13 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     'Content-Type': 'application/json',
                 }
             });
-            
+
             console.log('Delete sprint response status:', response.status);
             console.log('Delete sprint response ok:', response.ok);
-            
+
             if (response.ok) {
                 setSprints(sprints.filter(s => s.id !== sprintToDelete.id));
-                
+
                 // Notify parent component to refresh tasks so they appear in "No Sprint" section
                 try {
                     if (onRefreshTasks && typeof onRefreshTasks === 'function') {
@@ -1044,7 +1044,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     console.warn('Error refreshing tasks/sprints after sprint deletion:', updateError);
                     // Don't show error to user since sprint was successfully deleted
                 }
-                
+
                 toast.success(`Sprint "${sprintToDelete.name}" was deleted. Tasks were moved to "No sprint".`, {
                     position: 'top-right',
                     autoClose: 4000,
@@ -1071,7 +1071,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                         errorMessage = `Server error: ${response.status}`;
                     }
                 }
-                
+
                 console.error('Delete sprint API error - Status:', response.status, 'Message:', errorMessage);
                 toast.error(errorMessage, {
                     position: 'top-right',
