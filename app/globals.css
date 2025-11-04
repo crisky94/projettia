@@ -507,8 +507,8 @@ body {
   }
 
   /* Ensure proper spacing between header and main content */
-  body > header + * main,
-  body > header ~ * main {
+  body>header+* main,
+  body>header~* main {
     margin-top: 0 !important;
     padding-top: 1rem !important;
   }
