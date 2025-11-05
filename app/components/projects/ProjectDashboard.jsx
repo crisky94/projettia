@@ -198,65 +198,65 @@ export default function ProjectDashboard({ userId }) {
             )}
 
             {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
-                <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
-                <form onSubmit={handleCreateProject}>
-                    <div className="mb-4">
-                        <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
-                            Project Name
-                        </label>
-                        <input
-                            id="projectName"
-                            type="text"
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                            className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
-                            required
-                            disabled={creating}
-                        />
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
+                        <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
+                        <form onSubmit={handleCreateProject}>
+                            <div className="mb-4">
+                                <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
+                                    Project Name
+                                </label>
+                                <input
+                                    id="projectName"
+                                    type="text"
+                                    value={projectName}
+                                    onChange={(e) => setProjectName(e.target.value)}
+                                    className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
+                                    required
+                                    disabled={creating}
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
+                                    Description (optional)
+                                </label>
+                                <textarea
+                                    id="projectDescription"
+                                    value={projectDescription}
+                                    onChange={(e) => setProjectDescription(e.target.value)}
+                                    className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
+                                    rows={4}
+                                    disabled={creating}
+                                />
+                            </div>
+                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCreateModal(false)}
+                                    className="button-professional-secondary"
+                                    disabled={creating}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={creating}
+                                >
+                                    {creating ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                            Creating...
+                                        </>
+                                    ) : (
+                                        'Create Project'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div className="mb-6">
-                        <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
-                            Description (optional)
-                        </label>
-                        <textarea
-                            id="projectDescription"
-                            value={projectDescription}
-                            onChange={(e) => setProjectDescription(e.target.value)}
-                            className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
-                            rows={4}
-                            disabled={creating}
-                        />
-                    </div>
-                    <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setShowCreateModal(false)}
-                            className="button-professional-secondary"
-                            disabled={creating}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            disabled={creating}
-                        >
-                            {creating ? (
-                                <>
-                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                    Creating...
-                                </>
-                            ) : (
-                                'Create Project'
-                            )}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    )}
+                </div>
+            )}
         </div>
     );
 }
