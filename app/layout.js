@@ -60,52 +60,23 @@ export default function RootLayout({ children }) {
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />
           <meta name="format-detection" content="telephone=no" />
-          <style dangerouslySetInnerHTML={{
-            __html: `
-              html { 
-                font-size: 15px !important; 
-                zoom: 1.02 !important; 
-                -webkit-text-size-adjust: 102% !important;
-              }
-              body { 
-                font-size: 15px !important; 
-                zoom: 1.02 !important; 
-                transform: scale(1.02) !important;
-                transform-origin: 0 0 !important;
-              }
-              /* Keep task boards readable */
-              [class*="TaskBoard"], [class*="SprintManager"], .task-card, .board-column {
-                zoom: 1.05 !important;
-                font-size: 16px !important;
-                transform: scale(1.05) !important;
-              }
-            `
-          }} />
         </head>
-        <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden" style={{
-          zoom: '1.05',
-          WebkitTransform: 'scale(1.05)',
-          MozTransform: 'scale(1.05)',
-          transform: 'scale(1.05)',
-          transformOrigin: '0 0',
-          fontSize: '15px',
-          minHeight: '100vh'
-        }}>
-          <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top relative w-full z-50">
-            <div className="flex items-center gap-2">
-              <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
+        <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
+          <header className="flex justify-between items-center px-4 py-3 bg-card border-b border-border relative w-full z-50">
+            <div className="flex items-center gap-3">
+              <Image src="/logo.png" width={48} height={48} alt="Projettia logo" priority />
             </div>
-            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div className="flex items-center gap-3">
               <ThemeToggle />
               <SignedOut>
-                <div className="flex flex-col xs:flex-row gap-2">
+                <div className="flex gap-2">
                   <SignInButton>
-                    <button className="text-sm px-3 py-2 rounded-lg border border-border hover:bg-muted transition-colors min-h-44 min-w-44">
+                    <button className="text-sm px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors">
                       Sign In
                     </button>
                   </SignInButton>
                   <SignUpButton>
-                    <button className="bg-primary text-primary-foreground rounded-lg font-medium text-sm px-3 py-2 cursor-pointer hover:opacity-90 transition-opacity min-h-44 min-w-44">
+                    <button className="bg-primary text-primary-foreground rounded-lg font-medium text-sm px-4 py-2 hover:opacity-90 transition-opacity">
                       Sign Up
                     </button>
                   </SignUpButton>
@@ -116,7 +87,9 @@ export default function RootLayout({ children }) {
                   signOutUrl="/"
                   appearance={{
                     elements: {
-                      avatarBox: "w-8 h-8 sm:w-10 sm:h-10"
+                      avatarBox: "w-8 h-8",
+                      userButtonBox: "w-8 h-8",
+                      userButtonTrigger: "w-8 h-8"
                     }
                   }}
                 />

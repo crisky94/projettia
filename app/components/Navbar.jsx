@@ -7,7 +7,7 @@ export default function Navbar({ user }) {
 
     return (
         <nav className="bg-card shadow border-b border-border">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto px-4 sm:px-4 lg:px-4">
                 <div className="flex justify-between h-14 sm:h-16">
                     <div className="flex">
                         <div className="flex-shrink-0 flex items-center">
