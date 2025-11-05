@@ -152,112 +152,115 @@ export default function ProjectDashboard({ userId }) {
                             href={`/projects/${project.id}`}
                             className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95"
                         >
-                                    <div className="p-4 sm:p-6">
-                                        <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
-                                            {project.name}
-                                        </h2>
-                                        {project.description && (
-                                            <p className="text-muted-foreground mb-3 sm:mb-4 line-clamp-2 text-sm sm:text-base">
-                                                {project.description}
-                                            </p>
-                                        )}
-                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 text-xs sm:text-sm text-muted-foreground">
-                                            <div className="flex items-center gap-2">
-                                                <svg
-                                                    className="w-3 h-3 sm:w-4 sm:h-4"
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                                </svg>
-                                                <span>{project._count?.tasks || 0} tasks</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <svg
-                                                    className="w-3 h-3 sm:w-4 sm:h-4"
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                                </svg>
-                                                <span>{project._count?.members || 0} members</span>
-                                            </div>
-                                        </div>
+                            <div className="p-4 sm:p-6">
+                                <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
+                                    {project.name}
+                                </h2>
+                                {project.description && (
+                                    <p className="text-muted-foreground mb-3 sm:mb-4 line-clamp-2 text-sm sm:text-base">
+                                        {project.description}
+                                    </p>
+                                )}
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 text-xs sm:text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-2">
+                                        <svg
+                                            className="w-3 h-3 sm:w-4 sm:h-4"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                        </svg>
+                                        <span>{project._count?.tasks || 0} tasks</span>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-            {showCreateModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
-                        <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
-                        <form onSubmit={handleCreateProject}>
-                            <div className="mb-4">
-                                <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
-                                    Project Name
-                                </label>
-                                <input
-                                    id="projectName"
-                                    type="text"
-                                    value={projectName}
-                                    onChange={(e) => setProjectName(e.target.value)}
-                                    className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
-                                    required
-                                    disabled={creating}
-                                />
+                                    <div className="flex items-center gap-2">
+                                        <svg
+                                            className="w-3 h-3 sm:w-4 sm:h-4"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        <span>{project._count?.members || 0} members</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="mb-6">
-                                <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
-                                    Description (optional)
-                                </label>
-                                <textarea
-                                    id="projectDescription"
-                                    value={projectDescription}
-                                    onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
-                                    rows={4}
-                                    disabled={creating}
-                                />
-                            </div>
-                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowCreateModal(false)}
-                                    className="button-professional-secondary"
-                                    disabled={creating}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    disabled={creating}
-                                >
-                                    {creating ? (
-                                        <>
-                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                            Creating...
-                                        </>
-                                    ) : (
-                                        'Create Project'
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </Link>
+                    ))}
                 </div>
-            )}
+                    </div>
+    )
+}
+
+{
+    showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
+                <form onSubmit={handleCreateProject}>
+                    <div className="mb-4">
+                        <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
+                            Project Name
+                        </label>
+                        <input
+                            id="projectName"
+                            type="text"
+                            value={projectName}
+                            onChange={(e) => setProjectName(e.target.value)}
+                            className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
+                            required
+                            disabled={creating}
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
+                            Description (optional)
+                        </label>
+                        <textarea
+                            id="projectDescription"
+                            value={projectDescription}
+                            onChange={(e) => setProjectDescription(e.target.value)}
+                            className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
+                            rows={4}
+                            disabled={creating}
+                        />
+                    </div>
+                    <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setShowCreateModal(false)}
+                            className="button-professional-secondary"
+                            disabled={creating}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={creating}
+                        >
+                            {creating ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                    Creating...
+                                </>
+                            ) : (
+                                'Create Project'
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
+    )
+}
+        </div >
     );
 }
