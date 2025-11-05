@@ -424,9 +424,9 @@ export default function ProjectPage({ params }) {
 
     return (
         <div className="bg-background">
-            <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
-                <div className="flex flex-col gap-4 mb-6">
-                    <div className="flex items-center justify-between">
+            <div className="max-w-6xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
+                <div className="flex flex-col gap-4 mb-6 items-center">
+                    <div className="flex items-center justify-between w-full">
                         <button
                             onClick={() => window.location.href = '/projects'}
                             className="px-3 py-2 bg-card hover:bg-muted text-card-foreground rounded-lg font-medium shadow-sm transition-all duration-200 flex items-center gap-2 border border-border"
@@ -449,9 +449,9 @@ export default function ProjectPage({ params }) {
                             </button>
                         )}
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground uppercase line-clamp-2">{project.name}</h1>
-                        <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 w-full">
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground uppercase line-clamp-2 text-center sm:text-left">{project.name}</h1>
+                        <div className="flex flex-col sm:flex-row gap-2 justify-center sm:justify-end">
 
                             <button onClick={() => setShowMembersModal(true)} className="w-full sm:w-auto bg-card text-card-foreground hover:bg-muted border border-border px-4 py-3 sm:py-2 rounded-lg text-sm font-medium transition-colors">
                                 <span className="flex items-center justify-center gap-2">
@@ -488,14 +488,14 @@ export default function ProjectPage({ params }) {
                     </div>
 
                     {project.description && (
-                        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-card rounded-lg border border-border">
-                            <p className="text-card-foreground text-sm sm:text-base">{project.description}</p>
+                        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-card rounded-lg border border-border max-w-4xl mx-auto">
+                            <p className="text-card-foreground text-sm sm:text-base text-center">{project.description}</p>
                         </div>
                     )}
 
                     {/* Navigation Tabs */}
-                    <div className="border-b border-border mb-4 sm:mb-6">
-                        <nav className="flex space-x-2 sm:space-x-8 overflow-x-auto" aria-label="Tabs">
+                    <div className="border-b border-border mb-4 sm:mb-6 w-full">
+                        <nav className="flex space-x-2 sm:space-x-8 overflow-x-auto justify-center" aria-label="Tabs">
                             <button
                                 onClick={() => setActiveTab('kanban')}
                                 className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'kanban'
@@ -526,9 +526,10 @@ export default function ProjectPage({ params }) {
                     </div>
 
                     {/* Tab Content */}
-                    <div className="w-full max-w-7xl mx-auto">
+                    <div className="w-full max-w-6xl mx-auto">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-                            <div className="lg:col-span-2 w-full max-w-none mx-auto">
+                            <div className="lg:col-span-3 w-full max-w-none mx-auto flex justify-center">
+                                <div className="w-full max-w-5xl">
                                 {activeTab === 'kanban' && (
                                     <TaskBoard
                                         projectId={project.id}
@@ -554,9 +555,7 @@ export default function ProjectPage({ params }) {
                                         onRefreshSprints={refreshSprints}
                                     />
                                 )}
-                            </div>
-                            <div>
-                                {/* <Chat projectId={project.id} user={user} /> */}
+                                </div>
                             </div>
                         </div>
                     </div>
