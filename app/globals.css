@@ -462,21 +462,10 @@ body {
   @media screen and (max-width: 1200px) {
     html {
       font-size: 15px !important;
-      zoom: 1.01 !important;
     }
 
     body {
       font-size: 15px !important;
-      zoom: 1.01 !important;
-      transform: scale(1.01) !important;
-      transform-origin: 0 0 !important;
-    }
-
-    .max-w-7xl,
-    .container,
-    main {
-      transform: scale(1.01) !important;
-      transform-origin: 0 0 !important;
     }
 
     /* Keep task boards readable on smaller screens */
@@ -485,7 +474,6 @@ body {
     .task-card,
     .board-column,
     table {
-      zoom: 1.03 !important;
       font-size: 16px !important;
     }
   }
@@ -496,7 +484,6 @@ body {
     html,
     body {
       font-size: 15px !important;
-      zoom: 1.02 !important;
     }
 
     /* Ensure task boards remain usable on mobile */
@@ -504,7 +491,6 @@ body {
     [class*="SprintManager"],
     .task-card,
     .board-column {
-      zoom: 1.05 !important;
       font-size: 16px !important;
     }
   }
@@ -557,10 +543,14 @@ body {
   .grid,
   .task-item,
   .project-card {
-    zoom: 1.05 !important;
     font-size: 16px !important;
-    transform: scale(1.05) !important;
-    transform-origin: center !important;
+  }
+
+  /* Specific rule to prevent TaskBoard scaling */
+  .task-board-container,
+  .task-board-container * {
+    zoom: 1 !important;
+    transform: none !important;
   }
 
   /* Ensure task/sprint content remains readable */

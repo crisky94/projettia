@@ -855,7 +855,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background min-h-screen overflow-x-hidden">
+        <div className="task-board-container w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background overflow-x-hidden">
             <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
 
                 {/* Page header */}
