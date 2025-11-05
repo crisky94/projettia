@@ -123,35 +123,37 @@ export default function ProjectDashboard({ userId }) {
     }
 
     return (
-        <div className="max-w-6xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-center sm:text-left">My Projects</h1>
-                <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="button-professional mx-auto sm:mx-0"
-                >
-                    + Create Project
-                </button>
-            </div>
-
-            {projects.length === 0 ? (
-                <div className="text-center py-12 px-4">
-                    <h3 className="text-lg sm:text-xl text-muted-foreground mb-4">No projects yet</h3>
+        <div className="min-h-screen bg-background flex flex-col items-center">
+            <div className="w-full max-w-4xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
+                <div className="flex flex-col items-center gap-4 mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-center">My Projects</h1>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="text-primary hover:opacity-80 transition-opacity text-sm sm:text-base"
+                        className="button-professional"
                     >
-                        Create your first project
+                        + Create Project
                     </button>
                 </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
-                    {projects.map((project) => (
-                        <Link
-                            key={project.id}
-                            href={`/projects/${project.id}`}
-                            className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95 w-full max-w-sm"
+
+                {projects.length === 0 ? (
+                    <div className="text-center py-12 px-4">
+                        <h3 className="text-lg sm:text-xl text-muted-foreground mb-4">No projects yet</h3>
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="text-primary hover:opacity-80 transition-opacity text-sm sm:text-base"
                         >
+                            Create your first project
+                        </button>
+                    </div>
+                ) : (
+                    <div className="flex justify-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-5xl">
+                            {projects.map((project) => (
+                                <Link
+                                    key={project.id}
+                                    href={`/projects/${project.id}`}
+                                    className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95 w-full"
+                                >
                             <div className="p-4 sm:p-6">
                                 <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
                                     {project.name}
@@ -194,6 +196,7 @@ export default function ProjectDashboard({ userId }) {
                             </div>
                         </Link>
                     ))}
+                    </div>
                 </div>
             )}
 
@@ -257,6 +260,7 @@ export default function ProjectDashboard({ userId }) {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }
