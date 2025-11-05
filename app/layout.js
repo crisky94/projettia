@@ -83,12 +83,12 @@ export default function RootLayout({ children }) {
           }} />
         </head>
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden" style={{
-          zoom: '1.08',
-          WebkitTransform: 'scale(1.08)',
-          MozTransform: 'scale(1.08)',
-          transform: 'scale(1.08)',
+          zoom: '1.05',
+          WebkitTransform: 'scale(1.05)',
+          MozTransform: 'scale(1.05)',
+          transform: 'scale(1.05)',
           transformOrigin: '0 0',
-          fontSize: '16px',
+          fontSize: '15px',
           minHeight: '100vh'
         }}>
           <header className="flex justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4 min-h-14 sm:min-h-16 bg-card border-b border-border safe-area-inset-top relative w-full z-50">

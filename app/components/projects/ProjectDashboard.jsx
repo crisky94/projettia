@@ -123,37 +123,35 @@ export default function ProjectDashboard({ userId }) {
     }
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center">
-            <div className="w-full max-w-4xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
-                <div className="flex flex-col items-center gap-4 mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-center">My Projects</h1>
+        <div className="w-full max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Projects</h1>
+                <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="button-professional"
+                >
+                    + Create Project
+                </button>
+            </div>
+
+            {projects.length === 0 ? (
+                <div className="text-center py-12 px-4">
+                    <h3 className="text-lg sm:text-xl text-muted-foreground mb-4">No projects yet</h3>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="button-professional"
+                        className="text-primary hover:opacity-80 transition-opacity text-sm sm:text-base"
                     >
-                        + Create Project
+                        Create your first project
                     </button>
                 </div>
-
-                {projects.length === 0 ? (
-                    <div className="text-center py-12 px-4">
-                        <h3 className="text-lg sm:text-xl text-muted-foreground mb-4">No projects yet</h3>
-                        <button
-                            onClick={() => setShowCreateModal(true)}
-                            className="text-primary hover:opacity-80 transition-opacity text-sm sm:text-base"
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    {projects.map((project) => (
+                        <Link
+                            key={project.id}
+                            href={`/projects/${project.id}`}
+                            className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95"
                         >
-                            Create your first project
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex justify-center">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-5xl">
-                            {projects.map((project) => (
-                                <Link
-                                    key={project.id}
-                                    href={`/projects/${project.id}`}
-                                    className="card-professional hover:shadow-theme-lg transition-all duration-200 active:scale-95 w-full"
-                                >
                                     <div className="p-4 sm:p-6">
                                         <h2 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2 line-clamp-1">
                                             {project.name}
@@ -200,67 +198,66 @@ export default function ProjectDashboard({ userId }) {
                     </div>
                 )}
 
-                {showCreateModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
-                            <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
-                            <form onSubmit={handleCreateProject}>
-                                <div className="mb-4">
-                                    <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
-                                        Project Name
-                                    </label>
-                                    <input
-                                        id="projectName"
-                                        type="text"
-                                        value={projectName}
-                                        onChange={(e) => setProjectName(e.target.value)}
-                                        className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
-                                        required
-                                        disabled={creating}
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
-                                        Description (optional)
-                                    </label>
-                                    <textarea
-                                        id="projectDescription"
-                                        value={projectDescription}
-                                        onChange={(e) => setProjectDescription(e.target.value)}
-                                        className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
-                                        rows={4}
-                                        disabled={creating}
-                                    />
-                                </div>
-                                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowCreateModal(false)}
-                                        className="button-professional-secondary"
-                                        disabled={creating}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                        disabled={creating}
-                                    >
-                                        {creating ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                                Creating...
-                                            </>
-                                        ) : (
-                                            'Create Project'
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+            {showCreateModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="card-professional p-4 sm:p-6 w-full max-w-lg shadow-theme-xl">
+                        <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Create New Project</h2>
+                        <form onSubmit={handleCreateProject}>
+                            <div className="mb-4">
+                                <label htmlFor="projectName" className="block text-card-foreground text-sm font-bold mb-2">
+                                    Project Name
+                                </label>
+                                <input
+                                    id="projectName"
+                                    type="text"
+                                    value={projectName}
+                                    onChange={(e) => setProjectName(e.target.value)}
+                                    className="input-professional text-lg py-4 px-4 min-h-[56px] w-full"
+                                    required
+                                    disabled={creating}
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="projectDescription" className="block text-card-foreground text-sm font-bold mb-2">
+                                    Description (optional)
+                                </label>
+                                <textarea
+                                    id="projectDescription"
+                                    value={projectDescription}
+                                    onChange={(e) => setProjectDescription(e.target.value)}
+                                    className="input-professional resize-none text-lg py-4 px-4 min-h-[120px] w-full"
+                                    rows={4}
+                                    disabled={creating}
+                                />
+                            </div>
+                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCreateModal(false)}
+                                    className="button-professional-secondary"
+                                    disabled={creating}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={`button-professional ${creating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={creating}
+                                >
+                                    {creating ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                            Creating...
+                                        </>
+                                    ) : (
+                                        'Create Project'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }
