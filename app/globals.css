@@ -587,7 +587,7 @@ body {
   /* TaskBoard card minimum and maximum sizes for better space utilization */
   .task-board-container .card-professional {
     min-width: 280px !important;
-    max-width: 500px !important;
+    max-width: 900px !important;
     min-height: 180px !important;
   }
 
