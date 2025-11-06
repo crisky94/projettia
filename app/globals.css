@@ -571,10 +571,11 @@ body {
     max-width: 100vw !important;
   }
 
-  /* TaskBoard specific full-width rules */
+  /* TaskBoard specific full-width rules and better space utilization */
   .task-board-container .grid {
     width: 100% !important;
     max-width: none !important;
+    justify-items: stretch !important;
   }
 
   /* Ensure TaskBoard cards use available space efficiently */
@@ -583,9 +584,10 @@ body {
     max-width: 100% !important;
   }
 
-  /* TaskBoard card minimum sizes for better readability */
+  /* TaskBoard card minimum and maximum sizes for better space utilization */
   .task-board-container .card-professional {
-    min-width: 250px !important;
+    min-width: 280px !important;
+    max-width: 500px !important;
     min-height: 180px !important;
   }
 

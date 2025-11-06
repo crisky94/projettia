@@ -326,8 +326,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid with better card sizing */
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">{/* Optimized for better card readability */}
+                        /* Responsive grid - wider cards, better space utilization */
+                        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">{/* Fewer columns = wider cards, better space usage */}
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard
@@ -856,7 +856,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
     return (
         <div className="task-board-container w-full mx-auto py-4 px-4 sm:px-6 lg:px-8 bg-background overflow-x-hidden">
-            <div className="w-full max-w-7xl mx-auto">{/* Added reasonable max-width for better readability */}
+            <div className="w-full max-w-none mx-auto">{/* Removed max-width restriction to use more screen space */}
 
                 {/* Page header */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-8">
