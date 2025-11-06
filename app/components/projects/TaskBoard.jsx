@@ -326,8 +326,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid that wraps items to next row */
-                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                        /* Responsive grid that wraps items to next row - More columns for wider screens */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">{/* Increased columns for wide screens */}
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard
@@ -855,11 +855,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="task-board-container w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background overflow-x-hidden">
-            <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
+        <div className="task-board-container w-full mx-auto py-4 px-2 sm:px-4 lg:px-6 bg-background overflow-x-hidden">
+            <div className="w-full mx-auto">{/* Removed max-width restriction to use full screen width */}
 
                 {/* Page header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-8">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 sm:p-6 mb-6 sm:mb-8">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                         {/* Left: Title and description */}
                         <div className="space-y-2">
@@ -892,9 +892,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 </div>
 
                 {/* Project Members Section */}
-                <div className="mb-8">
+                <div className="mb-6 sm:mb-8">
                     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+                        <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200 dark:border-gray-800">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
                                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -909,9 +909,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
                             </div>
                         </div>
-                        <div className="px-6 py-4">
+                        <div className="px-4 sm:px-6 py-4">
                             {members.length === 0 ? (
-                                <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <div className="flex items-center justify-center py-8 sm:py-12 text-gray-500 dark:text-gray-400">
                                     {isLoadingMembers ? (
                                         <div className="flex items-center gap-3">
                                             <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -932,7 +932,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     )}
                                 </div>
                             ) : (
-                                <div className="flex flex-wrap gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">{/* Changed to grid for better layout */}
                                     {Array.isArray(members) && members.map((member) => {
                                         const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
@@ -970,21 +970,21 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         return (
                                             <div
                                                 key={member.userId}
-                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800"
+                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-3 sm:px-4 py-3 sm:py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 w-full"
                                             >
-                                                <div className={`w-12 h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200`}>
+                                                <div className={`w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold mr-3 sm:mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200 flex-shrink-0`}>
                                                     {initials}
                                                 </div>
-                                                <div className="flex flex-col flex-1">
-                                                    <span className="text-base font-semibold text-gray-900 dark:text-white">{member.user.name}</span>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.role === 'ADMIN'
+                                                <div className="flex flex-col flex-1 min-w-0">{/* Added min-w-0 for text truncation */}
+                                                    <span className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
+                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+                                                        <span className={`text-xs px-1 py-1 rounded-full font-medium inline-block ${member.role === 'ADMIN'
                                                             ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
                                                             : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                                             }`}>
-                                                            {member.role === 'ADMIN' ? '👑 Administrator' : '👤 Member'}
+                                                            {member.role === 'ADMIN' ? '👑 Admin' : '👤 Member'}
                                                         </span>
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
                                                             {member.user.email}
                                                         </span>
                                                     </div>
