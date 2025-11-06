@@ -88,8 +88,8 @@ export default function RootLayout({ children }) {
                   appearance={{
                     elements: {
                       avatarBox: "w-8 h-8",
-                      userButtonBox: "w-8 h-8",
-                      userButtonTrigger: "w-8 h-8"
+                      userButtonBox: "w-12 h-8",
+                      userButtonTrigger: "w-12 h-12"
                     }
                   }}
                 />

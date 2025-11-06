@@ -42,7 +42,7 @@ export default function Navbar({ user }) {
                     <div className="sm:hidden flex items-center">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="text-card-foreground hover:text-muted-foreground p-2 rounded-md transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            className="text-card-foreground  p-2 rounded-md transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +69,7 @@ export default function Navbar({ user }) {
                             </Link>
                             {user ? (
                                 <>
-                                    <div className="flex px-3 py-3 text-muted-foreground text-sm min-h-[44px] items-center">
+                                    <div className="flex px-3 py-3  text-sm min-h-[44px] items-center">
                                         {user.name}
                                     </div>
                                     <button className="flex w-full text-left px-3 py-3 text-muted-foreground hover:text-card-foreground transition-colors min-h-[44px] items-center">

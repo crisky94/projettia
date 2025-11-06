@@ -1049,7 +1049,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                         />
                         {/* Modal de edición de tarea */}
                         {showEditTaskModal && taskToEdit && (
-                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
                                 <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <h2 className="text-lg font-bold text-card-foreground">Editar Tarea</h2>
@@ -1136,7 +1136,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 </DndContext>
 
                 {showAddTaskModal && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
                         <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -1259,7 +1259,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
                         <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -1317,6 +1317,16 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     <div
                         className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
                         onClick={handleCloseViewModal}
+                        style={{
+                            position: 'fixed',
+                            top: '0',
+                            left: '0',
+                            right: '0',
+                            bottom: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
                     >
                         <div
                             className="card-professional shadow-theme-xl rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
@@ -1326,7 +1336,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
-                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight">
+                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight overflow-hidden max-w-full" style={{wordBreak: 'break-word', overflowWrap: 'break-word'}}>
                                             {taskToView.title}
                                         </h1>
                                         <div className="flex flex-wrap items-center gap-2">
@@ -1366,7 +1376,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 </svg>
                                                 Description
                                             </h3>
-                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line break-words word-wrap max-w-full overflow-hidden">
+                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm break-words overflow-wrap-anywhere max-w-full overflow-hidden" style={{wordBreak: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-wrap', maxWidth: '100%'}}>
                                                 {taskToView.description}
                                             </div>
                                         </div>
