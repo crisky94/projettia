@@ -578,7 +578,7 @@ body {
   }
 
   /* Ensure TaskBoard cards use available space efficiently */
-  .task-board-container .grid > div {
+  .task-board-container .grid>div {
     width: 100% !important;
     max-width: 100% !important;
   }
@@ -596,9 +596,10 @@ body {
 
   /* Remove any max-width constraints that limit table/content width but keep reasonable max for readability */
   .max-w-7xl {
-    max-width: 80rem !important; /* Keep 7xl for better readability */
+    max-width: 80rem !important;
+    /* Keep 7xl for better readability */
   }
-  
+
   .max-w-6xl,
   .max-w-5xl,
   .max-w-4xl,
