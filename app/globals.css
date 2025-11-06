@@ -578,13 +578,27 @@ body {
   }
 
   /* Ensure TaskBoard cards use available space efficiently */
-  .task-board-container .grid>div {
+  .task-board-container .grid > div {
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  /* Remove any max-width constraints that limit table/content width */
-  .max-w-7xl,
+  /* TaskBoard card minimum sizes for better readability */
+  .task-board-container .card-professional {
+    min-width: 250px !important;
+    min-height: 180px !important;
+  }
+
+  /* Member cards better sizing */
+  .task-board-container .grid .group {
+    min-height: 80px !important;
+  }
+
+  /* Remove any max-width constraints that limit table/content width but keep reasonable max for readability */
+  .max-w-7xl {
+    max-width: 80rem !important; /* Keep 7xl for better readability */
+  }
+  
   .max-w-6xl,
   .max-w-5xl,
   .max-w-4xl,
