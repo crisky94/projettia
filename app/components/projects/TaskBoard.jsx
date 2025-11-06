@@ -1336,7 +1336,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
-                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight overflow-hidden max-w-full" style={{wordBreak: 'break-word', overflowWrap: 'break-word'}}>
+                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight overflow-hidden max-w-full" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                             {taskToView.title}
                                         </h1>
                                         <div className="flex flex-wrap items-center gap-2">
@@ -1376,7 +1376,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 </svg>
                                                 Description
                                             </h3>
-                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm break-words overflow-wrap-anywhere max-w-full overflow-hidden" style={{wordBreak: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-wrap', maxWidth: '100%'}}>
+                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm break-words overflow-wrap-anywhere max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-wrap', maxWidth: '100%' }}>
                                                 {taskToView.description}
                                             </div>
                                         </div>
