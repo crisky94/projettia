@@ -134,7 +134,8 @@ body {
   color: rgb(var(--foreground));
   background: rgb(var(--background));
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.4; /* Tighter line height for mobile */
+  line-height: 1.4;
+  /* Tighter line height for mobile */
   /* Prevent horizontal overflow */
   overflow-x: hidden;
   /* Better font rendering */
@@ -171,7 +172,8 @@ a,
 input,
 textarea,
 select {
-  min-height: 44px; /* iOS recommended touch target */
+  min-height: 44px;
+  /* iOS recommended touch target */
   /* Mobile first padding and text */
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
@@ -180,6 +182,7 @@ select {
 
 /* Tablet and up */
 @media (min-width: 768px) {
+
   button,
   a,
   input,
@@ -194,6 +197,7 @@ select {
 
 /* Desktop and up */
 @media (min-width: 1024px) {
+
   button,
   a,
   input,
@@ -212,44 +216,44 @@ a {
 }
 
 /* Mobile-first responsive spacing */
-.space-y-2 > * + * {
+.space-y-2>*+* {
   margin-top: 0.25rem;
 }
 
-.space-y-4 > * + * {
+.space-y-4>*+* {
   margin-top: 0.5rem;
 }
 
-.space-y-6 > * + * {
+.space-y-6>*+* {
   margin-top: 0.75rem;
 }
 
 /* Tablet spacing */
 @media (min-width: 768px) {
-  .space-y-2 > * + * {
+  .space-y-2>*+* {
     margin-top: 0.5rem;
   }
-  
-  .space-y-4 > * + * {
+
+  .space-y-4>*+* {
     margin-top: 1rem;
   }
-  
-  .space-y-6 > * + * {
+
+  .space-y-6>*+* {
     margin-top: 1.5rem;
   }
 }
 
 /* Desktop spacing */
 @media (min-width: 1024px) {
-  .space-y-2 > * + * {
+  .space-y-2>*+* {
     margin-top: 0.75rem;
   }
-  
-  .space-y-4 > * + * {
+
+  .space-y-4>*+* {
     margin-top: 1.5rem;
   }
-  
-  .space-y-6 > * + * {
+
+  .space-y-6>*+* {
     margin-top: 2rem;
   }
 }
@@ -441,10 +445,12 @@ a {
   .card-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 8px; /* Smaller radius for mobile */
+    border-radius: 8px;
+    /* Smaller radius for mobile */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    padding: 0.75rem; /* Mobile padding */
+    padding: 0.75rem;
+    /* Mobile padding */
   }
 
   .card-professional:hover {
@@ -471,13 +477,17 @@ a {
     background-color: rgb(var(--primary));
     color: rgb(var(--primary-foreground));
     border: none;
-    border-radius: 6px; /* Smaller radius for mobile */
-    padding: 0.5rem 0.75rem; /* Mobile padding */
+    border-radius: 6px;
+    /* Smaller radius for mobile */
+    padding: 0.5rem 0.75rem;
+    /* Mobile padding */
     font-weight: 500;
-    font-size: 0.875rem; /* Mobile font size */
+    font-size: 0.875rem;
+    /* Mobile font size */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    min-height: 44px; /* Touch target */
+    min-height: 44px;
+    /* Touch target */
   }
 
   .button-professional:hover {
@@ -508,12 +518,16 @@ a {
   .input-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 6px; /* Smaller radius for mobile */
-    padding: 0.625rem; /* Mobile padding */
-    font-size: 0.875rem; /* Mobile font size */
+    border-radius: 6px;
+    /* Smaller radius for mobile */
+    padding: 0.625rem;
+    /* Mobile padding */
+    font-size: 0.875rem;
+    /* Mobile font size */
     color: rgb(var(--foreground));
     transition: all 0.2s ease;
-    min-height: 44px; /* Touch target */
+    min-height: 44px;
+    /* Touch target */
   }
 
   .input-professional:focus {
@@ -881,11 +895,11 @@ a {
   .responsive-container {
     padding: 0.75rem;
   }
-  
+
   .responsive-grid {
     gap: 1rem;
   }
-  
+
   .responsive-text {
     font-size: 0.9rem;
     line-height: 1.45;
@@ -897,17 +911,17 @@ a {
   .responsive-container {
     padding: 1rem;
   }
-  
+
   .responsive-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.25rem;
   }
-  
+
   .responsive-text {
     font-size: 1rem;
     line-height: 1.5;
   }
-  
+
   .responsive-spacing {
     margin: 0.75rem 0;
     padding: 0.75rem;
@@ -919,12 +933,12 @@ a {
   .responsive-container {
     padding: 1.25rem;
   }
-  
+
   .responsive-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
-  
+
   .responsive-text {
     font-size: 1.05rem;
     line-height: 1.55;
@@ -936,17 +950,17 @@ a {
   .responsive-container {
     padding: 1.5rem;
   }
-  
+
   .responsive-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
-  
+
   .responsive-text {
     font-size: 1.1rem;
     line-height: 1.6;
   }
-  
+
   .responsive-spacing {
     margin: 1rem 0;
     padding: 1rem;
@@ -958,12 +972,12 @@ a {
   .responsive-container {
     padding: 2rem;
   }
-  
+
   .responsive-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2.5rem;
   }
-  
+
   .responsive-text {
     font-size: 1.15rem;
     line-height: 1.65;
@@ -975,17 +989,17 @@ a {
   .responsive-container {
     padding: 2.5rem;
   }
-  
+
   .responsive-grid {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 3rem;
   }
-  
+
   .responsive-text {
     font-size: 1.2rem;
     line-height: 1.7;
   }
-  
+
   .responsive-spacing {
     margin: 1.5rem 0;
     padding: 1.5rem;
@@ -1005,7 +1019,7 @@ a {
   .mobile-only {
     display: none;
   }
-  
+
   .tablet-up {
     display: block;
   }
@@ -1013,13 +1027,14 @@ a {
 
 /* Touch-friendly interactions */
 @media (hover: none) and (pointer: coarse) {
+
   button,
   a,
   .clickable {
     min-height: 44px;
     padding: 0.75rem;
   }
-  
+
   .card-professional {
     padding: 1rem;
   }
