@@ -45,9 +45,9 @@ miembros de los proyectos. Solo los usuarios con permisos de administrador
 #### Componentes actualizados:
 
 - Lista de miembros con roles claramente identificados
-  (Propietario/Administrador/Miembro)
-- Botones de acción contextuales según permisos
-- Gestión mejorada de estados de carga y errores
+  (Propietario/Administrador/Miembro).
+- Botones de acción contextuales según permisos.
+- Gestión mejorada de estados de carga y errores.
 
 ## Permisos y Roles
 
