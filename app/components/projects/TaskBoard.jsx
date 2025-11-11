@@ -66,14 +66,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-5 w-full min-h-[180px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
+            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-4 lg:p-5 w-full min-h-[160px] lg:min-h-[180px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
         >
             {/* Priority indicator */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
 
             {/* Title */}
-            <div className="mb-3 pl-2">
-                <h4 className="text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
+            <div className="mb-2 lg:mb-3 pl-2">
+                <h4 className="text-sm lg:text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
                 {shouldShowViewMore && (
@@ -101,23 +101,23 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             )}
 
             {/* Assignee */}
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-2 lg:mt-3 flex items-center gap-2">
                 {assigneeName ? (
-                    <div className={`h-6 w-6 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-[10px] font-bold text-white`}>
+                    <div className={`h-5 w-5 lg:h-6 lg:w-6 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-white`}>
                         {assigneeInitials}
                     </div>
                 ) : (
-                    <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">--</div>
+                    <div className="h-5 w-5 lg:h-6 lg:w-6 rounded-full bg-muted flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-muted-foreground">--</div>
                 )}
-                <span className="text-xs sm:text-sm text-muted-foreground">{assigneeName || 'unasigned'}</span>
+                <span className="text-xs sm:text-sm text-muted-foreground truncate">{assigneeName || 'unasigned'}</span>
             </div>
 
             {/* Sprint display only (no assignment/change) */}
             {task.sprint && (
-                <div className="mt-3 p-2 bg-muted rounded-lg">
-                    <div className="flex items-center gap-2">
+                <div className="mt-2 lg:mt-3 p-1.5 lg:p-2 bg-muted rounded-lg">
+                    <div className="flex items-center gap-1.5 lg:gap-2">
                         <span className="text-xs font-medium text-muted-foreground">Sprint:</span>
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium">
+                        <span className="inline-flex items-center gap-1 px-1.5 lg:px-2 py-0.5 lg:py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium truncate">
                             🚀 {task.sprint.name}
                         </span>
                     </div>
@@ -255,21 +255,21 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             ref={setNodeRef}
             className={getRowStyles(status, isOver)}
         >
-            <div className="px-6 py-5 border-b border-border">
+            <div className="px-6 py-4 border-b border-border">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
+                        <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
                             status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
                                 status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
                                     'bg-gradient-to-br from-gray-500 to-gray-600'
                             }`}>
-                            <span className="text-white text-lg">
+                            <span className="text-white text-base lg:text-lg">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
                         </div>
                         <div>
-                            <h3 className={`text-xl font-bold ${getHeaderStyles(status)}`}>
+                            <h3 className={`text-lg lg:text-xl xl:text-2xl font-bold ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
                             <p className="text-sm text-muted-foreground">
@@ -287,7 +287,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                     </div>
                 </div>
             </div>
-            <div className="p-6">
+            <div className="p-4 lg:p-6">
 
                 {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
                 <div className="relative">
@@ -326,8 +326,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid - wider cards, better space utilization */
-                        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">{/* Fewer columns = wider cards, better space usage */}
+                        /* Responsive grid optimized for centered layout */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center">{/* Centered grid items */}
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard
@@ -855,23 +855,23 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="task-board-container w-full mx-auto py-4 px-4 sm:px-6 lg:px-8 bg-background overflow-x-hidden">
-            <div className="w-full max-w-none mx-auto">{/* Removed max-width restriction to use more screen space */}
+        <div className="task-board-container w-full py-4 px-24 bg-background overflow-x-hidden">
+            <div className="w-full mx-auto">{/* Centered layout with reasonable max width */}
 
                 {/* Page header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-8">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 lg:p-6 mb-6 lg:mb-8">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                         {/* Left: Title and description */}
                         <div className="space-y-2">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                    <svg className="w-4 h-4 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
                                     </svg>
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-white">Task Board</h1>
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm">Manage and organize project tasks efficiently</p>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">Manage and organize project tasks efficiently</p>
                         </div>
 
                         {/* Right: Actions */}
@@ -892,24 +892,24 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 </div>
 
                 {/* Project Members Section */}
-                <div className="mb-8">
+                <div className="mb-6 lg:mb-8">
                     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+                        <div className="px-4 lg:px-6 py-4 lg:py-5 border-b border-gray-200 dark:border-gray-800">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                                    <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Team Members</h3>
+                                    <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white">Team Members</h3>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">
                                         {members.length} {members.length === 1 ? 'member' : 'members'} in the project
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="px-6 py-4">
+                        <div className="px-4 py-3 lg:py-4">
                             {members.length === 0 ? (
                                 <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                                     {isLoadingMembers ? (
@@ -932,7 +932,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     )}
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{/* Simplified grid for better member card display */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center">{/* Centered member cards */}
                                     {Array.isArray(members) && members.map((member) => {
                                         const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
