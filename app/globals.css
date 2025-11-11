@@ -449,7 +449,6 @@ a {
     /* Smaller radius for mobile */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    padding: 0.75rem;
     /* Mobile padding */
   }
 
@@ -462,16 +461,15 @@ a {
   @media (min-width: 768px) {
     .card-professional {
       border-radius: 12px;
-      padding: 1rem;
     }
   }
 
   /* Desktop card styling */
-  @media (min-width: 1024px) {
+  /* @media (min-width: 1024px) {
     .card-professional {
       padding: 1.5rem;
     }
-  }
+  } */
 
   .button-professional {
     background-color: rgb(var(--primary));
@@ -776,7 +774,7 @@ a {
   }
 
   /* TaskBoard card minimum and maximum sizes for better space utilization */
-  .task-board-container .card-professional {
+  .task-board-container {
     min-width: 280px !important;
     max-width: 900px !important;
     min-height: 180px !important;
