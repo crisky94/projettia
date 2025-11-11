@@ -1042,50 +1042,53 @@ a {
 
 /* Ultra-wide screen optimizations for task boards */
 @media (min-width: 1920px) {
+
   /* Centered task board with better distribution */
   .task-board-container {
     padding-left: 2rem;
     padding-right: 2rem;
   }
-  
+
   /* Optimize grid gaps for ultra-wide */
   .grid {
     gap: 1.5rem;
   }
-  
+
   /* Better font scaling on very large screens */
   html {
     font-size: 17px;
   }
-  
+
   /* Center content better */
   .max-w-7xl {
-    max-width: 90rem; /* Increased from default 80rem */
+    max-width: 90rem;
+    /* Increased from default 80rem */
   }
 }
 
 @media (min-width: 2560px) {
+
   /* 4K+ screen optimizations */
   .task-board-container {
     padding-left: 3rem;
     padding-right: 3rem;
   }
-  
+
   /* Larger gaps for 4K screens */
   .grid {
     gap: 2rem;
   }
-  
+
   /* Scale fonts appropriately for 4K */
   html {
     font-size: 18px;
   }
-  
+
   /* Ensure task cards don't get too small */
   .card-professional {
     min-width: 280px;
   }
-  
+
   /* Better centering for 4K */
   .max-w-7xl {
     max-width: 100rem;
@@ -1093,26 +1096,27 @@ a {
 }
 
 @media (min-width: 3840px) {
+
   /* 4K+ ultra-wide optimizations */
   html {
     font-size: 20px;
   }
-  
+
   .task-board-container {
     padding-left: 4rem;
     padding-right: 4rem;
   }
-  
+
   /* Maximum comfortable gaps */
   .grid {
     gap: 2.5rem;
   }
-  
+
   /* Prevent cards from being too small on massive screens */
   .card-professional {
     min-width: 320px;
   }
-  
+
   /* Ultra-wide centering */
   .max-w-7xl {
     max-width: 110rem;
@@ -1125,7 +1129,7 @@ a {
 }
 
 /* Grid centering improvements */
-.grid.justify-items-center > * {
+.grid.justify-items-center>* {
   max-width: 100%;
   width: 100%;
 }
