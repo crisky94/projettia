@@ -1138,22 +1138,28 @@ a {
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.1em; /* 10% larger base font size for production */
+    font-size: 1.1em;
+    /* 10% larger base font size for production */
   }
-  
+
   /* Ensure better visibility in production environment */
   .task-board-container {
-    zoom: 1.05; /* Slight zoom increase for production */
+    zoom: 1.05;
+    /* Slight zoom increase for production */
   }
-  
+
   /* Larger interactive elements for production */
-  button, .button-professional, input, .input-professional {
+  button,
+  .button-professional,
+  input,
+  .input-professional {
     transform: scale(1.02);
   }
-  
+
   /* Enhanced card sizes for production */
   .card-professional {
     transform: scale(1.01);
-    margin: 0.25rem; /* Small margin to compensate for scale */
+    margin: 0.25rem;
+    /* Small margin to compensate for scale */
   }
 }
