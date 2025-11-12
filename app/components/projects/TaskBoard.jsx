@@ -66,14 +66,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-4 lg:p-5 w-full min-h-[160px] lg:min-h-[180px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${!canDrag ? 'opacity-95' : 'hover:-translate-y-1'}`}
+            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-5 lg:p-6 xl:p-8 w-full min-h-[180px] lg:min-h-[200px] xl:min-h-[220px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${canDrag ? 'hover:-translate-y-1' : 'opacity-95'}`}
         >
             {/* Priority indicator */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
 
             {/* Title */}
-            <div className="mb-2 lg:mb-3 pl-2">
-                <h4 className="text-sm lg:text-base font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
+            <div className="mb-3 lg:mb-4 pl-2">
+                <h4 className="text-base lg:text-lg xl:text-xl font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
                 {shouldShowViewMore && (
@@ -95,7 +95,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
 
             {/* Description */}
             {task.description && (
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+                <p className="mt-2 text-sm lg:text-base text-muted-foreground">
                     {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                 </p>
             )}
@@ -269,10 +269,10 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             </span>
                         </div>
                         <div>
-                            <h3 className={`text-lg lg:text-xl xl:text-2xl font-bold ${getHeaderStyles(status)}`}>
+                            <h3 className={`text-xl lg:text-2xl xl:text-3xl font-bold ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-base lg:text-lg text-muted-foreground">
                                 {status === 'PENDING' ? 'Pending tasks to start' :
                                     status === 'IN_PROGRESS' ? 'Tasks in active development' :
                                         status === 'COMPLETED' ? 'Successfully completed tasks' :
@@ -281,7 +281,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className={`${getBadgeStyles(status)} px-3 py-2 rounded-lg text-sm font-semibold shadow-sm`}>
+                        <span className={`${getBadgeStyles(status)} px-4 py-2 rounded-lg text-base lg:text-lg font-semibold shadow-sm`}>
                             {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                         </span>
                     </div>
@@ -869,9 +869,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
                                     </svg>
                                 </div>
-                                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white">Task Board</h1>
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">Manage and organize project tasks efficiently</p>
+                            <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg">Manage and organize project tasks efficiently</p>
                         </div>
 
                         {/* Right: Actions */}
@@ -932,7 +932,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     )}
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center">{/* Centered member cards */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-items-stretch">{/* Better responsive grid for member cards */}
                                     {Array.isArray(members) && members.map((member) => {
                                         const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
@@ -970,22 +970,27 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         return (
                                             <div
                                                 key={member.userId}
-                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 w-full min-h-[80px]"
+                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 w-full min-h-[90px]"
                                             >
                                                 <div className={`w-12 h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200 flex-shrink-0`}>
                                                     {initials}
                                                 </div>
-                                                <div className="flex flex-col flex-1 min-w-0">
-                                                    <span className="text-base font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
-                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
-                                                        <span className={`text-xs px-1 py-1 rounded-full font-medium inline-block ${member.role === 'ADMIN'
+                                                <div className="flex flex-col flex-1 min-w-0 gap-2">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                                                        <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
+                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium inline-block flex-shrink-0 ${member.role === 'ADMIN'
                                                             ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
                                                             : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                                             }`}>
-                                                            {member.role === 'ADMIN' ? '👑 Admin' : '👤 Member'}
+                                                            {member.role === 'ADMIN' ? 'Admin' : 'Member'}
                                                         </span>
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                                            {member.user.email}
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <span className="text-sm lg:text-base text-gray-600 dark:text-gray-300 truncate font-medium">
+                                                            {member.user.email || 'No email provided'}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -1411,10 +1416,15 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                     <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
                                                         {taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                                                     </div>
-                                                    <div>
-                                                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{taskToView.assignee.name}</span>
+                                                    <div className="flex-1 min-w-0">
+                                                        <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white block">{taskToView.assignee.name}</span>
                                                         {taskToView.assignee.email && (
-                                                            <p className="text-xs text-gray-600 dark:text-gray-400">{taskToView.assignee.email}</p>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <svg className="w-3 h-3 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                                </svg>
+                                                                <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300 truncate">{taskToView.assignee.email}</p>
+                                                            </div>
                                                         )}
                                                     </div>
                                                 </div>

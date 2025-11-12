@@ -77,8 +77,8 @@
 }
 
 html {
-  /* Mobile first font size */
-  font-size: 14px;
+  /* Base font size increased for better visibility in production */
+  font-size: 16px;
   /* Prevent iOS zoom on input focus */
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
@@ -93,40 +93,40 @@ html {
   overflow-x: hidden;
 }
 
-/* Responsive font scaling - mobile first */
+/* Responsive font scaling - larger base sizes for production */
 @media (min-width: 480px) {
-  html {
-    font-size: 15px;
-  }
-}
-
-@media (min-width: 640px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 768px) {
   html {
     font-size: 17px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   html {
     font-size: 18px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
   html {
     font-size: 19px;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1024px) {
   html {
     font-size: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 21px;
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 22px;
   }
 }
 
@@ -445,11 +445,12 @@ a {
   .card-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 8px;
-    /* Smaller radius for mobile */
+    border-radius: 12px;
+    /* Larger radius for better appearance */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    /* Mobile padding */
+    padding: 1.5rem;
+    /* Increased padding */
   }
 
   .card-professional:hover {
@@ -465,27 +466,28 @@ a {
   }
 
   /* Desktop card styling */
-  /* @media (min-width: 1024px) {
+  @media (min-width: 1024px) {
     .card-professional {
-      padding: 1.5rem;
+      padding: 2rem;
+      border-radius: 16px;
     }
-  } */
+  }
 
   .button-professional {
     background-color: rgb(var(--primary));
     color: rgb(var(--primary-foreground));
     border: none;
-    border-radius: 6px;
-    /* Smaller radius for mobile */
-    padding: 0.5rem 0.75rem;
-    /* Mobile padding */
-    font-weight: 500;
-    font-size: 0.875rem;
-    /* Mobile font size */
+    border-radius: 8px;
+    /* Increased radius for better appearance */
+    padding: 0.75rem 1rem;
+    /* Increased padding */
+    font-weight: 600;
+    font-size: 1rem;
+    /* Larger font size */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    min-height: 44px;
-    /* Touch target */
+    min-height: 48px;
+    /* Larger touch target */
   }
 
   .button-professional:hover {
@@ -516,16 +518,16 @@ a {
   .input-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 6px;
-    /* Smaller radius for mobile */
-    padding: 0.625rem;
-    /* Mobile padding */
-    font-size: 0.875rem;
-    /* Mobile font size */
+    border-radius: 8px;
+    /* Increased radius */
+    padding: 0.875rem;
+    /* Larger padding */
+    font-size: 1rem;
+    /* Larger font size */
     color: rgb(var(--foreground));
     transition: all 0.2s ease;
-    min-height: 44px;
-    /* Touch target */
+    min-height: 48px;
+    /* Larger touch target */
   }
 
   .input-professional:focus {
@@ -1130,4 +1132,28 @@ a {
 .grid.justify-items-center>* {
   max-width: 100%;
   width: 100%;
+}
+
+/* Production deployment optimizations for Render */
+@media screen {
+  body {
+    min-height: 100vh;
+    font-size: 1.1em; /* 10% larger base font size for production */
+  }
+  
+  /* Ensure better visibility in production environment */
+  .task-board-container {
+    zoom: 1.05; /* Slight zoom increase for production */
+  }
+  
+  /* Larger interactive elements for production */
+  button, .button-professional, input, .input-professional {
+    transform: scale(1.02);
+  }
+  
+  /* Enhanced card sizes for production */
+  .card-professional {
+    transform: scale(1.01);
+    margin: 0.25rem; /* Small margin to compensate for scale */
+  }
 }
