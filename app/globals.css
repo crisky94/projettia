@@ -1138,14 +1138,14 @@ a {
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.1em;
-    /* 10% larger base font size for production */
+    font-size: 1.2em;
+    /* 20% larger base font size for production */
   }
 
   /* Ensure better visibility in production environment */
   .task-board-container {
-    zoom: 1.05;
-    /* Slight zoom increase for production */
+    zoom: 1.1;
+    /* Increased zoom for production */
   }
 
   /* Larger interactive elements for production */
@@ -1153,13 +1153,46 @@ a {
   .button-professional,
   input,
   .input-professional {
-    transform: scale(1.02);
+    transform: scale(1.05);
   }
 
   /* Enhanced card sizes for production */
   .card-professional {
-    transform: scale(1.01);
-    margin: 0.25rem;
-    /* Small margin to compensate for scale */
+    transform: scale(1.03);
+    margin: 0.35rem;
+    /* Increased margin to compensate for scale */
   }
+}
+
+/* Specific enlargement for task and sprint tables */
+.task-board-container .card-professional {
+  min-height: 200px;
+  padding: 2rem;
+  font-size: 1.1em;
+}
+
+.task-board-container h1,
+.task-board-container h2,
+.task-board-container h3,
+.task-board-container h4 {
+  font-size: 1.3em;
+  line-height: 1.4;
+}
+
+.task-board-container .grid {
+  gap: 2rem;
+}
+
+.task-board-container button {
+  padding: 1rem 1.5rem;
+  font-size: 1.1em;
+  min-height: 52px;
+}
+
+.task-board-container input,
+.task-board-container textarea,
+.task-board-container select {
+  padding: 1rem;
+  font-size: 1.1em;
+  min-height: 52px;
 }

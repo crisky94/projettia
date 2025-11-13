@@ -713,7 +713,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <span>No tasks in this sprint</span>
                         </div>
                     ) : (
-                        <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                        <div className="grid gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             {tasks.map(task => (
                                 <TaskCard
                                     key={task.id}
