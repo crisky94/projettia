@@ -77,8 +77,8 @@
 }
 
 html {
-  /* Base font size increased for better visibility in production */
-  font-size: 16px;
+  /* Increased base font size for better visibility */
+  font-size: 18px;
   /* Prevent iOS zoom on input focus */
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
@@ -93,40 +93,40 @@ html {
   overflow-x: hidden;
 }
 
-/* Responsive font scaling - larger base sizes for production */
+/* Responsive font scaling - enhanced for better visibility */
 @media (min-width: 480px) {
-  html {
-    font-size: 17px;
-  }
-}
-
-@media (min-width: 640px) {
-  html {
-    font-size: 18px;
-  }
-}
-
-@media (min-width: 768px) {
   html {
     font-size: 19px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   html {
     font-size: 20px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
   html {
     font-size: 21px;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1024px) {
   html {
     font-size: 22px;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 23px;
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 24px;
   }
 }
 
@@ -1138,14 +1138,14 @@ a {
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.05em;
-    /* Reduced from 1.2em for better layout stability */
+    font-size: 1.15em;
+    /* Increased for better visibility */
   }
 
   /* Ensure better visibility in production environment */
   .task-board-container {
-    zoom: 1.02;
-    /* Reduced zoom to prevent layout issues */
+    zoom: 1.08;
+    /* Slight increase for better visibility */
   }
 
   /* Larger interactive elements for production */
@@ -1153,59 +1153,58 @@ a {
   .button-professional,
   input,
   .input-professional {
-    transform: scale(1.01);
-    /* Reduced scale to prevent overflow */
+    transform: scale(1.03);
+    /* Slight increase for better interaction */
   }
 
   /* Enhanced card sizes for production */
   .card-professional {
-    transform: none;
-    /* Removed transform to fix layout */
-    margin: 0.15rem;
-    /* Reduced margin */
+    transform: scale(1.02);
+    /* Small scale increase */
+    margin: 0.2rem;
   }
 }
 
 /* Specific enlargement for task and sprint tables */
 .task-board-container .card-professional {
-  min-height: 180px;
-  /* Reduced from 200px */
-  padding: 1.5rem;
-  /* Reduced padding */
-  font-size: 1em;
-  /* Normalized font size */
+  min-height: 200px;
+  /* Increased from 180px */
+  padding: 1.75rem;
+  /* Increased padding */
+  font-size: 1.05em;
+  /* Slightly larger text */
 }
 
 .task-board-container h1,
 .task-board-container h2,
 .task-board-container h3,
 .task-board-container h4 {
-  font-size: 1.1em;
-  /* Reduced from 1.3em */
+  font-size: 1.2em;
+  /* Increased from 1.1em */
   line-height: 1.4;
 }
 
 .task-board-container .grid {
-  gap: 1.5rem;
-  /* Reduced from 2rem */
+  gap: 1.75rem;
+  /* Increased gap */
 }
 
 .task-board-container button {
-  padding: 0.75rem 1.25rem;
-  /* Reduced padding */
-  font-size: 1em;
-  /* Normalized font size */
-  min-height: 44px;
-  /* Reduced from 52px */
+  padding: 0.875rem 1.375rem;
+  /* Increased padding */
+  font-size: 1.05em;
+  /* Slightly larger */
+  min-height: 48px;
+  /* Increased height */
 }
 
 .task-board-container input,
 .task-board-container textarea,
 .task-board-container select {
-  padding: 0.75rem;
-  /* Reduced padding */
-  font-size: 1em;
-  /* Normalized font size */
-  min-height: 44px;
-  /* Reduced from 52px */
+  padding: 0.875rem;
+  /* Increased padding */
+  font-size: 1.05em;
+  /* Slightly larger */
+  min-height: 48px;
+  /* Increased height */
 }

@@ -103,7 +103,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     };
 
     return (
-        <div className={`p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md group w-full break-words relative ${getStatusStyles(task.status)}`}>
+        <div className={`p-6 lg:p-7 rounded-lg border-2 transition-all duration-200 hover:shadow-lg group w-full break-words relative min-h-[180px] ${getStatusStyles(task.status)}`}>
             {/* Header */}
             <div className="mb-3">
                 <div className="flex-1">
@@ -117,7 +117,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         />
                     ) : (
                         <div>
-                            <h3 className="font-semibold text-sm mb-1 break-words overflow-hidden">
+                            <h3 className="font-semibold text-lg lg:text-xl mb-2 break-words overflow-hidden">
                                 {isTitleLong ? truncateText(task.title, 50) : task.title}
                             </h3>
                             {shouldShowViewMore && (
@@ -1242,42 +1242,42 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 bg-background overflow-x-hidden">
-            <div className="space-y-8 w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
+        <div className="w-full mx-auto py-6 px-6 sm:py-8 sm:px-8 lg:px-10 xl:px-14 2xl:px-18 bg-background overflow-x-hidden">
+            <div className="space-y-10 w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
                 {/* Header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8 lg:p-10">
                     <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                <svg className="w-8 h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
                             <div>
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Sprint Management</h2>
-                                <p className="text-gray-600 dark:text-gray-400 mt-1">Organize tasks into time-boxed sprints</p>
+                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">Sprint Management</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg lg:text-xl">Organize tasks into time-boxed sprints</p>
                             </div>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-4">
                             <button
                                 onClick={() => setShowAddTaskModal(true)}
-                                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation transform hover:scale-105"
+                                className="px-7 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation transform hover:scale-105"
                             >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                                <span className="hidden sm:inline">New Task</span>
-                                <span className="sm:hidden">Task</span>
+                                <span className="hidden sm:inline text-lg">New Task</span>
+                                <span className="sm:hidden text-lg">Task</span>
                             </button>
                             <button
                                 onClick={() => setShowAddSprintModal(true)}
-                                className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-action-manipulation transform hover:scale-105"
+                                className="px-7 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation transform hover:scale-105"
                             >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                                <span className="hidden sm:inline">New Sprint</span>
-                                <span className="sm:hidden">Sprint</span>
+                                <span className="hidden sm:inline text-lg">New Sprint</span>
+                                <span className="sm:hidden text-lg">Sprint</span>
                             </button>
                         </div>
                     </div>
