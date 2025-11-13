@@ -1138,14 +1138,14 @@ a {
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.2em;
-    /* 20% larger base font size for production */
+    font-size: 1.05em;
+    /* Reduced from 1.2em for better layout stability */
   }
 
   /* Ensure better visibility in production environment */
   .task-board-container {
-    zoom: 1.1;
-    /* Increased zoom for production */
+    zoom: 1.02;
+    /* Reduced zoom to prevent layout issues */
   }
 
   /* Larger interactive elements for production */
@@ -1153,46 +1153,59 @@ a {
   .button-professional,
   input,
   .input-professional {
-    transform: scale(1.05);
+    transform: scale(1.01);
+    /* Reduced scale to prevent overflow */
   }
 
   /* Enhanced card sizes for production */
   .card-professional {
-    transform: scale(1.03);
-    margin: 0.35rem;
-    /* Increased margin to compensate for scale */
+    transform: none;
+    /* Removed transform to fix layout */
+    margin: 0.15rem;
+    /* Reduced margin */
   }
 }
 
 /* Specific enlargement for task and sprint tables */
 .task-board-container .card-professional {
-  min-height: 200px;
-  padding: 2rem;
-  font-size: 1.1em;
+  min-height: 180px;
+  /* Reduced from 200px */
+  padding: 1.5rem;
+  /* Reduced padding */
+  font-size: 1em;
+  /* Normalized font size */
 }
 
 .task-board-container h1,
 .task-board-container h2,
 .task-board-container h3,
 .task-board-container h4 {
-  font-size: 1.3em;
+  font-size: 1.1em;
+  /* Reduced from 1.3em */
   line-height: 1.4;
 }
 
 .task-board-container .grid {
-  gap: 2rem;
+  gap: 1.5rem;
+  /* Reduced from 2rem */
 }
 
 .task-board-container button {
-  padding: 1rem 1.5rem;
-  font-size: 1.1em;
-  min-height: 52px;
+  padding: 0.75rem 1.25rem;
+  /* Reduced padding */
+  font-size: 1em;
+  /* Normalized font size */
+  min-height: 44px;
+  /* Reduced from 52px */
 }
 
 .task-board-container input,
 .task-board-container textarea,
 .task-board-container select {
-  padding: 1rem;
-  font-size: 1.1em;
-  min-height: 52px;
+  padding: 0.75rem;
+  /* Reduced padding */
+  font-size: 1em;
+  /* Normalized font size */
+  min-height: 44px;
+  /* Reduced from 52px */
 }

@@ -66,14 +66,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-6 lg:p-8 xl:p-10 w-full min-h-[220px] lg:min-h-[250px] xl:min-h-[280px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${canDrag ? 'hover:-translate-y-1' : 'opacity-95'}`}
+            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-4 lg:p-6 w-full min-h-[180px] lg:min-h-[200px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${canDrag ? 'hover:-translate-y-1' : 'opacity-95'}`}
         >
             {/* Priority indicator */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
 
             {/* Title */}
-            <div className="mb-4 lg:mb-5 pl-2">
-                <h4 className="text-lg lg:text-xl xl:text-2xl font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
+            <div className="mb-3 lg:mb-4 pl-2">
+                <h4 className="text-base lg:text-lg font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
                 </h4>
                 {shouldShowViewMore && (
@@ -95,29 +95,29 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
 
             {/* Description */}
             {task.description && (
-                <p className="mt-3 text-base lg:text-lg text-muted-foreground">
+                <p className="mt-2 text-sm lg:text-base text-muted-foreground">
                     {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                 </p>
             )}
 
             {/* Assignee */}
-            <div className="mt-4 lg:mt-5 flex items-center gap-3">
+            <div className="mt-3 lg:mt-4 flex items-center gap-2">
                 {assigneeName ? (
-                    <div className={`h-7 w-7 lg:h-8 lg:w-8 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-xs lg:text-sm font-bold text-white`}>
+                    <div className={`h-6 w-6 lg:h-7 lg:w-7 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-xs font-bold text-white`}>
                         {assigneeInitials}
                     </div>
                 ) : (
-                    <div className="h-7 w-7 lg:h-8 lg:w-8 rounded-full bg-muted flex items-center justify-center text-xs lg:text-sm font-bold text-muted-foreground">--</div>
+                    <div className="h-6 w-6 lg:h-7 lg:w-7 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground">--</div>
                 )}
-                <span className="text-sm lg:text-base text-muted-foreground truncate">{assigneeName || 'unasigned'}</span>
+                <span className="text-sm text-muted-foreground truncate">{assigneeName || 'unasigned'}</span>
             </div>
 
             {/* Sprint display only (no assignment/change) */}
             {task.sprint && (
-                <div className="mt-4 lg:mt-5 p-2 lg:p-3 bg-muted rounded-lg">
-                    <div className="flex items-center gap-2 lg:gap-3">
-                        <span className="text-sm lg:text-base font-medium text-muted-foreground">Sprint:</span>
-                        <span className="inline-flex items-center gap-1 px-2 lg:px-3 py-1 lg:py-1.5 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-sm lg:text-base font-medium truncate">
+                <div className="mt-3 lg:mt-4 p-2 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs lg:text-sm font-medium text-muted-foreground">Sprint:</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium truncate">
                             🚀 {task.sprint.name}
                         </span>
                     </div>
@@ -255,24 +255,24 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             ref={setNodeRef}
             className={getRowStyles(status, isOver)}
         >
-            <div className="px-6 lg:px-8 py-6 lg:py-8 border-b border-border">
+            <div className="px-6 py-5 border-b border-border">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 lg:gap-5">
-                        <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
                             status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
                                 status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
                                     'bg-gradient-to-br from-gray-500 to-gray-600'
                             }`}>
-                            <span className="text-white text-lg lg:text-xl">
+                            <span className="text-white text-lg">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
                         </div>
                         <div>
-                            <h3 className={`text-2xl lg:text-3xl xl:text-4xl font-bold ${getHeaderStyles(status)}`}>
+                            <h3 className={`text-xl lg:text-2xl font-bold ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
-                            <p className="text-lg lg:text-xl text-muted-foreground">
+                            <p className="text-sm lg:text-base text-muted-foreground">
                                 {status === 'PENDING' ? 'Pending tasks to start' :
                                     status === 'IN_PROGRESS' ? 'Tasks in active development' :
                                         status === 'COMPLETED' ? 'Successfully completed tasks' :
@@ -281,13 +281,13 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className={`${getBadgeStyles(status)} px-5 py-3 rounded-lg text-lg lg:text-xl font-semibold shadow-sm`}>
+                        <span className={`${getBadgeStyles(status)} px-3 py-2 rounded-lg text-sm lg:text-base font-semibold shadow-sm`}>
                             {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                         </span>
                     </div>
                 </div>
             </div>
-            <div className="p-6 lg:p-8">
+            <div className="p-6">
 
                 {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
                 <div className="relative">
@@ -326,8 +326,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid optimized for centered layout with larger gaps */
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">{/* Larger gaps and better distribution */}
+                        /* Responsive grid optimized for production deployment */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">{/* Stable grid layout for production */}
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard

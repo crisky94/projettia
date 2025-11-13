@@ -16,7 +16,7 @@ import ThemeToggle from './components/ThemeToggle';
 export const metadata = {
   title: 'Projettia',
   description: 'Team collaboration platform',
-  viewport: 'width=device-width, initial-scale=1.1, maximum-scale=3, user-scalable=yes, viewport-fit=cover',
+  viewport: 'width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes, viewport-fit=cover',
   themeColor: '#0f172a',
   appleWebApp: {
     capable: true,
