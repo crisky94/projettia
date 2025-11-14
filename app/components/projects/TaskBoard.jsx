@@ -258,7 +258,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             <div className="p-6 border-b border-border w-full">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full">
                         <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
                             status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
                                 status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
@@ -281,7 +281,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className={`${getBadgeStyles(status)} px-4 py-2 rounded-lg text-base lg:text-lg font-semibold shadow-sm`}>
+                        <span className={`${getBadgeStyles(status)} w-24 px-5 py-2 rounded-lg text-base lg:text-lg font-semibold shadow-sm`}>
                             {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                         </span>
                     </div>
