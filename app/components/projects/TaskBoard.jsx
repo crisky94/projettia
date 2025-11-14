@@ -1003,14 +1003,18 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     </div>
                 </div>
 
-                <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCorners}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                >
-                    {/* Cards - Kanban Board en Filas */}
-                    <div className="space-y-6">
+                {/* Task Board Section */}
+                <div className="mb-6 lg:mb-8">
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+                        <div className="px-4 lg:px-6 py-4 lg:py-5">
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCorners}
+                                onDragStart={handleDragStart}
+                                onDragEnd={handleDragEnd}
+                            >
+                                {/* Cards - Kanban Board en Filas */}
+                                <div className="space-y-6">
                         {/* Pending Row */}
                         <TaskRow
                             title="📋 To Do's"
@@ -1139,6 +1143,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                         )}
                     </div>
                 </DndContext>
+                        </div>
+                    </div>
+                </div>
 
                 {showAddTaskModal && (
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
