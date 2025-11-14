@@ -77,8 +77,8 @@
 }
 
 html {
-  /* Dramatically increased base font size for better visibility in deployment */
-  font-size: 22px;
+  /* Moderately increased base font size for better visibility */
+  font-size: 16px;
   /* Prevent iOS zoom on input focus */
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
@@ -93,40 +93,40 @@ html {
   overflow-x: hidden;
 }
 
-/* Responsive font scaling - AGGRESSIVE scaling for Render deployment */
+/* Responsive font scaling - Balanced scaling for better deployment visibility */
 @media (min-width: 480px) {
   html {
-    font-size: 24px;
+    font-size: 17px;
   }
 }
 
 @media (min-width: 640px) {
   html {
-    font-size: 26px;
+    font-size: 18px;
   }
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 28px;
+    font-size: 19px;
   }
 }
 
 @media (min-width: 1024px) {
   html {
-    font-size: 30px;
+    font-size: 20px;
   }
 }
 
 @media (min-width: 1280px) {
   html {
-    font-size: 32px;
+    font-size: 21px;
   }
 }
 
 @media (min-width: 1536px) {
   html {
-    font-size: 34px;
+    font-size: 22px;
   }
 }
 
@@ -1134,147 +1134,147 @@ a {
   width: 100%;
 }
 
-/* Production deployment optimizations for Render - AGGRESSIVE SCALING */
+/* Production deployment optimizations for Render - BALANCED SCALING */
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.4em !important;
-    /* Significantly increased for Render deployment */
-    zoom: 1.2 !important;
-    /* Much higher zoom for better visibility */
-    line-height: 1.7 !important;
+    font-size: 1.1em !important;
+    /* Moderate increase for Render deployment */
+    zoom: 1.05 !important;
+    /* Slight zoom for better visibility */
+    line-height: 1.5 !important;
   }
 
   /* Ensure better visibility in production environment */
   .task-board-container {
-    zoom: 1.25 !important;
-    /* Significant increase for better visibility */
-    transform: scale(1.1) !important;
+    zoom: 1.08 !important;
+    /* Moderate increase for better visibility */
+    transform: scale(1.02) !important;
     transform-origin: center center;
   }
 
-  /* Much larger interactive elements for production */
+  /* Moderately larger interactive elements for production */
   button,
   .button-professional,
   input,
   .input-professional {
-    transform: scale(1.15) !important;
-    /* Major increase for better interaction */
-    padding: 1.5rem 2.5rem !important;
-    font-size: 1.3em !important;
-    min-height: 65px !important;
+    transform: scale(1.05) !important;
+    /* Moderate increase for better interaction */
+    padding: 0.875rem 1.5rem !important;
+    font-size: 1.1em !important;
+    min-height: 48px !important;
   }
 
-  /* Significantly enhanced card sizes for production */
+  /* Moderately enhanced card sizes for production */
   .card-professional {
-    transform: scale(1.12) !important;
-    /* Major scale increase */
-    margin: 0.5rem !important;
-    min-height: 320px !important;
-    /* Much larger minimum height */
-    padding: 3rem !important;
-    /* Increased padding dramatically */
+    transform: scale(1.03) !important;
+    /* Moderate scale increase */
+    margin: 0.25rem !important;
+    min-height: 220px !important;
+    /* Reasonable minimum height */
+    padding: 1.5rem !important;
+    /* Moderate padding increase */
   }
 
-  /* Force all task and sprint cards to be much larger */
+  /* Moderate task and sprint card improvements */
   [data-testid*="task"],
   [class*="task"],
   [class*="sprint"],
   .rounded-xl,
   .rounded-lg {
-    min-height: 280px !important;
-    padding: 2.5rem !important;
-    font-size: 1.25em !important;
-    transform: scale(1.08) !important;
+    min-height: 200px !important;
+    padding: 1.25rem !important;
+    font-size: 1.05em !important;
+    transform: scale(1.02) !important;
   }
 
-  /* Larger headers and titles */
+  /* Moderately larger headers and titles */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-size: 1.5em !important;
-    transform: scale(1.05) !important;
+    font-size: 1.2em !important;
+    transform: scale(1.02) !important;
     line-height: 1.4 !important;
   }
 }
 
-/* FORCE LARGER CARDS - Specific targeting for Render deployment */
+/* Moderate card improvements - Balanced targeting for Render deployment */
 [class*="rounded"],
 [class*="card"],
 [class*="border"] {
-  min-height: 280px !important;
-  padding: 2.5rem 2rem !important;
-  font-size: 1.2em !important;
+  min-height: 180px !important;
+  padding: 1.25rem !important;
+  font-size: 1.05em !important;
 }
 
-/* Target TaskBoard and SprintManager specifically */
+/* Target TaskBoard and SprintManager with moderate improvements */
 .bg-amber-50,
 .bg-blue-50,
 .bg-green-50,
 .border-amber-200,
 .border-blue-200,
 .border-green-200 {
-  min-height: 300px !important;
-  padding: 3rem !important;
-  transform: scale(1.05) !important;
+  min-height: 200px !important;
+  padding: 1.5rem !important;
+  transform: scale(1.02) !important;
 }
 
-/* Force larger text in all task content */
+/* Moderate text size improvements */
 .font-semibold,
 .font-bold,
 .text-sm,
 .text-base,
 .text-lg {
-  font-size: 1.3em !important;
-  line-height: 1.5 !important;
+  font-size: 1.1em !important;
+  line-height: 1.4 !important;
 }
 
-/* Specific enlargement for task and sprint tables - AGGRESSIVE SCALING */
+/* Specific enlargement for task and sprint tables - BALANCED SCALING */
 .task-board-container .card-professional {
-  min-height: 320px !important;
-  /* Dramatically increased from 200px */
-  padding: 3rem !important;
-  /* Significantly increased padding */
-  font-size: 1.35em !important;
-  /* Much larger text */
-  transform: scale(1.1) !important;
+  min-height: 220px !important;
+  /* Moderately increased from 200px */
+  padding: 1.5rem !important;
+  /* Reasonable padding increase */
+  font-size: 1.1em !important;
+  /* Moderate text size */
+  transform: scale(1.02) !important;
 }
 
 .task-board-container h1,
 .task-board-container h2,
 .task-board-container h3,
 .task-board-container h4 {
-  font-size: 1.6em !important;
-  /* Significantly increased from 1.2em */
-  line-height: 1.3 !important;
-  transform: scale(1.05) !important;
+  font-size: 1.2em !important;
+  /* Reasonable increase from base */
+  line-height: 1.4 !important;
+  transform: scale(1.02) !important;
 }
 
 .task-board-container .grid {
-  gap: 2.5rem !important;
-  /* Significantly increased gap */
+  gap: 1.5rem !important;
+  /* Moderate gap increase */
 }
 
 .task-board-container button {
-  padding: 1.5rem 2rem !important;
-  /* Dramatically increased padding */
-  font-size: 1.3em !important;
-  /* Much larger text */
-  min-height: 65px !important;
-  /* Significantly increased height */
-  transform: scale(1.08) !important;
+  padding: 0.875rem 1.25rem !important;
+  /* Moderate padding increase */
+  font-size: 1.05em !important;
+  /* Slight text increase */
+  min-height: 48px !important;
+  /* Reasonable height */
+  transform: scale(1.02) !important;
 }
 
 .task-board-container input,
 .task-board-container textarea,
 .task-board-container select {
-  padding: 1.25rem !important;
-  /* Significantly increased padding */
-  font-size: 1.25em !important;
-  /* Much larger text */
-  min-height: 60px !important;
-  /* Significantly increased height */
+  padding: 0.875rem !important;
+  /* Moderate padding */
+  font-size: 1.05em !important;
+  /* Slight text increase */
+  min-height: 48px !important;
+  /* Reasonable height */
 }
