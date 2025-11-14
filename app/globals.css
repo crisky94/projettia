@@ -77,8 +77,8 @@
 }
 
 html {
-  /* Moderately increased base font size for better visibility */
-  font-size: 16px;
+  /* Mobile first font size */
+  font-size: 14px;
   /* Prevent iOS zoom on input focus */
   -webkit-text-size-adjust: 100%;
   /* Smooth scrolling */
@@ -93,40 +93,40 @@ html {
   overflow-x: hidden;
 }
 
-/* Responsive font scaling - Balanced scaling for better deployment visibility */
+/* Responsive font scaling - mobile first */
 @media (min-width: 480px) {
   html {
-    font-size: 17px;
+    font-size: 15px;
   }
 }
 
 @media (min-width: 640px) {
   html {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 19px;
+    font-size: 17px;
   }
 }
 
 @media (min-width: 1024px) {
   html {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
 @media (min-width: 1280px) {
   html {
-    font-size: 21px;
+    font-size: 19px;
   }
 }
 
 @media (min-width: 1536px) {
   html {
-    font-size: 22px;
+    font-size: 20px;
   }
 }
 
@@ -445,12 +445,12 @@ a {
   .card-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 12px;
-    /* Larger radius for better appearance */
+    border-radius: 8px;
+    /* Smaller radius for mobile */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    padding: 1.5rem;
-    /* Increased padding */
+    padding: 0.75rem;
+    /* Mobile padding */
   }
 
   .card-professional:hover {
@@ -462,14 +462,14 @@ a {
   @media (min-width: 768px) {
     .card-professional {
       border-radius: 12px;
+      padding: 1rem;
     }
   }
 
   /* Desktop card styling */
   @media (min-width: 1024px) {
     .card-professional {
-      padding: 2rem;
-      border-radius: 16px;
+      padding: 1.5rem;
     }
   }
 
@@ -477,17 +477,17 @@ a {
     background-color: rgb(var(--primary));
     color: rgb(var(--primary-foreground));
     border: none;
-    border-radius: 8px;
-    /* Increased radius for better appearance */
-    padding: 0.75rem 1rem;
-    /* Increased padding */
-    font-weight: 600;
-    font-size: 1rem;
-    /* Larger font size */
+    border-radius: 6px;
+    /* Smaller radius for mobile */
+    padding: 0.5rem 0.75rem;
+    /* Mobile padding */
+    font-weight: 500;
+    font-size: 0.875rem;
+    /* Mobile font size */
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    min-height: 48px;
-    /* Larger touch target */
+    min-height: 44px;
+    /* Touch target */
   }
 
   .button-professional:hover {
@@ -518,16 +518,16 @@ a {
   .input-professional {
     background-color: rgb(var(--card));
     border: 1px solid rgb(var(--border));
-    border-radius: 8px;
-    /* Increased radius */
-    padding: 0.875rem;
-    /* Larger padding */
-    font-size: 1rem;
-    /* Larger font size */
+    border-radius: 6px;
+    /* Smaller radius for mobile */
+    padding: 0.625rem;
+    /* Mobile padding */
+    font-size: 0.875rem;
+    /* Mobile font size */
     color: rgb(var(--foreground));
     transition: all 0.2s ease;
-    min-height: 48px;
-    /* Larger touch target */
+    min-height: 44px;
+    /* Touch target */
   }
 
   .input-professional:focus {
@@ -776,7 +776,7 @@ a {
   }
 
   /* TaskBoard card minimum and maximum sizes for better space utilization */
-  .task-board-container {
+  .task-board-container .card-professional {
     min-width: 280px !important;
     max-width: 900px !important;
     min-height: 180px !important;
@@ -1038,320 +1038,4 @@ a {
   .card-professional {
     padding: 1rem;
   }
-}
-
-/* Ultra-wide screen optimizations for task boards */
-@media (min-width: 1920px) {
-
-  /* Centered task board with better distribution */
-  .task-board-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
-  /* Optimize grid gaps for ultra-wide */
-  .grid {
-    gap: 1.5rem;
-  }
-
-  /* Better font scaling on very large screens */
-  html {
-    font-size: 17px;
-  }
-
-  /* Center content better */
-  .max-w-7xl {
-    max-width: 90rem;
-    /* Increased from default 80rem */
-  }
-}
-
-@media (min-width: 2560px) {
-
-  /* 4K+ screen optimizations */
-  .task-board-container {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-
-  /* Larger gaps for 4K screens */
-  .grid {
-    gap: 2rem;
-  }
-
-  /* Scale fonts appropriately for 4K */
-  html {
-    font-size: 18px;
-  }
-
-  /* Ensure task cards don't get too small */
-  .card-professional {
-    min-width: 280px;
-  }
-
-  /* Better centering for 4K */
-  .max-w-7xl {
-    max-width: 100rem;
-  }
-}
-
-@media (min-width: 3840px) {
-
-  /* 4K+ ultra-wide optimizations */
-  html {
-    font-size: 20px;
-  }
-
-  .task-board-container {
-    padding-left: 4rem;
-    padding-right: 4rem;
-  }
-
-  /* Maximum comfortable gaps */
-  .grid {
-    gap: 2.5rem;
-  }
-
-  /* Prevent cards from being too small on massive screens */
-  .card-professional {
-    min-width: 320px;
-  }
-
-  /* Ultra-wide centering */
-  .max-w-7xl {
-    max-width: 110rem;
-  }
-}
-
-/* Task board specific centering optimizations */
-.task-board-container {
-  margin: 0 auto;
-}
-
-/* Grid centering improvements */
-.grid.justify-items-center>* {
-  max-width: 100%;
-  width: 100%;
-}
-
-/* Production deployment optimizations for Render - FINAL BALANCED VERSION */
-@media screen {
-  body {
-    min-height: 100vh;
-    font-size: 1.05em !important;
-    /* Slightly increased for Render deployment */
-    zoom: 1.03 !important;
-    /* Minimal zoom for better visibility */
-    line-height: 1.5 !important;
-  }
-
-  /* Optimal visibility in production environment */
-  .task-board-container {
-    zoom: 1.05 !important;
-    /* Subtle increase for better visibility */
-    transform: scale(1.0) !important;
-    transform-origin: center center;
-  }
-
-  /* Balanced interactive elements for production */
-  button,
-  .button-professional,
-  input,
-  .input-professional {
-    transform: scale(1.0) !important;
-    /* Normal scale for better proportions */
-    padding: 0.5rem 1rem !important;
-    font-size: 1.0em !important;
-    min-height: 40px !important;
-  }
-
-  /* Normal card sizes for production */
-  .card-professional {
-    transform: scale(1.0) !important;
-    /* Normal scale */
-    margin: 0.25rem !important;
-    min-height: 200px !important;
-    /* Good height */
-    padding: 1.25rem !important;
-    /* Normal padding */
-  }
-
-  /* Normal task and sprint card improvements */
-  [data-testid*="task"],
-  [class*="task"],
-  [class*="sprint"],
-  .rounded-xl,
-  .rounded-lg {
-    min-height: 180px !important;
-    padding: 1rem !important;
-    font-size: 1.0em !important;
-    transform: scale(1.0) !important;
-  }
-
-  /* Normal headers and titles */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-size: 1.1em !important;
-    transform: scale(1.0) !important;
-    line-height: 1.4 !important;
-  }
-}
-
-/* Normal card improvements - Balanced targeting for Render deployment */
-[class*="rounded"],
-[class*="card"],
-[class*="border"] {
-  min-height: 160px !important;
-  padding: 1rem !important;
-  font-size: 1.0em !important;
-}
-
-/* Target TaskBoard and SprintManager with normal improvements */
-.bg-amber-50,
-.bg-blue-50,
-.bg-green-50,
-.border-amber-200,
-.border-blue-200,
-.border-green-200 {
-  min-height: 180px !important;
-  padding: 1.25rem !important;
-  transform: scale(1.0) !important;
-}
-
-/* Normal text size improvements */
-.font-semibold,
-.font-bold,
-.text-sm,
-.text-base,
-.text-lg {
-  font-size: 1.0em !important;
-  line-height: 1.4 !important;
-}
-
-/* Task-board container - NORMALIZED SCALING */
-.task-board-container .card-professional {
-  min-height: 200px !important;
-  /* Normal height */
-  padding: 1.25rem !important;
-  /* Normal padding */
-  font-size: 1.0em !important;
-  /* Normal text size */
-  transform: scale(1.0) !important;
-}
-
-.task-board-container h1,
-.task-board-container h2,
-.task-board-container h3,
-.task-board-container h4 {
-  font-size: 1.1em !important;
-  /* Slightly larger headers */
-  line-height: 1.4 !important;
-  transform: scale(1.0) !important;
-}
-
-.task-board-container .grid {
-  gap: 1.25rem !important;
-  /* Normal gap */
-}
-
-.task-board-container button {
-  padding: 0.5rem 1rem !important;
-  /* Normal button padding */
-  font-size: 1.0em !important;
-  /* Normal button text */
-  min-height: 40px !important;
-  /* Normal button height */
-  transform: scale(1.0) !important;
-}
-
-.task-board-container input,
-.task-board-container textarea,
-.task-board-container select {
-  padding: 0.75rem !important;
-  /* Normal input padding */
-  font-size: 1.0em !important;
-  /* Normal input text */
-  min-height: 44px !important;
-  /* Standard input height */
-}
-
-/* Normalize status badges and avatar elements */
-.bg-amber-200,
-.bg-blue-200,
-.bg-green-100,
-.text-amber-600,
-.text-blue-600,
-.text-green-600 {
-  font-size: 0.875rem !important;
-  padding: 0.375rem 0.75rem !important;
-  border-radius: 9999px !important;
-  transform: scale(1.0) !important;
-}
-
-/* Normalize avatar circles and user elements */
-.rounded-full,
-[class*="rounded-full"] {
-  width: auto !important;
-  height: auto !important;
-  transform: scale(1.0) !important;
-  font-size: 0.875rem !important;
-}
-
-/* Fix oversized circular elements */
-.w-8,
-.h-8,
-.w-10,
-.h-10,
-.w-12,
-.h-12 {
-  transform: scale(0.85) !important;
-}
-
-/* Normalize member name display */
-.text-sm {
-  font-size: 0.875rem !important;
-  transform: scale(1.0) !important;
-}
-
-/* Dashboard and project cards optimization for Render */
-.dashboard-container,
-.project-card,
-[class*="dashboard"] {
-  transform: scale(1.0) !important;
-  padding: 1.5rem !important;
-  margin: 0.5rem !important;
-}
-
-/* Main dashboard layout optimization */
-.container,
-.max-w-7xl,
-.mx-auto {
-  padding: 1rem 1.5rem !important;
-  transform: scale(1.0) !important;
-}
-
-/* Navigation and header elements */
-.navbar,
-.header,
-[class*="nav"] {
-  padding: 0.75rem 1.25rem !important;
-  font-size: 1.0em !important;
-  transform: scale(1.0) !important;
-}
-
-/* Project title and description styling */
-.project-title {
-  font-size: 1.25em !important;
-  font-weight: 600 !important;
-  line-height: 1.4 !important;
-}
-
-/* Project stats (tasks, members) styling */
-.project-stats {
-  font-size: 0.875rem !important;
-  opacity: 0.8;
 }
