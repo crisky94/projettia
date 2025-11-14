@@ -1015,134 +1015,134 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             >
                                 {/* Cards - Kanban Board en Filas */}
                                 <div className="space-y-6">
-                        {/* Pending Row */}
-                        <TaskRow
-                            title="📋 To Do's"
-                            status="PENDING"
-                            tasks={tasks.filter(task => task.status === 'PENDING')}
-                            isAdmin={isAdmin}
-                            currentUserId={currentUserId}
-                            allMembers={members}
-                            sprints={sprints}
-                            onDeleteTask={handleDeleteTask}
-                            onUpdateTask={handleOpenEditTask}
-                            onViewTask={handleViewTask}
-                        />
+                                    {/* Pending Row */}
+                                    <TaskRow
+                                        title="📋 To Do's"
+                                        status="PENDING"
+                                        tasks={tasks.filter(task => task.status === 'PENDING')}
+                                        isAdmin={isAdmin}
+                                        currentUserId={currentUserId}
+                                        allMembers={members}
+                                        sprints={sprints}
+                                        onDeleteTask={handleDeleteTask}
+                                        onUpdateTask={handleOpenEditTask}
+                                        onViewTask={handleViewTask}
+                                    />
 
-                        {/* In Progress Row */}
-                        <TaskRow
-                            title="⚡ In Progress"
-                            status="IN_PROGRESS"
-                            tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
-                            isAdmin={isAdmin}
-                            currentUserId={currentUserId}
-                            allMembers={members}
-                            sprints={sprints}
-                            onDeleteTask={handleDeleteTask}
-                            onUpdateTask={handleOpenEditTask}
-                            onViewTask={handleViewTask}
-                        />
+                                    {/* In Progress Row */}
+                                    <TaskRow
+                                        title="⚡ In Progress"
+                                        status="IN_PROGRESS"
+                                        tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
+                                        isAdmin={isAdmin}
+                                        currentUserId={currentUserId}
+                                        allMembers={members}
+                                        sprints={sprints}
+                                        onDeleteTask={handleDeleteTask}
+                                        onUpdateTask={handleOpenEditTask}
+                                        onViewTask={handleViewTask}
+                                    />
 
-                        {/* Completed Row */}
-                        <TaskRow
-                            title="✅ Completed"
-                            status="COMPLETED"
-                            tasks={tasks.filter(task => task.status === 'COMPLETED')}
-                            isAdmin={isAdmin}
-                            currentUserId={currentUserId}
-                            allMembers={members}
-                            sprints={sprints}
-                            onDeleteTask={handleDeleteTask}
-                            onUpdateTask={handleOpenEditTask}
-                            onViewTask={handleViewTask}
-                        />
-                        {/* Modal de edición de tarea */}
-                        {showEditTaskModal && taskToEdit && (
-                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
-                                <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
-                                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                        <h2 className="text-lg font-bold text-card-foreground">Editar Tarea</h2>
-                                    </div>
-                                    <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
-                                        <div>
-                                            <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                Título
-                                            </label>
-                                            <input
-                                                id="edit-title"
-                                                type="text"
-                                                value={editTask.title}
-                                                onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
-                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
-                                                required
-                                                disabled={isSubmitting}
-                                            />
+                                    {/* Completed Row */}
+                                    <TaskRow
+                                        title="✅ Completed"
+                                        status="COMPLETED"
+                                        tasks={tasks.filter(task => task.status === 'COMPLETED')}
+                                        isAdmin={isAdmin}
+                                        currentUserId={currentUserId}
+                                        allMembers={members}
+                                        sprints={sprints}
+                                        onDeleteTask={handleDeleteTask}
+                                        onUpdateTask={handleOpenEditTask}
+                                        onViewTask={handleViewTask}
+                                    />
+                                    {/* Modal de edición de tarea */}
+                                    {showEditTaskModal && taskToEdit && (
+                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
+                                            <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                                                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                                    <h2 className="text-lg font-bold text-card-foreground">Editar Tarea</h2>
+                                                </div>
+                                                <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
+                                                    <div>
+                                                        <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                            Título
+                                                        </label>
+                                                        <input
+                                                            id="edit-title"
+                                                            type="text"
+                                                            value={editTask.title}
+                                                            onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
+                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                                            required
+                                                            disabled={isSubmitting}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                            Descripción
+                                                        </label>
+                                                        <textarea
+                                                            id="edit-description"
+                                                            value={editTask.description}
+                                                            onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
+                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none"
+                                                            rows="2"
+                                                            disabled={isSubmitting}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label htmlFor="edit-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                            Asignar a
+                                                        </label>
+                                                        <select
+                                                            id="edit-assignee"
+                                                            value={editTask.assigneeId}
+                                                            onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                                            disabled={isSubmitting}
+                                                        >
+                                                            <option value="">unasigned</option>
+                                                            {members.map((member) => (
+                                                                <option key={member.userId} value={member.userId}>
+                                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
+                                                            className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted transition-colors touch-action-manipulation flex items-center justify-center"
+                                                            disabled={isSubmitting}
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                        <button
+                                                            type="submit"
+                                                            className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
+                                                                ? 'bg-blue-400 text-white cursor-not-allowed'
+                                                                : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
+                                                                }`}
+                                                            disabled={isSubmitting}
+                                                        >
+                                                            {isSubmitting ? (
+                                                                <>
+                                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                                    <span>Guardando...</span>
+                                                                </>
+                                                            ) : (
+                                                                'Guardar Cambios'
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                Descripción
-                                            </label>
-                                            <textarea
-                                                id="edit-description"
-                                                value={editTask.description}
-                                                onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
-                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none"
-                                                rows="2"
-                                                disabled={isSubmitting}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label htmlFor="edit-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                Asignar a
-                                            </label>
-                                            <select
-                                                id="edit-assignee"
-                                                value={editTask.assigneeId}
-                                                onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
-                                                disabled={isSubmitting}
-                                            >
-                                                <option value="">unasigned</option>
-                                                {members.map((member) => (
-                                                    <option key={member.userId} value={member.userId}>
-                                                        {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                            <button
-                                                type="button"
-                                                onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                                className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted transition-colors touch-action-manipulation flex items-center justify-center"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                                    ? 'bg-blue-400 text-white cursor-not-allowed'
-                                                    : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
-                                                    }`}
-                                                disabled={isSubmitting}
-                                            >
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                        <span>Guardando...</span>
-                                                    </>
-                                                ) : (
-                                                    'Guardar Cambios'
-                                                )}
-                                            </button>
-                                        </div>
-                                    </form>
+                                    )}
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                </DndContext>
+                            </DndContext>
                         </div>
                     </div>
                 </div>
