@@ -255,7 +255,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
             ref={setNodeRef}
             className={getRowStyles(status, isOver)}
         >
-            <div className="px-6 py-4 border-b border-border w-full">
+            <div className="p-6 border-b border-border w-full">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
