@@ -257,8 +257,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
         >
             <div className="p-6 border-b border-border w-full">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 w-full">
+                <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3 flex-1">
                         <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
                             status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
                                 status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
@@ -268,7 +268,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
                         </div>
-                        <div>
+                        <div className="flex-1">
                             <h3 className={`text-xl lg:text-2xl xl:text-3xl font-bold ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
@@ -280,19 +280,19 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                         <span className={`${getBadgeStyles(status)} w-24 px-5 py-2 rounded-lg text-base lg:text-lg font-semibold shadow-sm`}>
                             {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                         </span>
                     </div>
                 </div>
             </div>
-            <div className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6 w-full">
 
                 {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
-                <div className="relative">
+                <div className="relative w-full">
                     {tasks.length === 0 ? (
-                        <div className={`text-center py-16 border-2 border-dashed rounded-xl transition-all duration-200 ${isOver
+                        <div className={`text-center py-16 border-2 border-dashed rounded-xl transition-all duration-200 w-full ${isOver
                             ? 'border-current text-current bg-current/5'
                             : 'border-border text-muted-foreground'
                             }`}>
@@ -326,8 +326,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid optimized for centered layout */
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center">{/* Centered grid items */}
+                        /* Responsive grid optimized for full width layout */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-18 w-full">{/* Increased gap between cards */}
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <div key={task.id} className="w-full">
                                     <TaskCard
