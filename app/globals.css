@@ -1134,22 +1134,22 @@ a {
   width: 100%;
 }
 
-/* Production deployment optimizations for Render - BALANCED SCALING */
+/* Production deployment optimizations for Render - FINAL BALANCED VERSION */
 @media screen {
   body {
     min-height: 100vh;
-    font-size: 1.1em !important;
-    /* Moderate increase for Render deployment */
-    zoom: 1.05 !important;
-    /* Slight zoom for better visibility */
+    font-size: 1.05em !important;
+    /* Slightly increased for Render deployment */
+    zoom: 1.03 !important;
+    /* Minimal zoom for better visibility */
     line-height: 1.5 !important;
   }
 
-  /* Ensure better visibility in production environment */
+  /* Optimal visibility in production environment */
   .task-board-container {
-    zoom: 1.08 !important;
-    /* Moderate increase for better visibility */
-    transform: scale(1.02) !important;
+    zoom: 1.05 !important;
+    /* Subtle increase for better visibility */
+    transform: scale(1.0) !important;
     transform-origin: center center;
   }
 
@@ -1315,4 +1315,43 @@ a {
 .text-sm {
   font-size: 0.875rem !important;
   transform: scale(1.0) !important;
+}
+
+/* Dashboard and project cards optimization for Render */
+.dashboard-container,
+.project-card,
+[class*="dashboard"] {
+  transform: scale(1.0) !important;
+  padding: 1.5rem !important;
+  margin: 0.5rem !important;
+}
+
+/* Main dashboard layout optimization */
+.container,
+.max-w-7xl,
+.mx-auto {
+  padding: 1rem 1.5rem !important;
+  transform: scale(1.0) !important;
+}
+
+/* Navigation and header elements */
+.navbar,
+.header,
+[class*="nav"] {
+  padding: 0.75rem 1.25rem !important;
+  font-size: 1.0em !important;
+  transform: scale(1.0) !important;
+}
+
+/* Project title and description styling */
+.project-title {
+  font-size: 1.25em !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+
+/* Project stats (tasks, members) styling */
+.project-stats {
+  font-size: 0.875rem !important;
+  opacity: 0.8;
 }
