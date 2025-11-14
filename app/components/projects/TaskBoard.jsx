@@ -287,7 +287,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                     </div>
                 </div>
             </div>
-            <div className="p-4 lg:p-6 w-full">
+            <div className="p-1 w-full">
 
                 {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
                 <div className="relative w-full">
