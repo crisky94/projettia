@@ -813,7 +813,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         const task = tasks.find(t => t.id === taskId);
         setTaskToDelete(task);
         setShowDeleteTaskModal(true);
-        
+
         // Hacer scroll suave hacia arriba para mostrar el modal
         setTimeout(() => {
             console.log('Executing scroll...');
