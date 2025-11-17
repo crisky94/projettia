@@ -94,7 +94,7 @@ ErrorState.propTypes = {
 
 // Empty state component
 export const EmptyState = () => (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-20">
         <p className="text-muted-foreground">No messages yet. Start a conversation!</p>
     </div>
 );
@@ -112,7 +112,7 @@ export const ActionButton = ({ onClick, disabled, title, children, variant = 'de
             type={variant === 'primary' ? 'submit' : 'button'}
             onClick={onClick}
             disabled={disabled}
-            className={`${variantClasses[variant]} text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`${variantClasses[variant]} text-xs p-2 disabled:opacity-50 disabled:cursor-not-allowed`}
             title={title}
             aria-label={title}
         >
