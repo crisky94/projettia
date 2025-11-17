@@ -90,9 +90,9 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             onViewTask && onViewTask(task);
                         }}
                         className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
-                        title="Ver tarea completa"
+                        title="View full task"
                     >
-                        Ver más
+                        View more
                     </button>
                 )}
             </div>
@@ -116,7 +116,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     </div>
                 )}
                 <span className="task-assignee-name text-card-foreground truncate">
-                    {assigneeName || 'Sin asignar'}
+                    {assigneeName || 'Unassigned'}
                 </span>
             </div>
 
@@ -141,7 +141,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             onUpdateTask && onUpdateTask('edit', task);
                         }}
                         className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
-                        title="Editar tarea"
+                        title="Edit task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -153,7 +153,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             onDeleteTask && onDeleteTask(task.id);
                         }}
                         className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
-                        title="Eliminar tarea"
+                        title="Delete task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -288,10 +288,10 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
                             <p className="task-column-subtitle text-muted-foreground">
-                                {status === 'PENDING' ? 'Tareas pendientes por iniciar' :
-                                    status === 'IN_PROGRESS' ? 'Tareas en desarrollo activo' :
-                                        status === 'COMPLETED' ? 'Tareas completadas exitosamente' :
-                                            'Estado de tareas'}
+                                {status === 'PENDING' ? 'Pending tasks to start' :
+                                    status === 'IN_PROGRESS' ? 'Tasks in active development' :
+                                        status === 'COMPLETED' ? 'Successfully completed tasks' :
+                                            'Task status'}
                             </p>
                         </div>
                     </div>
@@ -320,8 +320,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                         </svg>
                                     </div>
                                     <div>
-                                        <span className="font-semibold text-lg text-primary block">Soltar tarea aquí</span>
-                                        <p className="text-sm text-primary/80 mt-1">La tarea se moverá a este estado</p>
+                                        <span className="font-semibold text-lg text-primary block">Drop task here</span>
+                                        <p className="text-sm text-primary/80 mt-1">The task will move to this status</p>
                                     </div>
                                 </div>
                             ) : (
@@ -333,20 +333,20 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                     </div>
                                     <div>
                                         <p className="font-medium text-base md:text-lg text-card-foreground">
-                                            No hay tareas aquí
+                                            No tasks here
                                         </p>
                                         <p className="text-sm md:text-base text-muted-foreground mt-2">
-                                            {status === 'PENDING' ? 'Crea nuevas tareas o mueve tareas existentes aquí' :
-                                                status === 'IN_PROGRESS' ? 'Arrastra tareas desde "Pendientes" para comenzar' :
-                                                    status === 'COMPLETED' ? 'Las tareas completadas aparecerán aquí' :
-                                                        'Arrastra tareas para organizarlas'}
+                                            {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
+                                                status === 'IN_PROGRESS' ? 'Drag tasks from "Pending" to start' :
+                                                    status === 'COMPLETED' ? 'Completed tasks will appear here' :
+                                                        'Drag tasks to organize them'}
                                         </p>
                                     </div>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        /* Lista de tareas */
+                        /* Task list */
                         <div className="space-y-4">
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <TaskCard
@@ -1080,12 +1080,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
                                             <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                                                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                                    <h2 className="text-lg font-bold text-card-foreground">Editar Tarea</h2>
+                                                    <h2 className="text-lg font-bold text-card-foreground">Edit Task</h2>
                                                 </div>
                                                 <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
                                                     <div>
                                                         <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                            Título
+                                                            Title
                                                         </label>
                                                         <input
                                                             id="edit-title"
@@ -1099,7 +1099,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                     </div>
                                                     <div>
                                                         <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                            Descripción
+                                                            Description
                                                         </label>
                                                         <textarea
                                                             id="edit-description"
@@ -1112,7 +1112,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                     </div>
                                                     <div>
                                                         <label htmlFor="edit-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                            Asignar a
+                                                            Assign to
                                                         </label>
                                                         <select
                                                             id="edit-assignee"
@@ -1121,7 +1121,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
                                                             disabled={isSubmitting}
                                                         >
-                                                            <option value="">unasigned</option>
+                                                            <option value="">Unassigned</option>
                                                             {members.map((member) => (
                                                                 <option key={member.userId} value={member.userId}>
                                                                     {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
@@ -1136,7 +1136,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                             className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted transition-colors touch-action-manipulation flex items-center justify-center"
                                                             disabled={isSubmitting}
                                                         >
-                                                            Cancelar
+                                                            Cancel
                                                         </button>
                                                         <button
                                                             type="submit"
@@ -1149,10 +1149,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                             {isSubmitting ? (
                                                                 <>
                                                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                                    <span>Guardando...</span>
+                                                                    <span>Saving...</span>
                                                                 </>
                                                             ) : (
-                                                                'Guardar Cambios'
+                                                                'Save Changes'
                                                             )}
                                                         </button>
                                                     </div>
