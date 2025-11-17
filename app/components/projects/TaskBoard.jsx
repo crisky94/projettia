@@ -99,7 +99,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
 
             {/* Description */}
             {task.description && (
-                <p className="task-card-description text-muted-foreground">
+                <p className="task-card-description text-muted-foreground truncate">
                     {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                 </p>
             )}
