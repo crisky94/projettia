@@ -211,7 +211,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
     });
     // Define row styles based on status
     const getRowStyles = (status, isOver) => {
-        const baseStyles = "w-full card-professional shadow-theme-sm hover:shadow-theme-md rounded-xl border transition-all duration-200 overflow-hidden";
+        const baseStyles = "w-full max-w-none card-professional shadow-theme-sm hover:shadow-theme-md rounded-xl border transition-all duration-200 overflow-hidden";
 
         if (isOver) {
             switch (status) {
@@ -347,7 +347,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     ) : (
                         /* Task list */
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <TaskCard
                                     key={task.id}
