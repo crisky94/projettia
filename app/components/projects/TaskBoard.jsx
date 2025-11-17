@@ -770,6 +770,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 assigneeId: task.assignee?.id || ''
             });
             setShowEditTaskModal(true);
+            // Auto-scroll to top to ensure modal is visible
+            setTimeout(() => {
+                console.log('Executing edit task scroll...');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 300);
         }
     };
 
@@ -806,6 +813,23 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         const task = tasks.find(t => t.id === taskId);
         setTaskToDelete(task);
         setShowDeleteTaskModal(true);
+        
+        // Hacer scroll suave hacia arriba para mostrar el modal
+        setTimeout(() => {
+            console.log('Executing scroll...');
+            // Probar diferentes métodos de scroll
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            // Backup con scroll inmediato
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            // Backup con jQuery style si existe
+            if (window.jQuery) {
+                window.jQuery('html, body').animate({ scrollTop: 0 }, 300);
+            }
+        }, 300);
     };
 
     const handleConfirmDeleteTask = async () => {
@@ -897,7 +921,16 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                         <div className="flex gap-3">
                             {/* Add Task button - Available to all members */}
                             <button
-                                onClick={() => setShowAddTaskModal(true)}
+                                onClick={() => {
+                                    setShowAddTaskModal(true);
+                                    // Auto-scroll to top to ensure modal is visible
+                                    setTimeout(() => {
+                                        console.log('Executing add task scroll...');
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        document.documentElement.scrollTop = 0;
+                                        document.body.scrollTop = 0;
+                                    }, 300);
+                                }}
                                 className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2 transform hover:scale-105"
                             >
                                 <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1290,8 +1323,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
-                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md mx-auto">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center gap-4">
