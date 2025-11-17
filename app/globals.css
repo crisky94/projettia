@@ -1367,12 +1367,12 @@ a {
   .hide-on-mobile {
     display: none !important;
   }
-  
+
   /* Reducir animaciones en móvil para mejor rendimiento */
   .task-card {
     transition: none;
   }
-  
+
   /* Texto más compacto en móvil */
   .task-card-description {
     display: -webkit-box;
@@ -1392,15 +1392,17 @@ a {
 /* Optimizaciones para dispositivos táctiles */
 @media (hover: none) and (pointer: coarse) {
   .task-action-buttons {
-    opacity: 1; /* Siempre visibles en dispositivos táctiles */
+    opacity: 1;
+    /* Siempre visibles en dispositivos táctiles */
   }
-  
+
   .task-action-button {
     min-width: 2.75rem;
     min-height: 2.75rem;
   }
-  
+
   .task-card {
-    padding: 1.25rem; /* Más padding para mejor toque */
+    padding: 1.25rem;
+    /* Más padding para mejor toque */
   }
 }

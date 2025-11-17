@@ -136,9 +136,9 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             {isAdmin && (
                 <div className="task-action-buttons">
                     <button
-                        onClick={(e) => { 
-                            e.stopPropagation?.(); 
-                            onUpdateTask && onUpdateTask('edit', task); 
+                        onClick={(e) => {
+                            e.stopPropagation?.();
+                            onUpdateTask && onUpdateTask('edit', task);
                         }}
                         className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
                         title="Editar tarea"
@@ -148,9 +148,9 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                         </svg>
                     </button>
                     <button
-                        onClick={(e) => { 
-                            e.stopPropagation?.(); 
-                            onDeleteTask && onDeleteTask(task.id); 
+                        onClick={(e) => {
+                            e.stopPropagation?.();
+                            onDeleteTask && onDeleteTask(task.id);
                         }}
                         className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
                         title="Eliminar tarea"
@@ -275,9 +275,9 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                         <div className={`task-status-icon 
                             ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-                              status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                              status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
-                              'bg-gradient-to-br from-gray-500 to-gray-600'}
+                                status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                                    status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                                        'bg-gradient-to-br from-gray-500 to-gray-600'}
                         `}>
                             <span className="text-white">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
@@ -307,8 +307,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                 <div className="relative w-full">
                     {tasks.length === 0 ? (
                         <div className={`task-empty-state 
-                            ${isOver 
-                                ? 'border-current text-current bg-current/5' 
+                            ${isOver
+                                ? 'border-current text-current bg-current/5'
                                 : 'border-border text-muted-foreground'
                             }
                         `}>
