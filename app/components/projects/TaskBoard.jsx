@@ -1077,14 +1077,14 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     />
                                     {/* Modal de edición de tarea */}
                                     {showEditTaskModal && taskToEdit && (
-                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
+                                        <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
                                             <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
                                                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                                    <h2 className="text-lg font-bold text-card-foreground">Edit Task</h2>
+                                                    <h2 className="text-xl font-bold text-card-foreground">Edit Task</h2>
                                                 </div>
                                                 <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
                                                     <div>
-                                                        <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        <label htmlFor="edit-title" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                             Title
                                                         </label>
                                                         <input
@@ -1098,7 +1098,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        <label htmlFor="edit-description" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                             Description
                                                         </label>
                                                         <textarea
@@ -1111,7 +1111,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label htmlFor="edit-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        <label htmlFor="edit-assignee" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                             Assign to
                                                         </label>
                                                         <select
@@ -1167,12 +1167,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 </div>
 
                 {showAddTaskModal && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
+                    <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
                         <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
+                                    <h2 className="text-xl font-bold text-card-foreground flex items-center gap-2">
                                         <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
                                             <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1198,7 +1198,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             {/* Form */}
                             <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                                 <div>
-                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label htmlFor="title" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Task Title
                                     </label>
                                     <input
@@ -1214,7 +1214,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
 
                                 <div>
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label htmlFor="description" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Description
                                     </label>
                                     <textarea
@@ -1229,7 +1229,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
 
                                 <div>
-                                    <label htmlFor="assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label htmlFor="assignee" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Assign to
                                     </label>
                                     <select
@@ -1290,7 +1290,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-16">{/* Changed to items-start and added pt-16 */}
+                    <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
                         <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -1304,7 +1304,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         <h3 className="text-xl font-bold text-card-foreground">
                                             Delete task
                                         </h3>
-                                        <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
+                                        <p className="text-base text-gray-700 dark:text-gray-400 mt-1">
                                             This action cannot be undone
                                         </p>
                                     </div>
@@ -1314,7 +1314,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             {/* Content */}
                             <div className="p-4">
                                 <div className="mb-6">
-                                    <p className="text-gray-700 dark:text-gray-400 text-base leading-relaxed">
+                                    <p className="text-gray-700 dark:text-gray-400 text-lg leading-relaxed">
                                         Are you sure you want to delete the task{' '}
                                         <span className="font-semibold text-card-foreground break-words">"{taskToDelete.title}"</span>?
                                     </p>
