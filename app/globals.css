@@ -1039,3 +1039,368 @@ a {
     padding: 1rem;
   }
 }
+
+/* ============================================ */
+/* TASKBOARD RESPONSIVE DESIGN - DESDE CERO */
+/* ============================================ */
+
+/* Contenedores base del TaskBoard */
+.task-board-container {
+  width: 100%;
+  padding: 0.75rem;
+  overflow-x: hidden;
+}
+
+@media (min-width: 768px) {
+  .task-board-container {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-board-container {
+    padding: 2rem;
+  }
+}
+
+/* Columnas de tareas - responsive stack */
+.task-column {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  background: rgb(var(--card));
+  border: 2px solid rgb(var(--border));
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .task-column {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Headers de columnas - responsive */
+.task-column-header {
+  padding: 1rem;
+  border-bottom: 1px solid rgb(var(--border));
+  background: rgb(var(--card));
+}
+
+@media (min-width: 768px) {
+  .task-column-header {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-column-header {
+    padding: 2rem;
+  }
+}
+
+/* Iconos de estado - responsive */
+.task-status-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .task-status-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-status-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+}
+
+/* Títulos de columnas - responsive */
+.task-column-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .task-column-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-column-title {
+    font-size: 1.875rem;
+  }
+}
+
+/* Subtítulos de columnas */
+.task-column-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .task-column-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Badges de contador - responsive */
+.task-count-badge {
+  min-width: 3.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .task-count-badge {
+    min-width: 4rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Contenedor de tareas - responsive spacing */
+.task-list-container {
+  padding: 1rem;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .task-list-container {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* Tarjetas de tareas - responsive design */
+.task-card {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 2px solid;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 10rem;
+  width: 100%;
+  background: inherit;
+}
+
+@media (min-width: 768px) {
+  .task-card {
+    padding: 1.5rem;
+    min-height: 11.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-card {
+    padding: 1.75rem;
+    min-height: 12rem;
+  }
+}
+
+/* Títulos de tareas - responsive */
+.task-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+  word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .task-card-title {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-card-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Descripciones de tareas - responsive */
+.task-card-description {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .task-card-description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Avatares de usuarios - responsive */
+.task-assignee-avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .task-assignee-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Nombres de usuarios - responsive */
+.task-assignee-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .task-assignee-name {
+    font-size: 1rem;
+  }
+}
+
+/* Botones de acción - responsive y táctiles */
+.task-action-buttons {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .task-action-buttons {
+    bottom: 1rem;
+    right: 1rem;
+    gap: 0.5rem;
+  }
+}
+
+.task-card:hover .task-action-buttons {
+  opacity: 1;
+}
+
+.task-action-button {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+/* Estados vacíos - responsive */
+.task-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 2px dashed rgb(var(--border));
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .task-empty-state {
+    padding: 4rem 2rem;
+  }
+}
+
+.task-empty-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: rgb(var(--muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .task-empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ============================================ */
+/* UTILIDADES RESPONSIVE ESPECÍFICAS */
+/* ============================================ */
+
+/* Ocultar elementos en móvil */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  /* Reducir animaciones en móvil para mejor rendimiento */
+  .task-card {
+    transition: none;
+  }
+  
+  /* Texto más compacto en móvil */
+  .task-card-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Mostrar solo en tablet+ */
+@media (min-width: 768px) {
+  .show-on-tablet-up {
+    display: block !important;
+  }
+}
+
+/* Optimizaciones para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .task-action-buttons {
+    opacity: 1; /* Siempre visibles en dispositivos táctiles */
+  }
+  
+  .task-action-button {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+  
+  .task-card {
+    padding: 1.25rem; /* Más padding para mejor toque */
+  }
+}

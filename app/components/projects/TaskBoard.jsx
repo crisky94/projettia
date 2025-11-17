@@ -60,86 +60,100 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         return text.substring(0, maxLength) + '...';
     };
 
+    // Función para obtener estilos basados en el status (igual que SprintManager)
+    const getStatusStyles = (status) => {
+        const styles = {
+            PENDING: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/10 dark:border-amber-800 dark:text-amber-400',
+            IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/10 dark:border-blue-800 dark:text-blue-400',
+            COMPLETED: 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/10 dark:border-green-800 dark:text-green-400',
+        };
+        return styles[status] || styles.PENDING;
+    };
+
     return (
         <div
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
-            className={`card-professional shadow-theme-sm hover:shadow-theme-md p-5 lg:p-6 xl:p-8 w-full min-h-[180px] lg:min-h-[200px] xl:min-h-[220px] break-words relative group transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 ${canDrag ? 'hover:-translate-y-1' : 'opacity-95'}`}
+            className={`task-card ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-1 cursor-grab' : 'opacity-95'}`}
         >
-            {/* Priority indicator */}
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-l-xl"></div>
-
             {/* Title */}
-            <div className="mb-3 lg:mb-4 pl-2">
-                <h4 className="text-base lg:text-lg xl:text-xl font-semibold text-card-foreground mb-1 break-words overflow-hidden leading-tight">
+            <div className="mb-4">
+                <h3 className="task-card-title text-foreground/90">
                     {isTitleLong ? truncateText(task.title, 50) : task.title}
-                </h4>
+                </h3>
                 {shouldShowViewMore && (
                     <button
                         onClick={(e) => {
                             e.stopPropagation?.();
                             onViewTask && onViewTask(task);
                         }}
-                        className="text-xs text-primary hover:opacity-80 font-medium inline-flex items-center gap-1 hover:underline"
-                        title="View complete task"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+                        title="Ver tarea completa"
                     >
-                        <span>View more</span>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                        Ver más
                     </button>
                 )}
             </div>
 
             {/* Description */}
             {task.description && (
-                <p className="mt-2 text-sm lg:text-base text-muted-foreground">
+                <p className="task-card-description text-muted-foreground">
                     {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                 </p>
             )}
 
             {/* Assignee */}
-            <div className="mt-2 lg:mt-3 flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-4">
                 {assigneeName ? (
-                    <div className={`h-5 w-5 lg:h-6 lg:w-6 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-white`}>
+                    <div className={`task-assignee-avatar bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white`}>
                         {assigneeInitials}
                     </div>
                 ) : (
-                    <div className="h-5 w-5 lg:h-6 lg:w-6 rounded-full bg-muted flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-muted-foreground">--</div>
+                    <div className="task-assignee-avatar bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400">
+                        ?
+                    </div>
                 )}
-                <span className="text-xs sm:text-sm text-muted-foreground truncate">{assigneeName || 'unasigned'}</span>
+                <span className="task-assignee-name text-card-foreground truncate">
+                    {assigneeName || 'Sin asignar'}
+                </span>
             </div>
 
-            {/* Sprint display only (no assignment/change) */}
+            {/* Sprint info */}
             {task.sprint && (
-                <div className="mt-2 lg:mt-3 p-1.5 lg:p-2 bg-muted rounded-lg">
-                    <div className="flex items-center gap-1.5 lg:gap-2">
-                        <span className="text-xs font-medium text-muted-foreground">Sprint:</span>
-                        <span className="inline-flex items-center gap-1 px-1.5 lg:px-2 py-0.5 lg:py-1 bg-violet-100 dark:bg-violet-100 text-violet-400 dark:text-violet-700 rounded-md text-xs font-medium truncate">
+                <div className="mb-4 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium opacity-80">Sprint:</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-md text-xs font-medium truncate">
                             🚀 {task.sprint.name}
                         </span>
                     </div>
                 </div>
             )}
 
-            {/* Action buttons positioned at bottom right */}
+            {/* Action buttons */}
             {isAdmin && (
-                <div className="absolute bottom-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="task-action-buttons">
                     <button
-                        onClick={(e) => { e.stopPropagation?.(); onUpdateTask && onUpdateTask('edit', task); }}
-                        className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-card-foreground transition-colors"
-                        title="Edit task"
+                        onClick={(e) => { 
+                            e.stopPropagation?.(); 
+                            onUpdateTask && onUpdateTask('edit', task); 
+                        }}
+                        className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+                        title="Editar tarea"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                     </button>
                     <button
-                        onClick={(e) => { e.stopPropagation?.(); onDeleteTask && onDeleteTask(task.id); }}
-                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
-                        title="Delete task"
+                        onClick={(e) => { 
+                            e.stopPropagation?.(); 
+                            onDeleteTask && onDeleteTask(task.id); 
+                        }}
+                        className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                        title="Eliminar tarea"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -253,104 +267,109 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
     return (
         <div
             ref={setNodeRef}
-            className={getRowStyles(status, isOver)}
+            className="task-column"
         >
-            <div className="p-6 border-b border-border w-full">
+            <div className="task-column-header">
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-3 flex-1">
-                        <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-                            status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                                status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
-                                    'bg-gradient-to-br from-gray-500 to-gray-600'
-                            }`}>
-                            <span className="text-white text-base lg:text-lg">
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                        <div className={`task-status-icon 
+                            ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
+                              status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                              status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                              'bg-gradient-to-br from-gray-500 to-gray-600'}
+                        `}>
+                            <span className="text-white">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
                         </div>
-                        <div className="flex-1">
-                            <h3 className={`text-xl lg:text-2xl xl:text-3xl font-bold ${getHeaderStyles(status)}`}>
+                        <div className="flex-1 min-w-0">
+                            <h3 className={`task-column-title ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
-                            <p className="text-base lg:text-lg text-muted-foreground">
-                                {status === 'PENDING' ? 'Pending tasks to start' :
-                                    status === 'IN_PROGRESS' ? 'Tasks in active development' :
-                                        status === 'COMPLETED' ? 'Successfully completed tasks' :
-                                            'Task status'}
+                            <p className="task-column-subtitle text-muted-foreground">
+                                {status === 'PENDING' ? 'Tareas pendientes por iniciar' :
+                                    status === 'IN_PROGRESS' ? 'Tareas en desarrollo activo' :
+                                        status === 'COMPLETED' ? 'Tareas completadas exitosamente' :
+                                            'Estado de tareas'}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`${getBadgeStyles(status)} w-24 px-5 py-2 rounded-lg text-base lg:text-lg font-semibold shadow-sm`}>
-                            {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+                        <span className={`task-count-badge ${getBadgeStyles(status)}`}>
+                            {tasks.length}
                         </span>
                     </div>
                 </div>
             </div>
-            <div className="p-1 w-full">
-
-                {/* Tasks Container - Wrap to next row (no horizontal scroll) */}
+            {/* Tasks Container */}
+            <div className="task-list-container">
                 <div className="relative w-full">
                     {tasks.length === 0 ? (
-                        <div className={`text-center py-16 border-2 border-dashed rounded-xl transition-all duration-200 w-full ${isOver
-                            ? 'border-current text-current bg-current/5'
-                            : 'border-border text-muted-foreground'
-                            }`}>
+                        <div className={`task-empty-state 
+                            ${isOver 
+                                ? 'border-current text-current bg-current/5' 
+                                : 'border-border text-muted-foreground'
+                            }
+                        `}>
                             {isOver ? (
-                                <div className="flex flex-col items-center gap-3">
-                                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-                                        <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="task-empty-icon bg-primary/20">
+                                        <svg className="w-6 h-6 md:w-8 md:h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7-7-7m14-8l-7 7-7-7" />
                                         </svg>
                                     </div>
-                                    <span className="font-semibold text-lg text-primary">Drop task here</span>
-                                    <p className="text-sm text-primary/80">Task will move to this status</p>
+                                    <div>
+                                        <span className="font-semibold text-lg text-primary block">Soltar tarea aquí</span>
+                                        <p className="text-sm text-primary/80 mt-1">La tarea se moverá a este estado</p>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                                        <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="task-empty-icon bg-muted">
+                                        <svg className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="font-medium text-base text-card-foreground">No tasks here</p>
-                                        <p className="text-sm text-muted-foreground mt-1">
-                                            {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
-                                                status === 'IN_PROGRESS' ? 'Drag tasks from "To Do\'s" to start' :
-                                                    status === 'COMPLETED' ? 'Completed tasks will appear here' :
-                                                        'Drag tasks to organize them'}
+                                        <p className="font-medium text-base md:text-lg text-card-foreground">
+                                            No hay tareas aquí
+                                        </p>
+                                        <p className="text-sm md:text-base text-muted-foreground mt-2">
+                                            {status === 'PENDING' ? 'Crea nuevas tareas o mueve tareas existentes aquí' :
+                                                status === 'IN_PROGRESS' ? 'Arrastra tareas desde "Pendientes" para comenzar' :
+                                                    status === 'COMPLETED' ? 'Las tareas completadas aparecerán aquí' :
+                                                        'Arrastra tareas para organizarlas'}
                                         </p>
                                     </div>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        /* Responsive grid optimized for full width layout */
-                        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">{/* Increased gap between cards */}
+                        /* Lista de tareas */
+                        <div className="space-y-4">
                             {tasks.filter(task => task && task.id).map((task) => (
-                                <div key={task.id} className="w-full">
-                                    <TaskCard
-                                        task={task}
-                                        isAdmin={isAdmin}
-                                        currentUserId={currentUserId}
-                                        allMembers={allMembers}
-                                        sprints={sprints}
-                                        onDeleteTask={onDeleteTask}
-                                        onUpdateTask={onUpdateTask}
-                                        onViewTask={onViewTask}
-                                    />
-                                </div>
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    isAdmin={isAdmin}
+                                    currentUserId={currentUserId}
+                                    allMembers={allMembers}
+                                    sprints={sprints}
+                                    onDeleteTask={onDeleteTask}
+                                    onUpdateTask={onUpdateTask}
+                                    onViewTask={onViewTask}
+                                />
                             ))}
 
-                            {/* Drop zone indicator when dragging */}
+                            {/* Zona de drop cuando se arrastra */}
                             {isOver && tasks.length > 0 && (
-                                <div className="w-full h-24 flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
+                                <div className="w-full h-24 md:h-28 flex items-center justify-center border-2 border-dashed border-current rounded-xl bg-current/5 text-current">
                                     <div className="flex flex-col items-center gap-2">
-                                        <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <span className="font-medium text-xs sm:text-sm">Soltar aquí</span>
+                                        <span className="font-medium text-sm md:text-base">Soltar aquí</span>
                                     </div>
                                 </div>
                             )}
@@ -855,8 +874,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="task-board-container w-full py-4 px-24 bg-background overflow-x-hidden">
-            <div className="w-full mx-auto">{/* Centered layout with reasonable max width */}
+        <div className="task-board-container">
+            <div className="w-full mx-auto">
 
                 {/* Page header */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 lg:p-6 mb-6 lg:mb-8">
