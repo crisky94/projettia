@@ -575,7 +575,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             }
             return;
         }
-        
+
         // Cuando cambian los sprints, recargar las tareas desde el backend para reflejar cambios
         const fetchTasks = async () => {
             try {
@@ -599,7 +599,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 setTasks([]);
             }
         };
-        
+
         // Solo hacer fetch si no es demo
         if (!isDemo) {
             fetchTasks();

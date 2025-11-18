@@ -27,7 +27,7 @@ export default function Home() {
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
           Collaborate with your team in real-time, manage tasks efficiently, and communicate seamlessly.
         </p>
-        
+
         {/* Demo Button - Prominente */}
         <div className="mb-8">
           <button

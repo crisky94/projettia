@@ -10,7 +10,7 @@ export default function DemoProjectPage({ params }) {
     const router = useRouter();
     const [timeLeft, setTimeLeft] = useState(0);
     const [isValidDemo, setIsValidDemo] = useState(false);
-    
+
     // States similar to the real application
     const [project, setProject] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -261,11 +261,11 @@ export default function DemoProjectPage({ params }) {
             const startTime = parseInt(savedDemoTime);
             const elapsed = Date.now() - startTime;
             const demoDuration = 5 * 60 * 1000; // 5 minutes
-            
+
             if (elapsed < demoDuration) {
                 setIsValidDemo(true);
                 setTimeLeft(demoDuration - elapsed);
-                
+
                 // Load demo data
                 const demoData = getDemoData(params.id);
                 if (demoData) {
@@ -318,8 +318,8 @@ export default function DemoProjectPage({ params }) {
 
     const updateTaskStatus = async (taskId, newStatus) => {
         // Simulate task update
-        setTasks(prevTasks => 
-            prevTasks.map(task => 
+        setTasks(prevTasks =>
+            prevTasks.map(task =>
                 task.id === taskId ? { ...task, status: newStatus } : task
             )
         );
@@ -379,7 +379,7 @@ export default function DemoProjectPage({ params }) {
                 <div className="text-center">
                     <h2 className="text-xl font-semibold text-destructive mb-4">Error</h2>
                     <p className="text-muted-foreground mb-4">{error}</p>
-                    <button 
+                    <button
                         onClick={() => router.push('/demo')}
                         className="bg-primary text-primary-foreground px-4 py-2 rounded hover:opacity-90"
                     >
@@ -417,7 +417,7 @@ export default function DemoProjectPage({ params }) {
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                                <button 
+                                <button
                                     onClick={() => router.push('/demo')}
                                     className="hover:text-primary"
                                 >
@@ -475,11 +475,10 @@ export default function DemoProjectPage({ params }) {
                         <nav className="-mb-px flex space-x-8">
                             <button
                                 onClick={() => setActiveTab('kanban')}
-                                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                                    activeTab === 'kanban'
+                                className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'kanban'
                                         ? 'border-primary text-primary'
                                         : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
-                                }`}
+                                    }`}
                             >
                                 <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 0v10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H9z" />
@@ -488,11 +487,10 @@ export default function DemoProjectPage({ params }) {
                             </button>
                             <button
                                 onClick={() => setActiveTab('sprints')}
-                                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                                    activeTab === 'sprints'
+                                className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'sprints'
                                         ? 'border-primary text-primary'
                                         : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
-                                }`}
+                                    }`}
                             >
                                 <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -534,7 +532,7 @@ export default function DemoProjectPage({ params }) {
                 )}
 
                 {/* Chat Component - Exactly like in the real app */}
-                <MinimizableChat 
+                <MinimizableChat
                     projectId={project.id}
                     currentUserId={user.id}
                     members={members}
@@ -569,11 +567,10 @@ export default function DemoProjectPage({ params }) {
                                                 <div className="text-xs text-muted-foreground">{member.user.email}</div>
                                             </div>
                                         </div>
-                                        <span className={`text-xs px-2 py-1 rounded ${
-                                            member.role === 'OWNER' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' :
-                                            member.role === 'ADMIN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
-                                            'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                        }`}>
+                                        <span className={`text-xs px-2 py-1 rounded ${member.role === 'OWNER' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' :
+                                                member.role === 'ADMIN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
+                                                    'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                            }`}>
                                             {member.role === 'OWNER' ? 'Owner' : member.role === 'ADMIN' ? 'Admin' : 'Member'}
                                         </span>
                                     </div>
@@ -645,7 +642,7 @@ export default function DemoProjectPage({ params }) {
                                     <input
                                         type="text"
                                         value={editProjectData.name}
-                                        onChange={(e) => setEditProjectData({...editProjectData, name: e.target.value})}
+                                        onChange={(e) => setEditProjectData({ ...editProjectData, name: e.target.value })}
                                         className="w-full p-3 border border-border rounded bg-background"
                                         required
                                     />
@@ -654,7 +651,7 @@ export default function DemoProjectPage({ params }) {
                                     <label className="block text-sm font-medium mb-2">Description</label>
                                     <textarea
                                         value={editProjectData.description}
-                                        onChange={(e) => setEditProjectData({...editProjectData, description: e.target.value})}
+                                        onChange={(e) => setEditProjectData({ ...editProjectData, description: e.target.value })}
                                         className="w-full p-3 border border-border rounded bg-background"
                                         rows={3}
                                     />
