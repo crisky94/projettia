@@ -257,7 +257,7 @@ export default function ProjectPage({ params }) {
             setEditProjectData({ name: '', description: '' });
 
             // Show success notification
-            toast.success('Project updated successfully!', {
+            toast.success('Project updated successfully! ', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -269,7 +269,7 @@ export default function ProjectPage({ params }) {
             console.error('Error updating project:', error);
 
             // Show error notification
-            toast.error(error.message || 'Error updating project', {
+            toast.error(error.message || 'Error updating project ', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,

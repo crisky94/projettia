@@ -4,12 +4,66 @@ import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
-const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask }) => {
+const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
         disabled: !canDrag,
     });
+
+    // Add inline editing state
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingTask, setEditingTask] = useState({
+        title: task.title,
+        description: task.description || '',
+        assigneeId: task.assignee?.id || '',
+        sprintId: task.sprint?.id || ''
+    });
+
+    // Handle inline editing
+    const handleSave = async () => {
+        try {
+            const payload = {
+                title: editingTask.title,
+                description: editingTask.description,
+                assigneeId: editingTask.assigneeId ? editingTask.assigneeId : null,
+                sprintId: editingTask.sprintId ? editingTask.sprintId : null
+            };
+            
+            const response = await fetch(`/api/projects/${projectId}/tasks/${task.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) throw new Error('Error updating task');
+            
+            setIsEditing(false);
+            
+            // Refresh tasks to show updated data
+            if (refreshTasks) {
+                await refreshTasks();
+            }
+            
+            // Show success message using toast
+            const { toast } = await import('react-toastify');
+            toast.success('Task updated successfully!');
+        } catch (error) {
+            console.error('Error updating task:', error);
+            const { toast } = await import('react-toastify');
+            toast.error('Error updating task');
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingTask({
+            title: task.title,
+            description: task.description || '',
+            assigneeId: task.assignee?.id || '',
+            sprintId: task.sprint?.id || ''
+        });
+        setIsEditing(false);
+    };
 
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -80,85 +134,158 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         >
             {/* Title */}
             <div className="mb-4">
-                <h3 className="task-card-title text-foreground/90">
-                    {isTitleLong ? truncateText(task.title, 50) : task.title}
-                </h3>
-                {shouldShowViewMore && (
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation?.();
-                            onViewTask && onViewTask(task);
-                        }}
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
-                        title="View full task"
-                    >
-                        View more
-                    </button>
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={editingTask.title}
+                        onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold"
+                        placeholder="Task title"
+                    />
+                ) : (
+                    <>
+                        <h3 className="task-card-title text-foreground/90">
+                            {isTitleLong ? truncateText(task.title, 50) : task.title}
+                        </h3>
+                        {shouldShowViewMore && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation?.();
+                                    onViewTask && onViewTask(task);
+                                }}
+                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+                                title="View full task"
+                            >
+                                View more
+                            </button>
+                        )}
+                    </>
                 )}
             </div>
 
             {/* Description */}
-            {task.description && (
-                <p className="task-card-description text-muted-foreground truncate">
-                    {isDescriptionLong ? truncateText(task.description, 100) : task.description}
-                </p>
+            {isEditing ? (
+                <textarea
+                    value={editingTask.description}
+                    onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
+                    placeholder="Task description"
+                    rows="2"
+                />
+            ) : (
+                task.description && (
+                    <p className="task-card-description text-muted-foreground truncate">
+                        {isDescriptionLong ? truncateText(task.description, 100) : task.description}
+                    </p>
+                )
             )}
 
             {/* Assignee */}
-            <div className="flex items-center gap-2 mb-4">
-                {assigneeName ? (
-                    <div className={`task-assignee-avatar bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white`}>
-                        {assigneeInitials}
-                    </div>
-                ) : (
-                    <div className="task-assignee-avatar bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400">
-                        ?
-                    </div>
-                )}
-                <span className="task-assignee-name text-card-foreground truncate">
-                    {assigneeName || 'Unassigned'}
-                </span>
-            </div>
+            {isEditing ? (
+                <select
+                    value={editingTask.assigneeId}
+                    onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
+                >
+                    <option value="">Unassigned</option>
+                    {allMembers.map(member => (
+                        <option key={member.userId} value={member.userId}>{member.user.name}</option>
+                    ))}
+                </select>
+            ) : (
+                <div className="flex items-center gap-2 mb-4">
+                    {assigneeName ? (
+                        <div className={`task-assignee-avatar bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white`}>
+                            {assigneeInitials}
+                        </div>
+                    ) : (
+                        <div className="task-assignee-avatar bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400">
+                            ?
+                        </div>
+                    )}
+                    <span className="task-assignee-name text-card-foreground truncate">
+                        {assigneeName || 'Unassigned'}
+                    </span>
+                </div>
+            )}
 
             {/* Sprint info */}
-            {task.sprint && (
-                <div className="mb-4 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium opacity-80">Sprint:</span>
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-md text-xs font-medium truncate">
-                            🚀 {task.sprint.name}
-                        </span>
+            {isEditing ? (
+                <select
+                    value={editingTask.sprintId}
+                    onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
+                >
+                    <option value="">No sprint</option>
+                    {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
+                        <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
+                    ))}
+                </select>
+            ) : (
+                task.sprint && (
+                    <div className="mb-4 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium opacity-80">Sprint:</span>
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-md text-xs font-medium truncate">
+                                🚀 {task.sprint.name}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )
             )}
 
             {/* Action buttons */}
             {isAdmin && (
                 <div className="task-action-buttons">
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation?.();
-                            onUpdateTask && onUpdateTask('edit', task);
-                        }}
-                        className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
-                        title="Edit task"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                    </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation?.();
-                            onDeleteTask && onDeleteTask(task.id);
-                        }}
-                        className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
-                        title="Delete task"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
+                    {!isEditing ? (
+                        <>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation?.();
+                                    setIsEditing(true);
+                                }}
+                                className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+                                title="Edit task"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation?.();
+                                    onDeleteTask && onDeleteTask(task.id);
+                                }}
+                                className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                                title="Delete task"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </>
+                    ) : (
+                        <div className="flex gap-1">
+                            <button
+                                onClick={handleSave}
+                                className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
+                                title="Save changes"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={handleCancel}
+                                className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
+                                title="Cancel"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
@@ -202,10 +329,12 @@ TaskCard.propTypes = {
     ),
     onDeleteTask: PropTypes.func,
     onUpdateTask: PropTypes.func,
-    onViewTask: PropTypes.func
+    onViewTask: PropTypes.func,
+    projectId: PropTypes.string.isRequired,
+    refreshTasks: PropTypes.func
 };
 
-const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask }) => {
+const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -359,6 +488,8 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                     onDeleteTask={onDeleteTask}
                                     onUpdateTask={onUpdateTask}
                                     onViewTask={onViewTask}
+                                    projectId={projectId}
+                                    refreshTasks={refreshTasks}
                                 />
                             ))}
 
@@ -762,21 +893,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
     // Abrir modal de edición
     const handleOpenEditTask = (action, task) => {
+        // Inline editing is now handled directly in TaskCard component
+        // This function is kept for compatibility but does nothing
         if (action === 'edit' && task) {
-            setTaskToEdit(task);
-            setEditTask({
-                title: task.title,
-                description: task.description || '',
-                assigneeId: task.assignee?.id || ''
-            });
-            setShowEditTaskModal(true);
-            // Auto-scroll to top to ensure modal is visible
-            setTimeout(() => {
-                console.log('Executing edit task scroll...');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
-            }, 300);
+            console.log('Edit task requested for:', task.title);
         }
     };
 
@@ -1079,6 +1199,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         onDeleteTask={handleDeleteTask}
                                         onUpdateTask={handleOpenEditTask}
                                         onViewTask={handleViewTask}
+                                        projectId={projectId}
+                                        refreshTasks={refreshTasks}
                                     />
 
                                     {/* In Progress Row */}
@@ -1093,6 +1215,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         onDeleteTask={handleDeleteTask}
                                         onUpdateTask={handleOpenEditTask}
                                         onViewTask={handleViewTask}
+                                        projectId={projectId}
+                                        refreshTasks={refreshTasks}
                                     />
 
                                     {/* Completed Row */}
@@ -1107,11 +1231,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         onDeleteTask={handleDeleteTask}
                                         onUpdateTask={handleOpenEditTask}
                                         onViewTask={handleViewTask}
+                                        projectId={projectId}
+                                        refreshTasks={refreshTasks}
                                     />
-                                    {/* Modal de edición de tarea */}
-                                    {showEditTaskModal && taskToEdit && (
+                                    {/* Modal de edición de tarea - DISABLED - Using inline editing now */}
+                                    {false && showEditTaskModal && taskToEdit && (
                                         <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
-                                            <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
+                                            <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
                                                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                                     <h2 className="text-xl font-bold text-card-foreground">Edit Task</h2>
                                                 </div>
@@ -1201,7 +1327,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {showAddTaskModal && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
-                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md">
+                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-sm">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center justify-between">
@@ -1324,7 +1450,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-md mx-auto">
+                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-sm mx-auto">
                             {/* Header */}
                             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center gap-4">

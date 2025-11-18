@@ -62,10 +62,10 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 estimatedHours: editingTask.estimatedHours ? parseFloat(editingTask.estimatedHours) : null
             });
             setIsEditing(false);
-            toast.success('Task updated successfully!');
+            toast.success('Task updated successfully !');
         } catch (error) {
-            console.error('Error updating task:', error);
-            toast.error('Error updating task');
+            console.error('Error updating task: ', error);
+            toast.error('Error updating task ');
         }
     };
 
@@ -457,10 +457,10 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
         try {
             await onUpdateSprint(sprint.id, editingSprint);
             setIsEditing(false);
-            toast.success('Sprint updated successfully!');
+            toast.success('Sprint updated successfully !');
         } catch (error) {
-            console.error('Error updating sprint:', error);
-            toast.error('Error updating sprint');
+            console.error('Error updating sprint: ', error);
+            toast.error('Error updating sprint ');
         }
     };
 
@@ -511,7 +511,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
             setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
 
             // Show success notification
-            toast.success('Task created successfully!', {
+            toast.success('Task created successfully! ', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -520,8 +520,8 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                 draggable: true,
             });
         } catch (error) {
-            console.error('Error creating task:', error);
-            toast.error('Error creating task', {
+            console.error('Error creating task: ', error);
+            toast.error('Error creating task ', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -975,14 +975,14 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 setSprints([sprint, ...sprints]);
                 setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                 setShowAddSprintModal(false);
-                toast.success('Sprint created successfully!');
+                toast.success('Sprint created successfully! ');
             } else {
                 const error = await response.json();
                 toast.error(error.error || 'Error creating sprint');
             }
         } catch (error) {
-            console.error('Error creating sprint:', error);
-            toast.error('Error creating sprint');
+            console.error('Error creating sprint: ', error);
+            toast.error('Error creating sprint ');
         } finally {
             setIsSubmitting(false);
         }
@@ -1004,8 +1004,8 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 throw new Error(error.error);
             }
         } catch (error) {
-            console.error('Error updating sprint:', error);
-            toast.error('Error updating sprint');
+            console.error('Error updating sprint: ', error);
+            toast.error('Error updating sprint ');
             throw error;
         }
     };
@@ -1045,7 +1045,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                     // Don't show error to user since sprint was successfully deleted
                 }
 
-                toast.success(`Sprint "${sprintToDelete.name}" was deleted. Tasks were moved to "No sprint".`, {
+                toast.success(`Sprint "${sprintToDelete.name}" was deleted. Tasks were moved to "No sprint". `, {
                     position: 'top-right',
                     autoClose: 4000,
                     hideProgressBar: false,
@@ -1055,20 +1055,20 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                 });
             } else {
                 // Try to parse error response
-                let errorMessage = 'Error eliminando sprint';
+                let errorMessage = 'Error eliminando sprint ';
                 try {
                     const errorData = await response.json();
                     errorMessage = errorData.error || errorData.message || errorMessage;
                 } catch (parseError) {
-                    console.warn('Could not parse error response:', parseError);
+                    console.warn('Could not parse error response: ', parseError);
                     if (response.status === 401) {
-                        errorMessage = 'Not authorized to delete this sprint';
+                        errorMessage = 'Not authorized to delete this sprint ';
                     } else if (response.status === 403) {
-                        errorMessage = 'Forbidden - Only admins can delete sprints';
+                        errorMessage = 'Forbidden - Only admins can delete sprints ';
                     } else if (response.status === 404) {
-                        errorMessage = 'Sprint not found';
+                        errorMessage = 'Sprint not found ';
                     } else {
-                        errorMessage = `Server error: ${response.status}`;
+                        errorMessage = `Server error: ${response.status} `;
                     }
                 }
 
@@ -1084,7 +1084,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
             }
         } catch (error) {
             console.error('Error eliminando sprint (network/other):', error);
-            toast.error(`Network error: ${error.message || 'Failed to delete sprint'}`, {
+            toast.error(`Network error: ${error.message || 'Failed to delete sprint '}`, {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
