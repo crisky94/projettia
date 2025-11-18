@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
           <header className="flex justify-between items-center px-4 py-3 bg-card border-b border-border relative w-full z-50">
             <div className="flex items-center gap-3">
-              <Image src="/logo.png" width={48} height={48} alt="Projettia logo" priority />
+              <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
             </div>
             <div className="flex items-center gap-3">
               <ThemeToggle />
@@ -87,9 +87,9 @@ export default function RootLayout({ children }) {
                   signOutUrl="/"
                   appearance={{
                     elements: {
-                      avatarBox: "w-8 h-8",
-                      userButtonBox: "w-12 h-8",
-                      userButtonTrigger: "w-12 h-12"
+                      avatarBox: "w-10 h-10",
+                      userButtonBox: "w-14 h-10",
+                      userButtonTrigger: "w-14 h-14"
                     }
                   }}
                 />
