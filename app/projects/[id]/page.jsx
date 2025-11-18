@@ -494,35 +494,37 @@ export default function ProjectPage({ params }) {
                     )}
 
                     {/* Navigation Tabs */}
-                    <div className="border-b border-border mb-4 sm:mb-6">
-                        <nav className="flex space-x-2 sm:space-x-8 overflow-x-auto" aria-label="Tabs">
+                    <div className="mb-6">
+                        <div className="border-b border-border">
+                            <nav className="-mb-px flex space-x-8">
                             <button
                                 onClick={() => setActiveTab('kanban')}
-                                className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'kanban'
-                                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
-                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                    }`}
+                                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                                    activeTab === 'kanban'
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                }`}
                             >
-                                <span className="flex items-center gap-2">
-                                    <span>📋</span>
-                                    <span className="hidden sm:inline">Task Board</span>
-                                    <span className="sm:hidden">Tasks</span>
-                                </span>
+                                <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 0v10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H9z" />
+                                </svg>
+                                Tablero Kanban
                             </button>
                             <button
                                 onClick={() => setActiveTab('sprints')}
-                                className={`py-3 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0 ${activeTab === 'sprints'
-                                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
-                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                    }`}
+                                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                                    activeTab === 'sprints'
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                }`}
                             >
-                                <span className="flex items-center gap-2">
-                                    <span>🚀</span>
-                                    <span className="hidden sm:inline">Sprint Management</span>
-                                    <span className="sm:hidden">Sprints</span>
-                                </span>
+                                <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Gestión de Sprints
                             </button>
                         </nav>
+                        </div>
                     </div>
 
                     {/* Tab Content */}

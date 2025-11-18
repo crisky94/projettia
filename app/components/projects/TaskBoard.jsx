@@ -560,7 +560,7 @@ TaskRow.propTypes = {
  * This change allows better collaboration where any team member can contribute
  * by creating and managing tasks, while keeping deletion restricted for data safety.
  */
-const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [] }) => {
+const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [], isDemo = false }) => {
     // Estado para edición de tarea
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
@@ -568,6 +568,14 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     const [tasks, setTasks] = useState(initialTasks || []);
     // Eliminar sprint de las tareas si el sprint fue borrado
     useEffect(() => {
+        // En modo demo, usar initialTasks directamente sin llamadas API
+        if (isDemo) {
+            if (initialTasks && Array.isArray(initialTasks)) {
+                setTasks(initialTasks);
+            }
+            return;
+        }
+        
         // Cuando cambian los sprints, recargar las tareas desde el backend para reflejar cambios
         const fetchTasks = async () => {
             try {
@@ -591,8 +599,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 setTasks([]);
             }
         };
-        fetchTasks();
-    }, [sprints, projectId]);
+        
+        // Solo hacer fetch si no es demo
+        if (!isDemo) {
+            fetchTasks();
+        }
+    }, [sprints, projectId, isDemo, initialTasks]);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [newTask, setNewTask] = useState({
@@ -1669,7 +1681,8 @@ TaskBoard.propTypes = {
     ),
     onTaskUpdate: PropTypes.func,
     onTaskDelete: PropTypes.func,
-    onTaskCreate: PropTypes.func
+    onTaskCreate: PropTypes.func,
+    isDemo: PropTypes.bool
 };
 
 export default TaskBoard;
