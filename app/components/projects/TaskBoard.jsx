@@ -29,22 +29,22 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                 assigneeId: editingTask.assigneeId ? editingTask.assigneeId : null,
                 sprintId: editingTask.sprintId ? editingTask.sprintId : null
             };
-            
+
             const response = await fetch(`/api/projects/${projectId}/tasks/${task.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            
+
             if (!response.ok) throw new Error('Error updating task');
-            
+
             setIsEditing(false);
-            
+
             // Refresh tasks to show updated data
             if (refreshTasks) {
                 await refreshTasks();
             }
-            
+
             // Show success message using toast
             const { toast } = await import('react-toastify');
             toast.success('Task updated successfully!');
