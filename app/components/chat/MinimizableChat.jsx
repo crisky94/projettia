@@ -398,6 +398,22 @@ export default function MinimizableChat({ projectId, user, projectName }) {
 
                 {/* Message Input */}
                 <div className="p-2 sm:p-3 border-t border-border bg-card">
+                    {/* Info message for edit/delete functionality */}
+                    {(() => {
+                        const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
+                        const last = ownMessages.at(-1);
+                        const hasEditableMessage = !!last && !!last.content && !!last.content.trim();
+                        
+                        if (hasEditableMessage) {
+                            return (
+                                <div className="mb-2 text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded border border-border/50">
+                                    💡 You can only edit or delete your last message
+                                </div>
+                            );
+                        }
+                        return null;
+                    })()}
+                    
                     <form onSubmit={handleSendMessage} className="flex gap-0 items-center">
                         <input
                             type="text"
@@ -430,7 +446,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     onClick={startEditLast}
                                     disabled={!canEditLast}
                                     className="button-professional-secondary text-xs p-1.5 sm:p-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="Edit last message"
+                                    title="Edit your most recent message only"
                                     aria-label="Edit last message"
                                 >
                                     <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,7 +465,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                                     onClick={deleteLast}
                                     disabled={!canDeleteLast}
                                     className="button-professional-secondary text-xs p-1.5 sm:p-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="Delete last message"
+                                    title="Delete your most recent message only"
                                     aria-label="Delete last message"
                                 >
                                     <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
