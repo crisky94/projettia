@@ -103,7 +103,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     };
 
     return (
-        <div className={`p-6 lg:p-7 rounded-lg border-2 transition-all duration-200 hover:shadow-lg group w-full break-words relative min-h-[180px] ${getStatusStyles(task.status)}`}>
+        <div className={`p-4 sm:p-6 lg:p-7 rounded-lg border-2 transition-all duration-200 hover:shadow-lg group w-full break-words relative min-h-[180px] min-w-0 ${getStatusStyles(task.status)}`}>
             {/* Header */}
             <div className="mb-3">
                 <div className="flex-1">
@@ -152,11 +152,11 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
             {/* Sprint and Time Info */}
             <div className="flex items-center justify-between mb-3 text-xs">
                 {isEditing ? (
-                    <div className="flex gap-2 w-full">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <select
                             value={editingTask.sprintId}
                             onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                            className="flex-1 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            className="flex-1 min-w-0 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         >
                             <option value="">No sprint</option>
                             {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
@@ -167,7 +167,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             type="number"
                             value={editingTask.estimatedHours}
                             onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
-                            className="w-20 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            className="w-full sm:w-20 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             placeholder="0.5h"
                             min="0.5"
                             max="1000"
@@ -274,11 +274,11 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
 
             {/* Modal de vista completa */}
             {showViewModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 task-view-modal">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-border">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 task-view-modal">
+                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto border border-border">
                         {/* Header */}
-                        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-card">
-                            <div className="flex items-start justify-between gap-4">
+                        <div className="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-card">
+                            <div className="flex items-start justify-between gap-2 sm:gap-4 min-w-0">
                                 <div className="flex-1 min-w-0">
                                     <h2 className="text-xl font-bold text-card-foreground mb-2 break-words word-wrap overflow-wrap-anywhere">
                                         {task.title}
@@ -713,7 +713,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <span>No tasks in this sprint</span>
                         </div>
                     ) : (
-                        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                             {tasks.map(task => (
                                 <TaskCard
                                     key={task.id}
@@ -1242,11 +1242,11 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     }
 
     return (
-        <div className="w-full mx-auto py-6 px-6 sm:py-8 sm:px-8 lg:px-10 xl:px-14 2xl:px-18 bg-background overflow-x-hidden">
-            <div className="space-y-10 w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto">
+        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-10 bg-background overflow-x-hidden min-w-0">
+            <div className="space-y-6 sm:space-y-10 w-full max-w-full sm:max-w-[1400px] 2xl:max-w-[1600px] mx-auto min-w-0">
                 {/* Header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8 lg:p-10">
-                    <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 sm:p-6 lg:p-8">
+                    <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0 min-w-0">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
                                 <svg className="w-8 h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1313,7 +1313,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                 </div>
                             </div>
                             <div className="p-4">
-                                <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                                     {getTasksWithoutSprint().map(task => (
                                         <TaskCard
                                             key={task.id}
@@ -1445,7 +1445,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                         disabled={isSubmitting}
                                     />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Start Date *
