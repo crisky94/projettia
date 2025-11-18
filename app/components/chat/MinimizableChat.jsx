@@ -403,7 +403,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         const ownMessages = messagesRef.current.filter((m) => m.userId === user?.id);
                         const last = ownMessages.at(-1);
                         const hasEditableMessage = !!last && !!last.content && !!last.content.trim();
-                        
+
                         if (hasEditableMessage) {
                             return (
                                 <div className="mb-2 text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded border border-border/50">
@@ -413,7 +413,7 @@ export default function MinimizableChat({ projectId, user, projectName }) {
                         }
                         return null;
                     })()}
-                    
+
                     <form onSubmit={handleSendMessage} className="flex gap-0 items-center">
                         <input
                             type="text"
