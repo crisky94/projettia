@@ -465,7 +465,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                             No tasks here
                                         </p>
                                         <p className="text-sm md:text-base text-muted-foreground mt-2">
-                                            {status === 'PENDING' ? 'Create new tasks or move existing tasks here' :
+                                            {status === 'PENDING' ? 'Create new tasks ' :
                                                 status === 'IN_PROGRESS' ? 'Drag tasks from "Pending" to start' :
                                                     status === 'COMPLETED' ? 'Completed tasks will appear here' :
                                                         'Drag tasks to organize them'}
@@ -866,7 +866,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             setNewTask({ title: '', description: '', assigneeId: '' });
 
             // Show success notification
-            toast.success('✅ Task created successfully! You can now manage and track its progress.', {
+            toast.success('✅ Task created successfully! You can now manage and track its progress. ', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -875,7 +875,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 draggable: true,
             });
         } catch (error) {
-            console.error('Error creating task:', error);
+            console.error('Error creating task: ', error);
 
             // Show error notification
             toast.error('Error creating task', {
@@ -921,9 +921,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             await refreshTasks();
             setShowEditTaskModal(false);
             setTaskToEdit(null);
-            toast.success('Task updated successfully!');
+            toast.success('Task updated successfully! ');
         } catch (error) {
-            toast.error('Error updating task');
+            toast.error('Error updating task ');
         } finally {
             setIsSubmitting(false);
         }
