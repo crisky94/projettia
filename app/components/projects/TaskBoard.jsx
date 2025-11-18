@@ -476,7 +476,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                         </div>
                     ) : (
                         /* Task list */
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="space-y-4">
                             {tasks.filter(task => task && task.id).map((task) => (
                                 <TaskCard
                                     key={task.id}
@@ -1150,7 +1150,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 <div className="flex flex-col flex-1 min-w-0 gap-2">
                                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                                                         <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
-                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium inline-block flex-shrink-0 ${member.role === 'ADMIN'
+                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium inline-block flex-shrink-0 self-start sm:self-auto w-fit ${member.role === 'ADMIN'
                                                             ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
                                                             : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                                             }`}>
@@ -1185,55 +1185,62 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 onDragStart={handleDragStart}
                                 onDragEnd={handleDragEnd}
                             >
-                                {/* Cards - Kanban Board en Filas */}
-                                <div className="space-y-6">
-                                    {/* Pending Row */}
-                                    <TaskRow
-                                        title="📋 To Do's"
-                                        status="PENDING"
-                                        tasks={tasks.filter(task => task.status === 'PENDING')}
-                                        isAdmin={isAdmin}
-                                        currentUserId={currentUserId}
-                                        allMembers={members}
-                                        sprints={sprints}
-                                        onDeleteTask={handleDeleteTask}
-                                        onUpdateTask={handleOpenEditTask}
-                                        onViewTask={handleViewTask}
-                                        projectId={projectId}
-                                        refreshTasks={refreshTasks}
-                                    />
+                                {/* Cards - Responsive Kanban Board */}
+                                {/* Mobile: Stack vertically (rows), Desktop: Side by side (columns) */}
+                                <div className="flex flex-col md:flex-row md:gap-6 space-y-6 md:space-y-0">
+                                    {/* To Do's - First column/row */}
+                                    <div className="flex-1 min-w-0">
+                                        <TaskRow
+                                            title="📋 To Do's"
+                                            status="PENDING"
+                                            tasks={tasks.filter(task => task.status === 'PENDING')}
+                                            isAdmin={isAdmin}
+                                            currentUserId={currentUserId}
+                                            allMembers={members}
+                                            sprints={sprints}
+                                            onDeleteTask={handleDeleteTask}
+                                            onUpdateTask={handleOpenEditTask}
+                                            onViewTask={handleViewTask}
+                                            projectId={projectId}
+                                            refreshTasks={refreshTasks}
+                                        />
+                                    </div>
 
-                                    {/* In Progress Row */}
-                                    <TaskRow
-                                        title="⚡ In Progress"
-                                        status="IN_PROGRESS"
-                                        tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
-                                        isAdmin={isAdmin}
-                                        currentUserId={currentUserId}
-                                        allMembers={members}
-                                        sprints={sprints}
-                                        onDeleteTask={handleDeleteTask}
-                                        onUpdateTask={handleOpenEditTask}
-                                        onViewTask={handleViewTask}
-                                        projectId={projectId}
-                                        refreshTasks={refreshTasks}
-                                    />
+                                    {/* In Progress - Second column/row */}
+                                    <div className="flex-1 min-w-0">
+                                        <TaskRow
+                                            title="⚡ In Progress"
+                                            status="IN_PROGRESS"
+                                            tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
+                                            isAdmin={isAdmin}
+                                            currentUserId={currentUserId}
+                                            allMembers={members}
+                                            sprints={sprints}
+                                            onDeleteTask={handleDeleteTask}
+                                            onUpdateTask={handleOpenEditTask}
+                                            onViewTask={handleViewTask}
+                                            projectId={projectId}
+                                            refreshTasks={refreshTasks}
+                                        />
+                                    </div>
 
-                                    {/* Completed Row */}
-                                    <TaskRow
-                                        title="✅ Completed"
-                                        status="COMPLETED"
-                                        tasks={tasks.filter(task => task.status === 'COMPLETED')}
-                                        isAdmin={isAdmin}
-                                        currentUserId={currentUserId}
-                                        allMembers={members}
-                                        sprints={sprints}
-                                        onDeleteTask={handleDeleteTask}
-                                        onUpdateTask={handleOpenEditTask}
-                                        onViewTask={handleViewTask}
-                                        projectId={projectId}
-                                        refreshTasks={refreshTasks}
-                                    />
+                                    {/* Completed - Third column/row */}
+                                    <div className="flex-1 min-w-0">
+                                        <TaskRow
+                                            title="✅ Completed"
+                                            status="COMPLETED"
+                                            tasks={tasks.filter(task => task.status === 'COMPLETED')}
+                                            isAdmin={isAdmin}
+                                            currentUserId={currentUserId}
+                                            allMembers={members}
+                                            sprints={sprints}
+                                            onDeleteTask={handleDeleteTask}
+                                            onUpdateTask={handleOpenEditTask}
+                                            onViewTask={handleViewTask}
+                                            projectId={projectId}
+                                            refreshTasks={refreshTasks}
+                                        />
+                                    </div>
                                     {/* Modal de edición de tarea - DISABLED - Using inline editing now */}
                                     {false && showEditTaskModal && taskToEdit && (
                                         <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
