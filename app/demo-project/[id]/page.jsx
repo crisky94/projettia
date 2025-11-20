@@ -632,7 +632,7 @@ export default function DemoProjectPage({ params }) {
                                         }}
                                         className="flex-1 px-4 py-2 border border-border rounded hover:bg-muted"
                                     >
-                                        Cancelar
+                                        Cancel
                                     </button>
                                     <button
                                         type="submit"
@@ -679,7 +679,7 @@ export default function DemoProjectPage({ params }) {
                                         onClick={() => setShowEditProjectModal(false)}
                                         className="flex-1 px-4 py-2 border border-border rounded hover:bg-muted"
                                     >
-                                        Cancelar
+                                        Cancel
                                     </button>
                                     <button
                                         type="submit"

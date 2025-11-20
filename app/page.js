@@ -34,17 +34,17 @@ export default function Home() {
             onClick={handleDemoClick}
             className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg mb-4"
           >
-            🚀 Probar Demo de la Aplicación
+            🚀 Try Application Demo
           </button>
           <p className="text-sm text-muted-foreground">
-            Explora todas las funciones sin registro • Demo de 5 minutos
+            Explore all features without registration • 30-minute demo
           </p>
         </div>
 
         {/* Divider */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1 h-px bg-border"></div>
-          <span className="text-sm text-muted-foreground px-3">O</span>
+          <span className="text-sm text-muted-foreground px-3">OR</span>
           <div className="flex-1 h-px bg-border"></div>
         </div>
 
