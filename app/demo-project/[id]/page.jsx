@@ -30,14 +30,17 @@ export default function DemoProjectPage({ params }) {
         name: '',
         description: ''
     });
-    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
-    const [deleteConfirmStep, setDeleteConfirmStep] = useState(1);
-    const [showRemoveMemberModal, setShowRemoveMemberModal] = useState(false);
-    const [memberToRemove, setMemberToRemove] = useState(null);
     const [activeTab, setActiveTab] = useState('kanban');
 
-    // Enhanced demo data to exactly replicate the application
+    // Enhanced demo data - starts empty, user creates everything
     const getDemoData = (projectId) => {
+        // Try to load from localStorage first
+        const savedData = localStorage.getItem(`demo-project-${projectId}`);
+        if (savedData) {
+            return JSON.parse(savedData);
+        }
+
+        // Create empty project structure if none exists
         const demoMembers = [
             {
                 id: '1',
@@ -45,23 +48,10 @@ export default function DemoProjectPage({ params }) {
                 user: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
                 role: 'OWNER',
                 joinedAt: new Date().toISOString()
-            },
-            {
-                id: '2',
-                userId: 'member1',
-                user: { id: 'member1', name: 'Ana García', email: 'ana@team.com' },
-                role: 'ADMIN',
-                joinedAt: new Date().toISOString()
-            },
-            {
-                id: '3',
-                userId: 'member2',
-                user: { id: 'member2', name: 'Carlos López', email: 'carlos@team.com' },
-                role: 'MEMBER',
-                joinedAt: new Date().toISOString()
             }
         ];
 
+        // Return empty project structure based on projectId
         const projectsData = {
             'demo-1': {
                 id: 'demo-1',
@@ -71,106 +61,8 @@ export default function DemoProjectPage({ params }) {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 members: demoMembers,
-                tasks: [
-                    {
-                        id: 1,
-                        title: 'Diseñar página de inicio',
-                        description: 'Crear wireframes y mockups para la página principal del e-commerce',
-                        status: 'PENDING',
-                        priority: 'HIGH',
-                        assignee: { id: 'member1', name: 'Ana García', email: 'ana@team.com' },
-                        sprint: { id: 2, name: 'Sprint 2 - Core Features' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 2,
-                        title: 'Implementar carrito de compras',
-                        description: 'Desarrollar funcionalidad completa del carrito con persistencia',
-                        status: 'IN_PROGRESS',
-                        priority: 'HIGH',
-                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
-                        sprint: { id: 2, name: 'Sprint 2 - Core Features' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 3,
-                        title: 'Integrar pasarela de pago',
-                        description: 'Implementar Stripe para procesamiento de pagos',
-                        status: 'PENDING',
-                        priority: 'MEDIUM',
-                        assignee: { id: 'member2', name: 'Carlos López', email: 'carlos@team.com' },
-                        sprint: null,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 4,
-                        title: 'Crear sistema de usuarios',
-                        description: 'Sistema de autenticación y gestión de perfiles',
-                        status: 'COMPLETED',
-                        priority: 'HIGH',
-                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
-                        sprint: { id: 1, name: 'Sprint 1 - Setup' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 5,
-                        title: 'Optimizar SEO',
-                        description: 'Mejorar meta tags, structured data y performance',
-                        status: 'PENDING',
-                        priority: 'LOW',
-                        assignee: { id: 'member1', name: 'Ana García', email: 'ana@team.com' },
-                        sprint: { id: 3, name: 'Sprint 3 - Polish' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 6,
-                        title: 'Añadir reviews de productos',
-                        description: 'Sistema de reseñas y calificaciones de productos',
-                        status: 'IN_PROGRESS',
-                        priority: 'MEDIUM',
-                        assignee: { id: 'member2', name: 'Carlos López', email: 'carlos@team.com' },
-                        sprint: { id: 2, name: 'Sprint 2 - Core Features' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-1'
-                    }
-                ],
-                sprints: [
-                    {
-                        id: 1,
-                        name: 'Sprint 1 - Setup',
-                        status: 'COMPLETED',
-                        startDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-                        endDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 2,
-                        name: 'Sprint 2 - Core Features',
-                        status: 'ACTIVE',
-                        startDate: new Date().toISOString(),
-                        endDate: new Date(Date.now() + 13 * 24 * 60 * 60 * 1000).toISOString(),
-                        projectId: 'demo-1'
-                    },
-                    {
-                        id: 3,
-                        name: 'Sprint 3 - Polish',
-                        status: 'PLANNED',
-                        startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-                        endDate: new Date(Date.now() + 27 * 24 * 60 * 60 * 1000).toISOString(),
-                        projectId: 'demo-1'
-                    }
-                ]
+                tasks: [], // Start with empty tasks
+                sprints: [] // Start with empty sprints
             },
             'demo-2': {
                 id: 'demo-2',
@@ -179,86 +71,36 @@ export default function DemoProjectPage({ params }) {
                 ownerId: 'demo_user',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
-                members: demoMembers.slice(0, 2), // Solo 2 miembros
-                tasks: [
-                    {
-                        id: 7,
-                        title: 'Crear wireframes',
-                        description: 'Wireframes de todas las pantallas principales de la app',
-                        status: 'COMPLETED',
-                        priority: 'HIGH',
-                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
-                        sprint: { id: 4, name: 'Design Sprint 1' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-2'
-                    },
-                    {
-                        id: 8,
-                        title: 'Diseñar mockups de pantallas',
-                        description: 'Diseño visual de alta fidelidad para todas las pantallas',
-                        status: 'IN_PROGRESS',
-                        priority: 'HIGH',
-                        assignee: { id: 'member1', name: 'Ana García', email: 'ana@team.com' },
-                        sprint: { id: 4, name: 'Design Sprint 1' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-2'
-                    },
-                    {
-                        id: 9,
-                        title: 'Prototipar navegación',
-                        description: 'Crear prototipo interactivo con navegación completa',
-                        status: 'PENDING',
-                        priority: 'MEDIUM',
-                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
-                        sprint: { id: 5, name: 'User Testing' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-2'
-                    },
-                    {
-                        id: 10,
-                        title: 'Testear usabilidad',
-                        description: 'Realizar tests de usabilidad con usuarios reales',
-                        status: 'PENDING',
-                        priority: 'HIGH',
-                        assignee: { id: 'member1', name: 'Ana García', email: 'ana@team.com' },
-                        sprint: { id: 5, name: 'User Testing' },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        projectId: 'demo-2'
-                    }
-                ],
-                sprints: [
-                    {
-                        id: 4,
-                        name: 'Design Sprint 1',
-                        status: 'ACTIVE',
-                        startDate: new Date().toISOString(),
-                        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-                        projectId: 'demo-2'
-                    },
-                    {
-                        id: 5,
-                        name: 'User Testing',
-                        status: 'PLANNED',
-                        startDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(),
-                        endDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-                        projectId: 'demo-2'
-                    }
-                ]
+                members: demoMembers,
+                tasks: [], // Start with empty tasks
+                sprints: [] // Start with empty sprints
+            },
+            'demo-3': {
+                id: 'demo-3',
+                name: 'API Development',
+                description: 'RESTful API for customer management system',
+                ownerId: 'demo_user',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                members: demoMembers,
+                tasks: [], // Start with empty tasks
+                sprints: [] // Start with empty sprints
             }
         };
 
         return projectsData[projectId] || null;
     };
 
+    // Save demo data to localStorage
+    const saveDemoData = (projectData) => {
+        localStorage.setItem(`demo-project-${projectData.id}`, JSON.stringify(projectData));
+    };
+
     useEffect(() => {
         // Check if there's an active demo session
         const savedDemoTime = localStorage.getItem('demoStartTime');
         if (savedDemoTime) {
-            const startTime = parseInt(savedDemoTime);
+            const startTime = Number.parseInt(savedDemoTime);
             const elapsed = Date.now() - startTime;
             const demoDuration = 30 * 60 * 1000; // 30 minutes
 
@@ -312,35 +154,213 @@ export default function DemoProjectPage({ params }) {
 
     // Demo functions that simulate real functions
     const refreshTasks = async () => {
-        // In demo, we don't need to refresh from API
-        toast.info('In demo mode, changes are simulated');
+        // Save current state to localStorage
+        if (project) {
+            const updatedProject = {
+                ...project,
+                tasks,
+                sprints,
+                members,
+                updatedAt: new Date().toISOString()
+            };
+            saveDemoData(updatedProject);
+        }
+        toast.info('Changes saved to demo session');
     };
 
     const updateTaskStatus = async (taskId, newStatus) => {
         // Simulate task update
-        setTasks(prevTasks =>
-            prevTasks.map(task =>
-                task.id === taskId ? { ...task, status: newStatus } : task
-            )
+        const updatedTasks = tasks.map(task =>
+            task.id === taskId ? { ...task, status: newStatus, updatedAt: new Date().toISOString() } : task
         );
+        setTasks(updatedTasks);
+        
+        // Save to localStorage
+        if (project) {
+            const updatedProject = {
+                ...project,
+                tasks: updatedTasks,
+                sprints,
+                members,
+                updatedAt: new Date().toISOString()
+            };
+            saveDemoData(updatedProject);
+        }
         toast.success('Task updated (demo)');
-    };
-
-    const handleDeleteProject = async () => {
-        toast.info('In demo mode, real projects cannot be deleted');
-        setShowDeleteConfirmModal(false);
     };
 
     const handleEditProject = async (e) => {
         e.preventDefault();
-        toast.info('In demo mode, changes are not saved');
-        setProject(prev => ({
-            ...prev,
+        const updatedProject = {
+            ...project,
             name: editProjectData.name,
-            description: editProjectData.description
-        }));
+            description: editProjectData.description,
+            updatedAt: new Date().toISOString()
+        };
+        setProject(updatedProject);
+        saveDemoData({ ...updatedProject, tasks, sprints, members });
         setShowEditProjectModal(false);
         setEditingProject(false);
+        toast.success('Project updated (demo)');
+    };
+
+    // New task functions
+    const handleCreateTask = (newTaskData) => {
+        const newTask = {
+            id: Date.now(),
+            title: newTaskData.title,
+            description: newTaskData.description || '',
+            status: newTaskData.status || 'PENDING',
+            priority: newTaskData.priority || 'MEDIUM',
+            assignee: newTaskData.assigneeId ? members.find(m => m.userId === newTaskData.assigneeId)?.user : null,
+            sprint: newTaskData.sprintId ? sprints.find(s => s.id === Number.parseInt(newTaskData.sprintId)) : null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            projectId: project.id
+        };
+        
+        const updatedTasks = [...tasks, newTask];
+        setTasks(updatedTasks);
+        
+        // Save to localStorage
+        const updatedProject = {
+            ...project,
+            tasks: updatedTasks,
+            sprints,
+            members,
+            updatedAt: new Date().toISOString()
+        };
+        saveDemoData(updatedProject);
+        toast.success('Task created (demo)');
+    };
+
+    const handleUpdateTask = (taskId, updatedData) => {
+        const updatedTasks = tasks.map(task => {
+            if (task.id === taskId) {
+                return {
+                    ...task,
+                    ...updatedData,
+                    assignee: updatedData.assigneeId ? members.find(m => m.userId === updatedData.assigneeId)?.user : task.assignee,
+                    sprint: updatedData.sprintId ? sprints.find(s => s.id === Number.parseInt(updatedData.sprintId)) : task.sprint,
+                    updatedAt: new Date().toISOString()
+                };
+            }
+            return task;
+        });
+        
+        setTasks(updatedTasks);
+        
+        // Save to localStorage
+        const updatedProject = {
+            ...project,
+            tasks: updatedTasks,
+            sprints,
+            members,
+            updatedAt: new Date().toISOString()
+        };
+        saveDemoData(updatedProject);
+        toast.success('Task updated (demo)');
+    };
+
+    const handleDeleteTask = (taskId) => {
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+        setTasks(updatedTasks);
+        
+        // Save to localStorage
+        const updatedProject = {
+            ...project,
+            tasks: updatedTasks,
+            sprints,
+            members,
+            updatedAt: new Date().toISOString()
+        };
+        saveDemoData(updatedProject);
+        toast.success('Task deleted (demo)');
+    };
+
+    // Sprint functions
+    const handleCreateSprint = (newSprintData) => {
+        const newSprint = {
+            id: Date.now(),
+            name: newSprintData.name,
+            status: newSprintData.status || 'PLANNED',
+            startDate: newSprintData.startDate || new Date().toISOString(),
+            endDate: newSprintData.endDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+            projectId: project.id
+        };
+        
+        const updatedSprints = [...sprints, newSprint];
+        setSprints(updatedSprints);
+        
+        // Save to localStorage
+        const updatedProject = {
+            ...project,
+            tasks,
+            sprints: updatedSprints,
+            members,
+            updatedAt: new Date().toISOString()
+        };
+        saveDemoData(updatedProject);
+        toast.success('Sprint created (demo)');
+    };
+
+    const handleUpdateSprint = (sprintId, updatedData) => {
+        const updatedSprints = sprints.map(sprint => {
+            if (sprint.id === sprintId) {
+                return {
+                    ...sprint,
+                    ...updatedData
+                };
+            }
+            return sprint;
+        });
+        
+        setSprints(updatedSprints);
+        
+        // Also update tasks that reference this sprint
+        const updatedTasks = tasks.map(task => {
+            if (task.sprint && task.sprint.id === sprintId) {
+                const updatedSprint = updatedSprints.find(s => s.id === sprintId);
+                return {
+                    ...task,
+                    sprint: updatedSprint
+                };
+            }
+            return task;
+        });
+        setTasks(updatedTasks);
+        
+        // Save to localStorage
+        const updatedProject = {
+            ...project,
+            tasks: updatedTasks,
+            sprints: updatedSprints,
+            members,
+            updatedAt: new Date().toISOString()
+        };
+        saveDemoData(updatedProject);
+        toast.success('Sprint updated (demo)');
+    };
+
+    const refreshSprints = async () => {
+        // Save current state to localStorage
+        if (project) {
+            const updatedProject = {
+                ...project,
+                tasks,
+                sprints,
+                members,
+                updatedAt: new Date().toISOString()
+            };
+            saveDemoData(updatedProject);
+        }
+        toast.info('Sprint changes saved to demo session');
+    };
+
+    const formatTime = (ms) => {
+        const minutes = Math.floor(ms / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
     const handleAddMember = async (e) => {
@@ -348,18 +368,6 @@ export default function DemoProjectPage({ params }) {
         toast.info('In demo mode, real members cannot be added');
         setShowAddMemberModal(false);
         setNewMemberEmail('');
-    };
-
-    const handleRemoveMember = async () => {
-        toast.info('In demo mode, members cannot be removed');
-        setShowRemoveMemberModal(false);
-        setMemberToRemove(null);
-    };
-
-    const formatTime = (ms) => {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
     if (loading || !isValidDemo || !project) {
@@ -464,7 +472,7 @@ export default function DemoProjectPage({ params }) {
                             <h3 className="font-semibold text-blue-900 dark:text-blue-100">Demo Project</h3>
                         </div>
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                            You're viewing a demo project with all real features. All interactions are simulated.
+                            Welcome to your demo project! Create tasks, sprints, and explore all features. Everything is saved in your demo session.
                         </p>
                     </div>
                 </div>
@@ -512,8 +520,9 @@ export default function DemoProjectPage({ params }) {
                         projectId={project.id}
                         onUpdateTask={updateTaskStatus}
                         refreshTasks={refreshTasks}
-                        onDeleteTask={(taskId) => toast.info('In demo mode, tasks cannot be deleted')}
-                        onViewTask={(task) => toast.info('In demo mode, detailed view simulated')}
+                        onDeleteTask={handleDeleteTask}
+                        onViewTask={handleUpdateTask}
+                        onCreateTask={handleCreateTask}
                         isDemo={true}
                     />
                 )}
@@ -526,8 +535,11 @@ export default function DemoProjectPage({ params }) {
                         isAdmin={memberPermissions.isProjectAdmin}
                         currentUserId={user.id}
                         projectId={project.id}
-                        refreshSprints={() => toast.info('In demo mode, update simulated')}
+                        refreshSprints={refreshSprints}
                         refreshTasks={refreshTasks}
+                        onCreateSprint={handleCreateSprint}
+                        onUpdateSprint={handleUpdateSprint}
+                        isDemo={true}
                     />
                 )}
 
@@ -567,10 +579,13 @@ export default function DemoProjectPage({ params }) {
                                                 <div className="text-xs text-muted-foreground">{member.user.email}</div>
                                             </div>
                                         </div>
-                                        <span className={`text-xs px-2 py-1 rounded ${member.role === 'OWNER' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' :
-                                            member.role === 'ADMIN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
-                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                            }`}>
+                                        <span className={`text-xs px-2 py-1 rounded ${
+                                            member.role === 'OWNER' 
+                                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' 
+                                                : member.role === 'ADMIN' 
+                                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' 
+                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                        }`}>
                                             {member.role === 'OWNER' ? 'Owner' : member.role === 'ADMIN' ? 'Admin' : 'Member'}
                                         </span>
                                     </div>
@@ -598,8 +613,9 @@ export default function DemoProjectPage({ params }) {
                             <h2 className="text-xl font-bold text-card-foreground mb-4">Add Member</h2>
                             <form onSubmit={handleAddMember}>
                                 <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-2">Member email</label>
+                                    <label htmlFor="memberEmail" className="block text-sm font-medium mb-2">Member email</label>
                                     <input
+                                        id="memberEmail"
                                         type="email"
                                         value={newMemberEmail}
                                         onChange={(e) => setNewMemberEmail(e.target.value)}
@@ -638,8 +654,9 @@ export default function DemoProjectPage({ params }) {
                             <h2 className="text-xl font-bold text-card-foreground mb-4">Edit Project</h2>
                             <form onSubmit={handleEditProject}>
                                 <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-2">Project name</label>
+                                    <label htmlFor="editProjectName" className="block text-sm font-medium mb-2">Project name</label>
                                     <input
+                                        id="editProjectName"
                                         type="text"
                                         value={editProjectData.name}
                                         onChange={(e) => setEditProjectData({ ...editProjectData, name: e.target.value })}
@@ -648,8 +665,9 @@ export default function DemoProjectPage({ params }) {
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-2">Description</label>
+                                    <label htmlFor="editProjectDescription" className="block text-sm font-medium mb-2">Description</label>
                                     <textarea
+                                        id="editProjectDescription"
                                         value={editProjectData.description}
                                         onChange={(e) => setEditProjectData({ ...editProjectData, description: e.target.value })}
                                         className="w-full p-3 border border-border rounded bg-background"

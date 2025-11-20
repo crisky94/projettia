@@ -849,6 +849,33 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         e.preventDefault();
         setIsSubmitting(true);
         try {
+            // En modo demo, usar la función proporcionada por el padre
+            if (isDemo && onCreateTask) {
+                const taskData = {
+                    title: newTask.title,
+                    description: newTask.description,
+                    assigneeId: newTask.assigneeId || null,
+                    status: 'PENDING'
+                };
+                
+                onCreateTask(taskData);
+                
+                setShowAddTaskModal(false);
+                setNewTask({ title: '', description: '', assigneeId: '' });
+                
+                // Show success notification
+                toast.success('✅ Task created successfully! You can now manage and track its progress. ', {
+                    position: 'top-right',
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                return;
+            }
+
+            // En modo normal, hacer llamada a la API
             const response = await fetch(`/api/projects/${projectId}/tasks`, {
                 method: 'POST',
                 headers: {

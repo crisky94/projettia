@@ -16,28 +16,28 @@ export default function DemoPage() {
   const [projectDescription, setProjectDescription] = useState('');
   const router = useRouter();
 
-  // Datos demo pre-cargados
+  // Datos demo pre-cargados - ahora empezamos vacío para que el usuario pueda crear
   const DEMO_PROJECTS = [
     {
       id: 'demo-1',
       name: 'E-commerce Platform',
       description: 'Building a modern online shopping platform with React and Node.js',
-      tasks: 6,
-      members: 3
+      tasks: 0,
+      members: 1
     },
     {
       id: 'demo-2',
       name: 'Mobile App Design',
       description: 'UI/UX design for a fitness tracking mobile application',
-      tasks: 4,
-      members: 2
+      tasks: 0,
+      members: 1
     },
     {
       id: 'demo-3',
       name: 'API Development',
       description: 'RESTful API for customer management system',
-      tasks: 12,
-      members: 2
+      tasks: 0,
+      members: 1
     }
   ];
 
@@ -152,7 +152,7 @@ export default function DemoPage() {
               <h3 className="font-semibold text-blue-900 dark:text-blue-100">Modo Demo Activo</h3>
             </div>
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              Estás viendo proyectos de ejemplo. ¡Intenta crear un nuevo proyecto o explorar las funciones!
+              Start with empty projects and create your own tasks, sprints, and workflows! Everything is saved during your demo session.
             </p>
           </div>
 
