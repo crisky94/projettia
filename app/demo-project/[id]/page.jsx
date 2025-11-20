@@ -260,7 +260,7 @@ export default function DemoProjectPage({ params }) {
         if (savedDemoTime) {
             const startTime = parseInt(savedDemoTime);
             const elapsed = Date.now() - startTime;
-            const demoDuration = 5 * 60 * 1000; // 5 minutes
+            const demoDuration = 30 * 60 * 1000; // 30 minutes
 
             if (elapsed < demoDuration) {
                 setIsValidDemo(true);

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-const DEMO_DURATION = 5 * 60 * 1000; // 5 minutos en millisegundos
+const DEMO_DURATION = 30 * 60 * 1000; // 30 minutos en millisegundos
 
 export default function DemoPage() {
   const [isDemo, setIsDemo] = useState(false);
@@ -87,7 +87,7 @@ export default function DemoPage() {
     setTimeLeft(DEMO_DURATION);
     setProjects(DEMO_PROJECTS);
     localStorage.setItem('demoStartTime', startTime.toString());
-    toast.success('¡Demo activado! Tienes 5 minutos para explorar.');
+    toast.success('¡Demo activado! Tienes 30 minutos para explorar.');
   };
 
   const formatTime = (ms) => {
@@ -282,7 +282,7 @@ export default function DemoPage() {
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-          Experimenta nuestra plataforma con una sesión demo de 5 minutos. ¡Sin registro necesario!
+          Experimenta nuestra plataforma con una sesión demo de 30 minutos. ¡Sin registro necesario!
         </p>
 
         <div className="bg-card border border-border rounded-lg p-6 mb-8">
@@ -324,7 +324,7 @@ export default function DemoPage() {
             onClick={startDemo}
             className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
-            Iniciar Demo de 5 Minutos
+            Iniciar Demo de 30 Minutos
           </button>
 
           <p className="text-sm text-muted-foreground">
@@ -339,7 +339,7 @@ export default function DemoPage() {
         </div>
 
         <div className="mt-8 p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground">
-          <p>⏰ Las sesiones demo duran 5 minutos e incluyen datos de muestra para pruebas.</p>
+          <p>⏰ Las sesiones demo duran 30 minutos e incluyen datos de muestra para pruebas.</p>
           <p>💾 No se guardará ningún dato después de que termine el demo.</p>
         </div>
       </div>
