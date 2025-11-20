@@ -174,7 +174,7 @@ export default function DemoProjectPage({ params }) {
             task.id === taskId ? { ...task, status: newStatus, updatedAt: new Date().toISOString() } : task
         );
         setTasks(updatedTasks);
-        
+
         // Save to localStorage
         if (project) {
             const updatedProject = {
@@ -218,10 +218,10 @@ export default function DemoProjectPage({ params }) {
             updatedAt: new Date().toISOString(),
             projectId: project.id
         };
-        
+
         const updatedTasks = [...tasks, newTask];
         setTasks(updatedTasks);
-        
+
         // Save to localStorage
         const updatedProject = {
             ...project,
@@ -247,9 +247,9 @@ export default function DemoProjectPage({ params }) {
             }
             return task;
         });
-        
+
         setTasks(updatedTasks);
-        
+
         // Save to localStorage
         const updatedProject = {
             ...project,
@@ -265,7 +265,7 @@ export default function DemoProjectPage({ params }) {
     const handleDeleteTask = (taskId) => {
         const updatedTasks = tasks.filter(task => task.id !== taskId);
         setTasks(updatedTasks);
-        
+
         // Save to localStorage
         const updatedProject = {
             ...project,
@@ -288,10 +288,10 @@ export default function DemoProjectPage({ params }) {
             endDate: newSprintData.endDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
             projectId: project.id
         };
-        
+
         const updatedSprints = [...sprints, newSprint];
         setSprints(updatedSprints);
-        
+
         // Save to localStorage
         const updatedProject = {
             ...project,
@@ -314,9 +314,9 @@ export default function DemoProjectPage({ params }) {
             }
             return sprint;
         });
-        
+
         setSprints(updatedSprints);
-        
+
         // Also update tasks that reference this sprint
         const updatedTasks = tasks.map(task => {
             if (task.sprint && task.sprint.id === sprintId) {
@@ -329,7 +329,7 @@ export default function DemoProjectPage({ params }) {
             return task;
         });
         setTasks(updatedTasks);
-        
+
         // Save to localStorage
         const updatedProject = {
             ...project,
@@ -579,13 +579,12 @@ export default function DemoProjectPage({ params }) {
                                                 <div className="text-xs text-muted-foreground">{member.user.email}</div>
                                             </div>
                                         </div>
-                                        <span className={`text-xs px-2 py-1 rounded ${
-                                            member.role === 'OWNER' 
-                                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' 
-                                                : member.role === 'ADMIN' 
-                                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' 
+                                        <span className={`text-xs px-2 py-1 rounded ${member.role === 'OWNER'
+                                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+                                                : member.role === 'ADMIN'
+                                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
                                                     : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                        }`}>
+                                            }`}>
                                             {member.role === 'OWNER' ? 'Owner' : member.role === 'ADMIN' ? 'Admin' : 'Member'}
                                         </span>
                                     </div>

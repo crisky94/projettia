@@ -857,12 +857,12 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     assigneeId: newTask.assigneeId || null,
                     status: 'PENDING'
                 };
-                
+
                 onCreateTask(taskData);
-                
+
                 setShowAddTaskModal(false);
                 setNewTask({ title: '', description: '', assigneeId: '' });
-                
+
                 // Show success notification
                 toast.success('✅ Task created successfully! You can now manage and track its progress. ', {
                     position: 'top-right',
