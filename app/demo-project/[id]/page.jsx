@@ -476,8 +476,8 @@ export default function DemoProjectPage({ params }) {
                             <button
                                 onClick={() => setActiveTab('kanban')}
                                 className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'kanban'
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
                                     }`}
                             >
                                 <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -488,8 +488,8 @@ export default function DemoProjectPage({ params }) {
                             <button
                                 onClick={() => setActiveTab('sprints')}
                                 className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'sprints'
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
                                     }`}
                             >
                                 <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -568,8 +568,8 @@ export default function DemoProjectPage({ params }) {
                                             </div>
                                         </div>
                                         <span className={`text-xs px-2 py-1 rounded ${member.role === 'OWNER' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' :
-                                                member.role === 'ADMIN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
-                                                    'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                            member.role === 'ADMIN' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
+                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
                                             }`}>
                                             {member.role === 'OWNER' ? 'Owner' : member.role === 'ADMIN' ? 'Admin' : 'Member'}
                                         </span>
