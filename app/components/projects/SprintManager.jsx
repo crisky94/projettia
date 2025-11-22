@@ -914,15 +914,15 @@ SprintCard.propTypes = {
  * into sprints, manage sprint details, and handle task management completely,
  * while keeping sprint deletion restricted for project integrity.
  */
-const SprintManager = ({ 
-    projectId, 
-    isAdmin, 
+const SprintManager = ({
+    projectId,
+    isAdmin,
     allMembers = [], // For normal mode
-    tasks = [], 
-    onTaskUpdate, 
-    onTaskDelete, 
-    onTaskCreate, 
-    onRefreshTasks, 
+    tasks = [],
+    onTaskUpdate,
+    onTaskDelete,
+    onTaskCreate,
+    onRefreshTasks,
     onRefreshSprints,
     // Demo props
     sprints: initialSprints = [],
@@ -978,7 +978,7 @@ const SprintManager = ({
 
     const loadData = async () => {
         if (isDemo) return; // Skip API calls in demo mode
-        
+
         try {
             setLoading(true);
             const sprintsRes = await fetch(`/api/projects/${projectId}/sprints`);
