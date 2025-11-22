@@ -808,10 +808,10 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         disabled={isSubmitting}
                                     >
                                         <option value="">unasigned</option>
-                                        {!Array.isArray(allMembers) || allMembers.length === 0 ? (
+                                        {!Array.isArray(membersToUse) || membersToUse.length === 0 ? (
                                             <option disabled>Loading members...</option>
                                         ) : (
-                                            allMembers.map((member) => (
+                                            membersToUse.map((member) => (
                                                 <option key={member.userId} value={member.userId}>
                                                     {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
                                                 </option>
@@ -914,9 +914,27 @@ SprintCard.propTypes = {
  * into sprints, manage sprint details, and handle task management completely,
  * while keeping sprint deletion restricted for project integrity.
  */
-const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdate, onTaskDelete, onTaskCreate, onRefreshTasks, onRefreshSprints }) => {
-    const [sprints, setSprints] = useState([]);
-    const [loading, setLoading] = useState(true);
+const SprintManager = ({ 
+    projectId, 
+    isAdmin, 
+    allMembers = [], // For normal mode
+    tasks = [], 
+    onTaskUpdate, 
+    onTaskDelete, 
+    onTaskCreate, 
+    onRefreshTasks, 
+    onRefreshSprints,
+    // Demo props
+    sprints: initialSprints = [],
+    members = [], // For demo mode
+    refreshSprints,
+    refreshTasks,
+    onCreateSprint,
+    onUpdateSprint,
+    isDemo = false
+}) => {
+    const [sprints, setSprints] = useState(initialSprints || []);
+    const [loading, setLoading] = useState(!isDemo);
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
@@ -937,11 +955,30 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Use appropriate members array based on mode
+    const membersToUse = isDemo ? members : allMembers;
+
     useEffect(() => {
-        loadData();
-    }, [projectId]);
+        if (isDemo) {
+            // In demo mode, use the props directly
+            setSprints(initialSprints || []);
+            setLoading(false);
+        } else {
+            // In normal mode, load data from API
+            loadData();
+        }
+    }, [projectId, isDemo, initialSprints]);
+
+    // Update sprints when prop changes in demo mode
+    useEffect(() => {
+        if (isDemo && initialSprints) {
+            setSprints(initialSprints);
+        }
+    }, [isDemo, initialSprints]);
 
     const loadData = async () => {
+        if (isDemo) return; // Skip API calls in demo mode
+        
         try {
             setLoading(true);
             const sprintsRes = await fetch(`/api/projects/${projectId}/sprints`);
@@ -964,21 +1001,29 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/projects/${projectId}/sprints`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newSprint)
-            });
-
-            if (response.ok) {
-                const sprint = await response.json();
-                setSprints([sprint, ...sprints]);
+            if (isDemo && onCreateSprint) {
+                // In demo mode, use the provided function
+                onCreateSprint(newSprint);
                 setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                 setShowAddSprintModal(false);
-                toast.success('Sprint created successfully! ');
             } else {
-                const error = await response.json();
-                toast.error(error.error || 'Error creating sprint');
+                // In normal mode, make API call
+                const response = await fetch(`/api/projects/${projectId}/sprints`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newSprint)
+                });
+
+                if (response.ok) {
+                    const sprint = await response.json();
+                    setSprints([sprint, ...sprints]);
+                    setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
+                    setShowAddSprintModal(false);
+                    toast.success('Sprint created successfully! ');
+                } else {
+                    const error = await response.json();
+                    toast.error(error.error || 'Error creating sprint');
+                }
             }
         } catch (error) {
             console.error('Error creating sprint: ', error);
@@ -1295,7 +1340,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                             onDeleteTask={handleDeleteTask}
                             onUpdateSprint={handleUpdateSprint}
                             onDeleteSprint={handleDeleteSprint}
-                            allMembers={allMembers}
+                            allMembers={membersToUse}
                             projectId={projectId}
                             onTaskCreate={onTaskCreate}
                         />
@@ -1321,7 +1366,7 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                             isAdmin={isAdmin}
                                             onUpdateTask={handleUpdateTask}
                                             onDeleteTask={handleDeleteTask}
-                                            allMembers={allMembers}
+                                            allMembers={membersToUse}
                                             sprints={sprints}
                                         />
                                     ))}
@@ -1587,10 +1632,10 @@ const SprintManager = ({ projectId, isAdmin, allMembers, tasks = [], onTaskUpdat
                                             disabled={isSubmitting}
                                         >
                                             <option value="">unasigned</option>
-                                            {!Array.isArray(allMembers) || allMembers.length === 0 ? (
+                                            {!Array.isArray(membersToUse) || membersToUse.length === 0 ? (
                                                 <option disabled>Loading members...</option>
                                             ) : (
-                                                allMembers.map((member) => (
+                                                membersToUse.map((member) => (
                                                     <option key={member.userId} value={member.userId}>
                                                         {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
                                                     </option>
