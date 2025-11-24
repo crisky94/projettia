@@ -51,7 +51,7 @@ export default function DemoProjectPage({ params }) {
             }
         ];
 
-        // Return empty project structure based on projectId
+        // Return project structure with fictional data based on projectId
         const projectsData = {
             'demo-1': {
                 id: 'demo-1',
@@ -61,8 +61,76 @@ export default function DemoProjectPage({ params }) {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 members: demoMembers,
-                tasks: [], // Start with empty tasks
-                sprints: [] // Start with empty sprints
+                tasks: [
+                    {
+                        id: 1,
+                        title: 'Setup React Project Structure',
+                        description: 'Initialize the React project with proper folder structure and dependencies',
+                        status: 'COMPLETED',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 1, name: 'Sprint 1 - Foundation' },
+                        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    },
+                    {
+                        id: 2,
+                        title: 'Design Product Catalog UI',
+                        description: 'Create responsive product catalog with search and filter functionality',
+                        status: 'IN_PROGRESS',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 1, name: 'Sprint 1 - Foundation' },
+                        createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    },
+                    {
+                        id: 3,
+                        title: 'Implement Shopping Cart',
+                        description: 'Add shopping cart functionality with add/remove items and quantity management',
+                        status: 'PENDING',
+                        priority: 'MEDIUM',
+                        assignee: null,
+                        sprint: { id: 2, name: 'Sprint 2 - Features' },
+                        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    },
+                    {
+                        id: 4,
+                        title: 'Setup Payment Integration',
+                        description: 'Integrate with Stripe for secure payment processing',
+                        status: 'PENDING',
+                        priority: 'HIGH',
+                        assignee: null,
+                        sprint: null,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    }
+                ],
+                sprints: [
+                    {
+                        id: 1,
+                        name: 'Sprint 1 - Foundation',
+                        description: 'Basic setup and core UI components',
+                        status: 'ACTIVE',
+                        startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    },
+                    {
+                        id: 2,
+                        name: 'Sprint 2 - Features',
+                        description: 'Core e-commerce features and functionality',
+                        status: 'PLANNED',
+                        startDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(),
+                        endDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-1'
+                    }
+                ]
             },
             'demo-2': {
                 id: 'demo-2',
@@ -72,8 +140,55 @@ export default function DemoProjectPage({ params }) {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 members: demoMembers,
-                tasks: [], // Start with empty tasks
-                sprints: [] // Start with empty sprints
+                tasks: [
+                    {
+                        id: 5,
+                        title: 'Create User Personas',
+                        description: 'Research and define target user personas for the fitness app',
+                        status: 'COMPLETED',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 3, name: 'Design Sprint 1' },
+                        createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-2'
+                    },
+                    {
+                        id: 6,
+                        title: 'Design Workout Tracking Interface',
+                        description: 'Create wireframes and mockups for workout tracking screens',
+                        status: 'IN_PROGRESS',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 3, name: 'Design Sprint 1' },
+                        createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-2'
+                    },
+                    {
+                        id: 7,
+                        title: 'Create Progress Dashboard',
+                        description: 'Design user dashboard with fitness progress visualization',
+                        status: 'PENDING',
+                        priority: 'MEDIUM',
+                        assignee: null,
+                        sprint: null,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-2'
+                    }
+                ],
+                sprints: [
+                    {
+                        id: 3,
+                        name: 'Design Sprint 1',
+                        description: 'Initial design research and wireframing',
+                        status: 'ACTIVE',
+                        startDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+                        endDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-2'
+                    }
+                ]
             },
             'demo-3': {
                 id: 'demo-3',
@@ -83,8 +198,67 @@ export default function DemoProjectPage({ params }) {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 members: demoMembers,
-                tasks: [], // Start with empty tasks
-                sprints: [] // Start with empty sprints
+                tasks: [
+                    {
+                        id: 8,
+                        title: 'Setup Database Schema',
+                        description: 'Design and implement PostgreSQL database schema',
+                        status: 'COMPLETED',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 4, name: 'Backend Sprint 1' },
+                        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-3'
+                    },
+                    {
+                        id: 9,
+                        title: 'Create Customer CRUD Endpoints',
+                        description: 'Implement REST endpoints for customer management',
+                        status: 'IN_PROGRESS',
+                        priority: 'HIGH',
+                        assignee: { id: 'demo_user', name: 'Demo User', email: 'demo@projettia.com' },
+                        sprint: { id: 4, name: 'Backend Sprint 1' },
+                        createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-3'
+                    },
+                    {
+                        id: 10,
+                        title: 'Add Authentication Middleware',
+                        description: 'Implement JWT-based authentication and authorization',
+                        status: 'PENDING',
+                        priority: 'HIGH',
+                        assignee: null,
+                        sprint: { id: 4, name: 'Backend Sprint 1' },
+                        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-3'
+                    },
+                    {
+                        id: 11,
+                        title: 'API Documentation',
+                        description: 'Create comprehensive API documentation using Swagger',
+                        status: 'PENDING',
+                        priority: 'MEDIUM',
+                        assignee: null,
+                        sprint: null,
+                        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        projectId: 'demo-3'
+                    }
+                ],
+                sprints: [
+                    {
+                        id: 4,
+                        name: 'Backend Sprint 1',
+                        description: 'Core API development and database setup',
+                        status: 'ACTIVE',
+                        startDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+                        endDate: new Date(Date.now()).toISOString(),
+                        projectId: 'demo-3'
+                    }
+                ]
             }
         };
 
@@ -152,209 +326,54 @@ export default function DemoProjectPage({ params }) {
         }
     }, [isValidDemo, timeLeft, router]);
 
-    // Demo functions that simulate real functions
+    // Demo functions that simulate real functions - READ ONLY MODE
     const refreshTasks = async () => {
-        // Save current state to localStorage
-        if (project) {
-            const updatedProject = {
-                ...project,
-                tasks,
-                sprints,
-                members,
-                updatedAt: new Date().toISOString()
-            };
-            saveDemoData(updatedProject);
-        }
-        toast.info('Changes saved to demo session');
+        // Read-only demo - no changes saved
+        toast.info('Demo is in read-only mode');
     };
 
     const updateTaskStatus = async (taskId, newStatus) => {
-        // Simulate task update
-        const updatedTasks = tasks.map(task =>
-            task.id === taskId ? { ...task, status: newStatus, updatedAt: new Date().toISOString() } : task
-        );
-        setTasks(updatedTasks);
-
-        // Save to localStorage
-        if (project) {
-            const updatedProject = {
-                ...project,
-                tasks: updatedTasks,
-                sprints,
-                members,
-                updatedAt: new Date().toISOString()
-            };
-            saveDemoData(updatedProject);
-        }
-        toast.success('Task updated (demo)');
+        // Read-only demo - no changes allowed
+        toast.info('Demo is in read-only mode. Task updates are disabled.');
     };
 
     const handleEditProject = async (e) => {
         e.preventDefault();
-        const updatedProject = {
-            ...project,
-            name: editProjectData.name,
-            description: editProjectData.description,
-            updatedAt: new Date().toISOString()
-        };
-        setProject(updatedProject);
-        saveDemoData({ ...updatedProject, tasks, sprints, members });
+        // Read-only demo - no changes allowed
+        toast.info('Demo is in read-only mode. Project editing is disabled.');
         setShowEditProjectModal(false);
-        setEditingProject(false);
-        toast.success('Project updated (demo)');
     };
 
-    // New task functions
+    // Task functions - READ ONLY
     const handleCreateTask = (newTaskData) => {
-        const newTask = {
-            id: Date.now(),
-            title: newTaskData.title,
-            description: newTaskData.description || '',
-            status: newTaskData.status || 'PENDING',
-            priority: newTaskData.priority || 'MEDIUM',
-            assignee: newTaskData.assigneeId ? members.find(m => m.userId === newTaskData.assigneeId)?.user : null,
-            sprint: newTaskData.sprintId ? sprints.find(s => s.id === Number.parseInt(newTaskData.sprintId)) : null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            projectId: project.id
-        };
-
-        const updatedTasks = [...tasks, newTask];
-        setTasks(updatedTasks);
-
-        // Save to localStorage
-        const updatedProject = {
-            ...project,
-            tasks: updatedTasks,
-            sprints,
-            members,
-            updatedAt: new Date().toISOString()
-        };
-        saveDemoData(updatedProject);
-        toast.success('Task created (demo)');
+        // Read-only demo - no creation allowed
+        toast.info('Demo is in read-only mode. Task creation is disabled.');
     };
 
     const handleUpdateTask = (taskId, updatedData) => {
-        const updatedTasks = tasks.map(task => {
-            if (task.id === taskId) {
-                return {
-                    ...task,
-                    ...updatedData,
-                    assignee: updatedData.assigneeId ? members.find(m => m.userId === updatedData.assigneeId)?.user : task.assignee,
-                    sprint: updatedData.sprintId ? sprints.find(s => s.id === Number.parseInt(updatedData.sprintId)) : task.sprint,
-                    updatedAt: new Date().toISOString()
-                };
-            }
-            return task;
-        });
-
-        setTasks(updatedTasks);
-
-        // Save to localStorage
-        const updatedProject = {
-            ...project,
-            tasks: updatedTasks,
-            sprints,
-            members,
-            updatedAt: new Date().toISOString()
-        };
-        saveDemoData(updatedProject);
-        toast.success('Task updated (demo)');
+        // Read-only demo - no updates allowed
+        toast.info('Demo is in read-only mode. Task editing is disabled.');
     };
 
     const handleDeleteTask = (taskId) => {
-        const updatedTasks = tasks.filter(task => task.id !== taskId);
-        setTasks(updatedTasks);
-
-        // Save to localStorage
-        const updatedProject = {
-            ...project,
-            tasks: updatedTasks,
-            sprints,
-            members,
-            updatedAt: new Date().toISOString()
-        };
-        saveDemoData(updatedProject);
-        toast.success('Task deleted (demo)');
+        // Read-only demo - no deletion allowed
+        toast.info('Demo is in read-only mode. Task deletion is disabled.');
     };
 
-    // Sprint functions
+    // Sprint functions - READ ONLY
     const handleCreateSprint = (newSprintData) => {
-        const newSprint = {
-            id: Date.now(),
-            name: newSprintData.name,
-            status: newSprintData.status || 'PLANNED',
-            startDate: newSprintData.startDate || new Date().toISOString(),
-            endDate: newSprintData.endDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-            projectId: project.id
-        };
-
-        const updatedSprints = [...sprints, newSprint];
-        setSprints(updatedSprints);
-
-        // Save to localStorage
-        const updatedProject = {
-            ...project,
-            tasks,
-            sprints: updatedSprints,
-            members,
-            updatedAt: new Date().toISOString()
-        };
-        saveDemoData(updatedProject);
-        toast.success('Sprint created (demo)');
+        // Read-only demo - no creation allowed
+        toast.info('Demo is in read-only mode. Sprint creation is disabled.');
     };
 
     const handleUpdateSprint = (sprintId, updatedData) => {
-        const updatedSprints = sprints.map(sprint => {
-            if (sprint.id === sprintId) {
-                return {
-                    ...sprint,
-                    ...updatedData
-                };
-            }
-            return sprint;
-        });
-
-        setSprints(updatedSprints);
-
-        // Also update tasks that reference this sprint
-        const updatedTasks = tasks.map(task => {
-            if (task.sprint && task.sprint.id === sprintId) {
-                const updatedSprint = updatedSprints.find(s => s.id === sprintId);
-                return {
-                    ...task,
-                    sprint: updatedSprint
-                };
-            }
-            return task;
-        });
-        setTasks(updatedTasks);
-
-        // Save to localStorage
-        const updatedProject = {
-            ...project,
-            tasks: updatedTasks,
-            sprints: updatedSprints,
-            members,
-            updatedAt: new Date().toISOString()
-        };
-        saveDemoData(updatedProject);
-        toast.success('Sprint updated (demo)');
+        // Read-only demo - no updates allowed
+        toast.info('Demo is in read-only mode. Sprint editing is disabled.');
     };
 
     const refreshSprints = async () => {
-        // Save current state to localStorage
-        if (project) {
-            const updatedProject = {
-                ...project,
-                tasks,
-                sprints,
-                members,
-                updatedAt: new Date().toISOString()
-            };
-            saveDemoData(updatedProject);
-        }
-        toast.info('Sprint changes saved to demo session');
+        // Read-only demo - no changes saved
+        toast.info('Demo is in read-only mode');
     };
 
     const formatTime = (ms) => {
@@ -472,7 +491,7 @@ export default function DemoProjectPage({ params }) {
                             <h3 className="font-semibold text-blue-900 dark:text-blue-100">Demo Project</h3>
                         </div>
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                            Welcome to your demo project! Create tasks, sprints, and explore all features. Everything is saved in your demo session.
+                            Welcome to your demo project! Explore all features and see how tasks and sprints are organized. This is a read-only demo.
                         </p>
                     </div>
                 </div>
@@ -524,6 +543,7 @@ export default function DemoProjectPage({ params }) {
                         onViewTask={handleUpdateTask}
                         onCreateTask={handleCreateTask}
                         isDemo={true}
+                        readOnly={true}
                     />
                 )}
 
@@ -540,6 +560,7 @@ export default function DemoProjectPage({ params }) {
                         onCreateSprint={handleCreateSprint}
                         onUpdateSprint={handleUpdateSprint}
                         isDemo={true}
+                        readOnly={true}
                     />
                 )}
 
