@@ -539,6 +539,7 @@ export default function ProjectPage({ params }) {
                                         onTaskUpdate={handleTaskUpdate}
                                         onTaskDelete={handleTaskDelete}
                                         onTaskCreate={handleTaskCreate}
+                                        disableCreate={true}
                                     />
                                 )}
                                 {activeTab === 'sprints' && (
@@ -552,6 +553,7 @@ export default function ProjectPage({ params }) {
                                         onTaskCreate={handleTaskCreate}
                                         onRefreshTasks={refreshTasks}
                                         onRefreshSprints={refreshSprints}
+                                        disableCreate={true}
                                     />
                                 )}
                             </div>

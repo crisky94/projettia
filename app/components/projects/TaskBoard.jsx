@@ -560,7 +560,7 @@ TaskRow.propTypes = {
  * This change allows better collaboration where any team member can contribute
  * by creating and managing tasks, while keeping deletion restricted for data safety.
  */
-const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [], isDemo = false }) => {
+const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [], isDemo = false, disableCreate = false }) => {
     // Estado para edición de tarea
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
@@ -847,6 +847,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
     const handleCreateTask = async (e) => {
         e.preventDefault();
+        if (disableCreate) {
+            toast.info('Task creation is currently disabled', {
+                position: 'top-right',
+                autoClose: 3000
+            });
+            return;
+        }
         setIsSubmitting(true);
         try {
             // En modo demo, usar la función proporcionada por el padre
@@ -1081,6 +1088,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             {/* Add Task button - Available to all members */}
                             <button
                                 onClick={() => {
+                                    if (disableCreate) {
+                                        toast.info('Task creation is currently disabled', {
+                                            position: 'top-right',
+                                            autoClose: 3000
+                                        });
+                                        return;
+                                    }
                                     setShowAddTaskModal(true);
                                     // Auto-scroll to top to ensure modal is visible
                                     setTimeout(() => {
@@ -1090,7 +1104,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         document.body.scrollTop = 0;
                                     }, 300);
                                 }}
-                                className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2 transform hover:scale-105"
+                                className={`w-full sm:w-auto ${disableCreate ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'} text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2`}
+                                disabled={disableCreate}
                             >
                                 <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -1472,17 +1487,19 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`button-professional w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-theme-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                            ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        className={`button-professional w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-theme-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting || disableCreate
+                                            ? 'bg-gray-400 text-white cursor-not-allowed'
                                             : 'bg-violet-500 text-white hover:shadow-theme-md'
                                             }`}
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     >
                                         {isSubmitting ? (
                                             <>
                                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                                 <span>Creating...</span>
                                             </>
+                                        ) : disableCreate ? (
+                                            'Creation Disabled'
                                         ) : (
                                             'Create Task'
                                         )}

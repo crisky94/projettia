@@ -931,7 +931,8 @@ const SprintManager = ({
     refreshTasks,
     onCreateSprint,
     onUpdateSprint,
-    isDemo = false
+    isDemo = false,
+    disableCreate = false
 }) => {
     const [sprints, setSprints] = useState(initialSprints || []);
     const [loading, setLoading] = useState(!isDemo);
@@ -997,6 +998,13 @@ const SprintManager = ({
 
     const handleCreateSprint = async (e) => {
         e.preventDefault();
+        if (disableCreate) {
+            toast.info('Sprint creation is currently disabled', {
+                position: 'top-right',
+                autoClose: 3000
+            });
+            return;
+        }
         if (!newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate) return;
 
         setIsSubmitting(true);
@@ -1315,8 +1323,18 @@ const SprintManager = ({
                                 <span className="sm:hidden text-lg">Task</span>
                             </button>
                             <button
-                                onClick={() => setShowAddSprintModal(true)}
-                                className="px-7 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation transform hover:scale-105"
+                                onClick={() => {
+                                    if (disableCreate) {
+                                        toast.info('Sprint creation is currently disabled', {
+                                            position: 'top-right',
+                                            autoClose: 3000
+                                        });
+                                        return;
+                                    }
+                                    setShowAddSprintModal(true);
+                                }}
+                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
+                                disabled={disableCreate}
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1543,13 +1561,13 @@ const SprintManager = ({
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                            ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting || disableCreate
+                                            ? 'bg-gray-400 text-white cursor-not-allowed'
                                             : 'bg-violet-500 text-white '
                                             }`}
-                                        disabled={isSubmitting || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
+                                        disabled={isSubmitting || disableCreate || !newSprint.name.trim() || !newSprint.startDate || !newSprint.endDate}
                                     >
-                                        {isSubmitting ? 'Creating...' : 'Create Sprint'}
+                                        {isSubmitting ? 'Creating...' : disableCreate ? 'Creation Disabled' : 'Create Sprint'}
                                     </button>
                                 </div>
                             </form>
