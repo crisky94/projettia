@@ -500,8 +500,8 @@ export default function ProjectPage({ params }) {
                                 <button
                                     onClick={() => setActiveTab('kanban')}
                                     className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'kanban'
-                                            ? 'border-primary text-primary'
-                                            : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
                                         }`}
                                 >
                                     <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,8 +512,8 @@ export default function ProjectPage({ params }) {
                                 <button
                                     onClick={() => setActiveTab('sprints')}
                                     className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'sprints'
-                                            ? 'border-primary text-primary'
-                                            : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
                                         }`}
                                 >
                                     <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
