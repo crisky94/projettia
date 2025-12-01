@@ -20,6 +20,8 @@ export default authMiddleware({
         "/",
         "/demo",
         "/demo-project(.*)",
+        "/showcase",
+        "/showcase-project(.*)",
         "/sign-in",
         "/sign-up",
         "/api/webhooks/clerk",

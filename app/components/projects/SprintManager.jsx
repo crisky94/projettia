@@ -1222,6 +1222,13 @@ const SprintManager = ({
 
     const handleCreateTask = async (e) => {
         e.preventDefault();
+        if (disableCreate) {
+            toast.info('Task creation is disabled in showcase mode', {
+                position: 'top-right',
+                autoClose: 3000
+            });
+            return;
+        }
         setIsSubmitting(true);
 
         try {
@@ -1313,8 +1320,17 @@ const SprintManager = ({
                         </div>
                         <div className="flex gap-4">
                             <button
-                                onClick={() => setShowAddTaskModal(true)}
-                                className="px-7 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation transform hover:scale-105"
+                                onClick={() => {
+                                    if (disableCreate) {
+                                        toast.info('Task creation is disabled in showcase mode', {
+                                            position: 'top-right',
+                                            autoClose: 3000
+                                        });
+                                        return;
+                                    }
+                                    setShowAddTaskModal(true);
+                                }}
+                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1324,17 +1340,9 @@ const SprintManager = ({
                             </button>
                             <button
                                 onClick={() => {
-                                    if (disableCreate) {
-                                        toast.info('Sprint creation is currently disabled', {
-                                            position: 'top-right',
-                                            autoClose: 3000
-                                        });
-                                        return;
-                                    }
                                     setShowAddSprintModal(true);
                                 }}
-                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
-                                disabled={disableCreate}
+                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1480,6 +1488,21 @@ const SprintManager = ({
                                     </button>
                                 </div>
                             </div>
+
+                            {/* Showcase Banner */}
+                            {disableCreate && (
+                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm text-orange-700 dark:text-orange-300">
+                                            This is a showcase demo - sprint creation is disabled for viewing purposes only
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
                             <form onSubmit={handleCreateSprint} className="p-3 space-y-3">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -1492,7 +1515,7 @@ const SprintManager = ({
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="e.g.: Sprint 1 - Basic Features"
                                         required
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
                                 <div>
@@ -1505,7 +1528,7 @@ const SprintManager = ({
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                         rows="3"
                                         placeholder="Optional sprint description..."
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1529,7 +1552,7 @@ const SprintManager = ({
                                             }}
                                             className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                             required
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || disableCreate}
                                         />
                                     </div>
                                     <div>
@@ -1543,7 +1566,7 @@ const SprintManager = ({
                                             min={newSprint.startDate || undefined}
                                             className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                             required
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || disableCreate}
                                         />
                                     </div>
                                 </div>
@@ -1604,6 +1627,20 @@ const SprintManager = ({
                                 </div>
                             </div>
 
+                            {/* Showcase Banner */}
+                            {disableCreate && (
+                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm text-orange-700 dark:text-orange-300">
+                                            This is a showcase demo - task creation is disabled for viewing purposes only
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Form */}
                             <form onSubmit={handleCreateTask} className="p-3 space-y-3">
                                 <div>
@@ -1618,7 +1655,7 @@ const SprintManager = ({
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="Enter task title..."
                                         required
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
@@ -1633,7 +1670,7 @@ const SprintManager = ({
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                         rows="3"
                                         placeholder="Describe the task details..."
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
@@ -1647,7 +1684,7 @@ const SprintManager = ({
                                             value={newTask.assigneeId}
                                             onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || disableCreate}
                                         >
                                             <option value="">unasigned</option>
                                             {!Array.isArray(membersToUse) || membersToUse.length === 0 ? (
@@ -1676,7 +1713,7 @@ const SprintManager = ({
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                             placeholder="30, 60, 90..."
                                             required
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || disableCreate}
                                         />
                                         <p className="text-xs text-gray-700 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
                                     </div>
@@ -1697,17 +1734,19 @@ const SprintManager = ({
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                            ? 'bg-violet-400 text-white cursor-not-allowed'
+                                        className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting || disableCreate
+                                            ? 'bg-gray-400 text-white cursor-not-allowed'
                                             : 'bg-violet-500 text-white '
                                             }`}
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     >
                                         {isSubmitting ? (
                                             <span className="flex items-center gap-2">
                                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                                 Creating...
                                             </span>
+                                        ) : disableCreate ? (
+                                            'Creation Disabled'
                                         ) : (
                                             'Create Task'
                                         )}

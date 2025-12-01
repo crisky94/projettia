@@ -1088,13 +1088,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             {/* Add Task button - Available to all members */}
                             <button
                                 onClick={() => {
-                                    if (disableCreate) {
-                                        toast.info('Task creation is currently disabled', {
-                                            position: 'top-right',
-                                            autoClose: 3000
-                                        });
-                                        return;
-                                    }
                                     setShowAddTaskModal(true);
                                     // Auto-scroll to top to ensure modal is visible
                                     setTimeout(() => {
@@ -1104,8 +1097,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         document.body.scrollTop = 0;
                                     }, 300);
                                 }}
-                                className={`w-full sm:w-auto ${disableCreate ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'} text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2`}
-                                disabled={disableCreate}
+                                className={`w-full sm:w-auto ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'} text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2`}
                             >
                                 <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -1415,6 +1407,20 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
                             </div>
 
+                            {/* Showcase Banner */}
+                            {disableCreate && (
+                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm text-orange-700 dark:text-orange-300">
+                                            This is a showcase demo - task creation is disabled for viewing purposes only
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Form */}
                             <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                                 <div>
@@ -1429,7 +1435,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
                                         placeholder="Enter task title..."
                                         required
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
@@ -1444,7 +1450,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
                                         rows="2"
                                         placeholder="Describe the task details..."
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
@@ -1457,7 +1463,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         value={newTask.assigneeId}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || disableCreate}
                                     >
                                         <option value="">unasigned</option>
                                         {!Array.isArray(members) || members.length === 0 ? (
