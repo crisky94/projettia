@@ -54,9 +54,9 @@ export default function ShowcaseProjectDashboard() {
             const start = Number.parseInt(localStorage.getItem('showcaseStartTime') || Date.now().toString());
             const elapsed = Date.now() - start;
             const remaining = Math.max(0, 30 * 60 * 1000 - elapsed); // 30 minutes
-            
+
             setTimeLeft(remaining);
-            
+
             if (remaining <= 0) {
                 localStorage.removeItem('showcaseStartTime');
                 globalThis.location.href = '/';
@@ -137,7 +137,7 @@ export default function ShowcaseProjectDashboard() {
                                         {project.description}
                                     </p>
                                 )}
-                                
+
                                 {/* Progress Bar */}
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">

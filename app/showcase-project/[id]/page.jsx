@@ -22,9 +22,9 @@ export default function ShowcaseProjectPage({ params }) {
             const start = Number.parseInt(showcaseStart);
             const elapsed = Date.now() - start;
             const remaining = Math.max(0, 30 * 60 * 1000 - elapsed); // 30 minutes
-            
+
             setTimeLeft(remaining);
-            
+
             if (remaining <= 0) {
                 localStorage.removeItem('showcaseStartTime');
                 globalThis.location.href = '/';
@@ -307,21 +307,19 @@ export default function ShowcaseProjectPage({ params }) {
                     <div className="flex space-x-1 bg-muted p-1 rounded-lg">
                         <button
                             onClick={() => setActiveTab('tasks')}
-                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${
-                                activeTab === 'tasks'
+                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${activeTab === 'tasks'
                                     ? 'bg-background text-foreground shadow-sm'
                                     : 'text-muted-foreground hover:text-foreground'
-                            }`}
+                                }`}
                         >
                             Task Board
                         </button>
                         <button
                             onClick={() => setActiveTab('sprints')}
-                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${
-                                activeTab === 'sprints'
+                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${activeTab === 'sprints'
                                     ? 'bg-background text-foreground shadow-sm'
                                     : 'text-muted-foreground hover:text-foreground'
-                            }`}
+                                }`}
                         >
                             Sprint Management
                         </button>

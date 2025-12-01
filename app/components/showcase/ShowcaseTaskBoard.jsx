@@ -279,7 +279,7 @@ ShowcaseTaskCard.propTypes = {
 // Showcase Task Board with Kanban columns
 const ShowcaseTaskBoard = ({ tasks = [], sprints = [] }) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
-    
+
     const columns = [
         { id: 'TODO', title: 'To Do', emoji: '📋', bgColor: 'bg-slate-50', borderColor: 'border-slate-200', textColor: 'text-slate-600' },
         { id: 'IN_PROGRESS', title: 'In Progress', emoji: '🔄', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-600' },

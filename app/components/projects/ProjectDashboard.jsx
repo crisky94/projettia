@@ -167,7 +167,7 @@ export default function ProjectDashboard({ userId }) {
                                             {project.description}
                                         </p>
                                     )}
-                                    
+
                                     {/* Progress Bar */}
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
