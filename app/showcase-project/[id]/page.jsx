@@ -273,7 +273,7 @@ export default function ShowcaseProjectPage({ params }) {
             <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
-                        <h2 className="text-lg font-bold">🚀 Showcase Mode Active</h2>
+                        <h2 className="text-lg font-bold">🚀 Demo Mode Active</h2>
                         <p className="text-sm opacity-90">Exploring project: {project.name}</p>
                     </div>
                     <div className="text-right">

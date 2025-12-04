@@ -86,15 +86,30 @@ export default function ShowcaseProjectDashboard() {
         );
     }
 
+      const handleExitDemo = () => {
+    // Detener el contador
+    localStorage.removeItem('showcaseStartTime');
+    setTimeLeft(null); // opcional, para ocultar el contador
+
+    // Navegar usando Next.js
+   globalThis.location.href = '/';
+  };
+
+
     return (
         <div className="w-full max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 bg-background">
             {/* Showcase Timer Banner */}
             <div className="mb-6 p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
-                        <h2 className="text-lg font-bold">🚀 Showcase Mode Active</h2>
+                        <h2 className="text-lg font-bold">🚀 Demo Mode Active</h2>
                         <p className="text-sm opacity-90">Explore the full functionality of our project management platform</p>
                     </div>
+                   
+                    <button onClick={handleExitDemo} className="text-sm px-3 py-2 rounded-lg border border-orange-500 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
+                      🚀 Exit Demo
+                    </button>
+                
                     <div className="text-right">
                         <div className="text-2xl font-mono font-bold">{formatTime(timeLeft)}</div>
                         <div className="text-xs opacity-90">Time remaining</div>
@@ -106,7 +121,7 @@ export default function ShowcaseProjectDashboard() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Showcase Projects</h1>
                 <button
                     onClick={() => {
-                        showToast.info('Project creation is disabled in showcase mode');
+                        showToast.info('Project creation is disabled in Demo mode');
                     }}
                     className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-default opacity-60"
                     disabled

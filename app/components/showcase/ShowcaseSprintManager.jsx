@@ -118,7 +118,7 @@ const ShowcaseTaskCard = ({ task }) => {
             {/* Showcase indicator */}
             <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="bg-orange-500 text-white px-2 py-1 rounded text-xs">
-                    Showcase Mode
+                    Demo Mode
                 </div>
             </div>
 
@@ -286,7 +286,7 @@ const ShowcaseSprintCard = ({ sprint, tasks }) => {
     };
 
     const handleDisabledAction = (actionName) => {
-        showToast.info(`${actionName} is disabled in showcase mode`);
+        showToast.info(`${actionName} is disabled in Demo mode`);
     };
 
     return (
@@ -413,7 +413,7 @@ const ShowcaseSprintManager = ({ sprints = [], tasks = [] }) => {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="font-medium">Showcase Mode Active</span>
+                    <span className="font-medium">Demo Mode Active</span>
                 </div>
                 <p className="text-sm mt-1 opacity-90">
                     You are viewing a read-only demonstration. All creation, editing, and deletion functions are disabled.
@@ -425,13 +425,13 @@ const ShowcaseSprintManager = ({ sprints = [], tasks = [] }) => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Sprint Management</h1>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => showToast.info('Create Sprint is disabled in showcase mode')}
+                        onClick={() => showToast.info('Create Sprint is disabled in Demo mode')}
                         className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-default opacity-60"
                     >
                         + Create Sprint (Disabled)
                     </button>
                     <button
-                        onClick={() => showToast.info('Create Task is disabled in showcase mode')}
+                        onClick={() => showToast.info('Create Task is disabled in Demo mode')}
                         className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-default opacity-60"
                     >
                         + Create Task (Disabled)

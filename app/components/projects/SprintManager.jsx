@@ -1223,7 +1223,7 @@ const SprintManager = ({
     const handleCreateTask = async (e) => {
         e.preventDefault();
         if (disableCreate) {
-            toast.info('Task creation is disabled in showcase mode', {
+            toast.info('Task creation is disabled in demo mode', {
                 position: 'top-right',
                 autoClose: 3000
             });
@@ -1322,7 +1322,7 @@ const SprintManager = ({
                             <button
                                 onClick={() => {
                                     if (disableCreate) {
-                                        toast.info('Task creation is disabled in showcase mode', {
+                                        toast.info('Task creation is disabled in demo mode', {
                                             position: 'top-right',
                                             autoClose: 3000
                                         });

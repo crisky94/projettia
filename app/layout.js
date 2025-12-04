@@ -73,7 +73,7 @@ export default function RootLayout({ children }) {
                 <div className="flex gap-2">
                   <Link href="/showcase">
                     <button className="text-sm px-3 py-2 rounded-lg border border-orange-500 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
-                      🚀 Showcase
+                      🚀 Demo
                     </button>
                   </Link>
                   <SignInButton>

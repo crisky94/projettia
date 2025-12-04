@@ -58,7 +58,7 @@ const ShowcaseTaskCard = ({ task, disableActions = true }) => {
 
     const handleDisabledAction = (actionName) => {
         if (globalThis.window?.toast) {
-            globalThis.window.toast.info(`${actionName} is disabled in showcase mode`);
+            globalThis.window.toast.info(`${actionName} is disabled in Demo mode`);
         }
     };
 
@@ -186,7 +186,7 @@ const ShowcaseTaskCard = ({ task, disableActions = true }) => {
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        <span className="text-sm font-medium">Showcase Mode - Read Only</span>
+                                        <span className="text-sm font-medium">Demo Mode - Read Only</span>
                                     </div>
                                 </div>
                             )}
@@ -299,7 +299,7 @@ const ShowcaseTaskBoard = ({ tasks = [], sprints = [] }) => {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="font-medium">Showcase Mode Active</span>
+                    <span className="font-medium">Demo Mode Active</span>
                 </div>
                 <p className="text-sm mt-1 opacity-90">
                     You are viewing a read-only demonstration. All creation, editing, and deletion functions are disabled.
@@ -312,7 +312,7 @@ const ShowcaseTaskBoard = ({ tasks = [], sprints = [] }) => {
                 <button
                     onClick={() => {
                         setShowCreateModal(true);
-                        showToast.info('Create Task is disabled in showcase mode');
+                        showToast.info('Create Task is disabled in Demo mode');
                     }}
                     className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-default opacity-60"
                     disabled

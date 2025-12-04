@@ -34,7 +34,7 @@ export default function Home() {
             onClick={handleDemoClick}
             className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg mb-4"
           >
-            🚀 View App Showcase
+            🚀 Demo
           </button>
           <p className="text-sm text-muted-foreground">
             Explore all features without registration • Read-only demonstration
