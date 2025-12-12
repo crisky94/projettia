@@ -12,7 +12,7 @@ const TaskCard = ({ task }) => {
                 <h4 className="text-white font-medium text-sm mb-1">{task.title}</h4>
                 <p className="text-gray-300 text-xs">{task.description}</p>
             </div>
-            
+
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
@@ -104,7 +104,7 @@ const ShowcaseTaskBoard = ({ tasks = [] }) => {
                     <span className="text-green-400 text-sm font-medium">Team Members</span>
                 </div>
                 <p className="text-gray-400 text-sm mb-3">2 members in the project</p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {teamMembers.map(member => (
                         <div key={member.id} className="bg-slate-800 border border-slate-700 rounded-lg p-4">
@@ -123,11 +123,10 @@ const ShowcaseTaskBoard = ({ tasks = [] }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                    member.role === 'Admin' 
-                                        ? 'bg-purple-600 text-white' 
+                                <span className={`px-2 py-1 rounded text-xs font-medium ${member.role === 'Admin'
+                                        ? 'bg-purple-600 text-white'
                                         : 'bg-blue-600 text-white'
-                                }`}>
+                                    }`}>
                                     {member.role}
                                 </span>
                             </div>
@@ -214,7 +213,7 @@ const ShowcaseTaskBoard = ({ tasks = [] }) => {
                                         <h4 className="text-white font-medium text-sm mb-1">{task.title}</h4>
                                         <p className="text-gray-300 text-xs">{task.description}</p>
                                     </div>
-                                    
+
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-400 text-xs">View more</span>
                                         <div className="flex items-center gap-2">

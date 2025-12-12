@@ -76,7 +76,7 @@ const ShowcaseSprintManager = ({ sprints = [], tasks = [] }) => {
                                         <span className="text-white font-medium">{progressPercentage}%</span>
                                     </div>
                                     <div className="w-full bg-slate-700 rounded-full h-2">
-                                        <div 
+                                        <div
                                             className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                             style={{ width: `${progressPercentage}%` }}
                                         ></div>
