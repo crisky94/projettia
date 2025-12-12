@@ -1,77 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import PropTypes from 'prop-types';
 import ShowcaseTaskBoard from '../../components/showcase/ShowcaseTaskBoard';
 import ShowcaseSprintManager from '../../components/showcase/ShowcaseSprintManager';
 
 export default function ShowcaseProjectPage({ params }) {
     const router = useRouter();
-    const [timeLeft, setTimeLeft] = useState(null);
     const [activeTab, setActiveTab] = useState('tasks');
-
-    useEffect(() => {
-        // Check if showcase session exists and is valid
-        const showcaseStart = localStorage.getItem('showcaseStartTime');
-        if (!showcaseStart) {
-            router.push('/');
-            return;
-        }
-
-        const updateTimer = () => {
-            const start = Number.parseInt(showcaseStart);
-            const elapsed = Date.now() - start;
-            const remaining = Math.max(0, 30 * 60 * 1000 - elapsed); // 30 minutes
-
-            setTimeLeft(remaining);
-
-            if (remaining <= 0) {
-                localStorage.removeItem('showcaseStartTime');
-                globalThis.location.href = '/';
-            }
-        };
-
-        updateTimer();
-        const interval = setInterval(updateTimer, 1000);
-        return () => clearInterval(interval);
-    }, [router]);
-
-    const formatTime = (ms) => {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    };
-
-    // Get project data based on ID
-    const getProjectData = (id) => {
-        const projectsData = {
-            'showcase-1': {
-                id: 'showcase-1',
-                name: 'E-commerce Platform',
-                description: 'Complete online shopping platform with modern UI/UX design and advanced features',
-                memberCount: 5,
-                taskCount: 15,
-                completedTasks: 8
-            },
-            'showcase-2': {
-                id: 'showcase-2',
-                name: 'Mobile Banking App',
-                description: 'Secure mobile application for banking operations with biometric authentication',
-                memberCount: 4,
-                taskCount: 12,
-                completedTasks: 4
-            },
-            'showcase-3': {
-                id: 'showcase-3',
-                name: 'AI Analytics Dashboard',
-                description: 'Business intelligence dashboard with machine learning insights and real-time data visualization',
-                memberCount: 3,
-                taskCount: 8,
-                completedTasks: 6
-            }
-        };
-        return projectsData[id] || projectsData['showcase-1'];
-    };
 
     // Get fictional data for showcase
     const getFictionalData = (projectId) => {
@@ -80,56 +17,56 @@ export default function ShowcaseProjectPage({ params }) {
                 tasks: [
                     {
                         id: 'task-1',
-                        title: 'User Authentication System',
-                        description: 'Implement secure user login and registration with JWT tokens',
-                        status: 'COMPLETED',
+                        title: 'asdasdf',
+                        description: 'asdasdf',
+                        status: 'TODO',
                         estimatedHours: 8,
-                        assignee: { id: '1', name: 'John Smith' },
-                        sprint: { id: 'sprint-1', name: 'MVP Sprint' }
+                        assignee: { id: '1', name: 'Cristina Labrador' },
+                        sprint: { id: 'sprint-1', name: '✓ Platilla' }
                     },
                     {
                         id: 'task-2',
-                        title: 'Product Catalog UI',
-                        description: 'Create responsive product listing and detail pages',
-                        status: 'COMPLETED',
-                        estimatedHours: 12,
-                        assignee: { id: '2', name: 'Sarah Johnson' },
-                        sprint: { id: 'sprint-1', name: 'MVP Sprint' }
-                    },
-                    {
-                        id: 'task-3',
-                        title: 'Shopping Cart Functionality',
-                        description: 'Implement add to cart, remove items, and cart persistence',
-                        status: 'IN_PROGRESS',
-                        estimatedHours: 6,
-                        assignee: { id: '1', name: 'John Smith' },
-                        sprint: { id: 'sprint-1', name: 'MVP Sprint' }
-                    },
-                    {
-                        id: 'task-4',
-                        title: 'Payment Integration',
-                        description: 'Integrate Stripe payment processing for checkout',
-                        status: 'IN_PROGRESS',
-                        estimatedHours: 10,
-                        assignee: { id: '3', name: 'Mike Chen' },
-                        sprint: { id: 'sprint-2', name: 'Payment Sprint' }
-                    },
-                    {
-                        id: 'task-5',
-                        title: 'Admin Dashboard',
-                        description: 'Create admin panel for managing products and orders',
+                        title: 'gerfgdf',
+                        description: 'fgdfgfgh',
                         status: 'TODO',
-                        estimatedHours: 16,
-                        assignee: { id: '4', name: 'Emma Wilson' },
+                        estimatedHours: 12,
+                        assignee: { id: '2', name: 'Cristina Labrador Ordóñez' },
                         sprint: null
                     },
                     {
-                        id: 'task-6',
-                        title: 'Search & Filters',
-                        description: 'Implement product search and filtering functionality',
+                        id: 'task-3',
+                        title: 'dfsdf',
+                        description: 'dfsdfs',
                         status: 'TODO',
+                        estimatedHours: 6,
+                        assignee: { id: '2', name: 'Cristina Labrador Ordóñez' },
+                        sprint: null
+                    },
+                    {
+                        id: 'task-4',
+                        title: 'fgdfsf',
+                        description: 'fgdfgd',
+                        status: 'IN_PROGRESS',
+                        estimatedHours: 10,
+                        assignee: { id: '2', name: 'Cristina Labrador Ordóñez' },
+                        sprint: { id: 'sprint-1', name: '✓ Script' }
+                    },
+                    {
+                        id: 'task-5',
+                        title: 'dhsdf',
+                        description: 'fghdfgh',
+                        status: 'IN_PROGRESS',
+                        estimatedHours: 16,
+                        assignee: { id: '1', name: 'Cristina Labrador' },
+                        sprint: { id: 'sprint-1', name: '✓ Script' }
+                    },
+                    {
+                        id: 'task-6',
+                        title: 'sgdfgdsfgdsfgdsfgfdgdsfgdsfgd sdgfdgfdg',
+                        description: 'fgdfdghdfghdfghfdhgdfhgdfhdfhdfhd fhdfhdfhfgfhbvcbcxb',
+                        status: 'COMPLETED',
                         estimatedHours: 8,
-                        assignee: { id: '2', name: 'Sarah Johnson' },
+                        assignee: null,
                         sprint: null
                     }
                 ],
@@ -256,72 +193,74 @@ export default function ShowcaseProjectPage({ params }) {
         return data[projectId] || data['showcase-1'];
     };
 
-    const project = getProjectData(params.id);
     const { tasks, sprints } = getFictionalData(params.id);
 
-    if (timeLeft === null) {
-        return (
-            <div className="flex items-center justify-center py-20 bg-background">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-background">
-            {/* Showcase Timer Banner */}
-            <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg">
-                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div>
-                        <h2 className="text-lg font-bold">🚀 Demo Mode Active</h2>
-                        <p className="text-sm opacity-90">Exploring project: {project.name}</p>
-                    </div>
-                    <div className="text-right">
-                        <div className="text-2xl font-mono font-bold">{formatTime(timeLeft)}</div>
-                        <div className="text-xs opacity-90">Time remaining</div>
+        <div className="min-h-screen bg-[#0F172A]">
+            {/* Navigation Header */}
+            <div className="bg-slate-800/50 border-b border-slate-700/50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => router.push('/showcase')}
+                                className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Back to projects
+                            </button>
+                            <div className="text-sm text-gray-400">
+                                WERTEAMWORK
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 text-blue-400">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span className="text-sm">Members (2)</span>
+                            </div>
+                            <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                Delete Project
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Project Header */}
-            <div className="bg-card border-b border-border">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => router.push('/showcase')}
-                                className="text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{project.name}</h1>
-                                <p className="text-muted-foreground mt-1">{project.description}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Tab Navigation */}
-                    <div className="flex space-x-1 bg-muted p-1 rounded-lg">
+            {/* Tab Navigation */}
+            <div className="bg-slate-800/30 border-b border-slate-700/50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex space-x-8">
                         <button
                             onClick={() => setActiveTab('tasks')}
-                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${activeTab === 'tasks'
-                                    ? 'bg-background text-foreground shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'
-                                }`}
+                            className={`flex items-center gap-2 py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                                activeTab === 'tasks'
+                                    ? 'border-purple-500 text-white'
+                                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                            }`}
                         >
-                            Task Board
+                            <div className="w-6 h-6 bg-purple-600 rounded flex items-center justify-center">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                            Tablero Kanban
                         </button>
                         <button
                             onClick={() => setActiveTab('sprints')}
-                            className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${activeTab === 'sprints'
-                                    ? 'bg-background text-foreground shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'
-                                }`}
+                            className={`flex items-center gap-2 py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                                activeTab === 'sprints'
+                                    ? 'border-purple-500 text-white'
+                                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                            }`}
                         >
-                            Sprint Management
+                            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Sprints Management
                         </button>
                     </div>
                 </div>
@@ -339,3 +278,9 @@ export default function ShowcaseProjectPage({ params }) {
         </div>
     );
 }
+
+ShowcaseProjectPage.propTypes = {
+    params: PropTypes.shape({
+        id: PropTypes.string.isRequired
+    }).isRequired
+};
