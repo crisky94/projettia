@@ -18,10 +18,7 @@ export default authMiddleware({
     },
     publicRoutes: [
         "/",
-        "/demo",
-        "/demo-project(.*)",
-        "/showcase",
-        "/showcase-project(.*)",
+
         "/sign-in",
         "/sign-up",
         "/api/webhooks/clerk",

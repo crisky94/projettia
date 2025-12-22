@@ -560,7 +560,7 @@ TaskRow.propTypes = {
  * This change allows better collaboration where any team member can contribute
  * by creating and managing tasks, while keeping deletion restricted for data safety.
  */
-const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [], isDemo = false, disableCreate = false }) => {
+const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpdate, onTaskDelete, onTaskCreate, sprints = [], disableCreate = false }) => {
     // Estado para edición de tarea
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
@@ -568,15 +568,13 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     const [tasks, setTasks] = useState(initialTasks || []);
     // Eliminar sprint de las tareas si el sprint fue borrado
     useEffect(() => {
-        // En modo demo, usar initialTasks directamente sin llamadas API
-        if (isDemo) {
-            if (initialTasks && Array.isArray(initialTasks)) {
-                setTasks(initialTasks);
-            }
+        // Use initialTasks if provided
+        if (initialTasks && Array.isArray(initialTasks)) {
+            setTasks(initialTasks);
             return;
         }
 
-        // Cuando cambian los sprints, recargar las tareas desde el backend para reflejar cambios
+        // Fetch tasks from API when component mounts or projectId changes
         const fetchTasks = async () => {
             try {
                 const tasksRes = await fetch(`/api/projects/${projectId}/tasks`);
@@ -585,10 +583,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     if (Array.isArray(tasksData)) {
                         const validatedTasks = tasksData.map(task => ({
                             ...task,
-                            status: task.status || 'PENDING',
-                            // Si el sprint asignado ya no existe, quitar la referencia
-                            sprintId: task.sprintId && !sprints.some(s => s.id === task.sprintId) ? null : task.sprintId,
-                            sprint: task.sprintId && !sprints.some(s => s.id === task.sprintId) ? null : task.sprint
+                            status: task.status || 'PENDING'
                         }));
                         setTasks(validatedTasks);
                     } else {
@@ -600,11 +595,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
             }
         };
 
-        // Solo hacer fetch si no es demo
-        if (!isDemo) {
-            fetchTasks();
-        }
-    }, [sprints, projectId, isDemo, initialTasks]);
+        // Fetch tasks from API
+        fetchTasks();
+    }, [projectId]);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [newTask, setNewTask] = useState({
@@ -856,8 +849,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         }
         setIsSubmitting(true);
         try {
-            // En modo demo, usar la función proporcionada por el padre
-            if (isDemo && onCreateTask) {
+            // Use parent function if provided
+            if (onCreateTask) {
                 const taskData = {
                     title: newTask.title,
                     description: newTask.description,
@@ -882,7 +875,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 return;
             }
 
-            // En modo normal, hacer llamada a la API
+            // Default API call
             const response = await fetch(`/api/projects/${projectId}/tasks`, {
                 method: 'POST',
                 headers: {
@@ -1407,20 +1400,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
                             </div>
 
-                            {/* Showcase Banner */}
-                            {disableCreate && (
-                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span className="text-sm text-orange-700 dark:text-orange-300">
-                                            This is a showcase demo - task creation is disabled for viewing purposes only
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
                             {/* Form */}
                             <form onSubmit={handleCreateTask} className="p-4 space-y-4">
                                 <div>
@@ -1731,8 +1710,7 @@ TaskBoard.propTypes = {
     ),
     onTaskUpdate: PropTypes.func,
     onTaskDelete: PropTypes.func,
-    onTaskCreate: PropTypes.func,
-    isDemo: PropTypes.bool
+    onTaskCreate: PropTypes.func
 };
 
 export default TaskBoard;

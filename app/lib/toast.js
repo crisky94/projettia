@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-// Global toast utility for showcase mode
+// Global toast utility
 export const showToast = {
     info: (message) => {
         toast.info(message, {

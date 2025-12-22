@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -924,18 +924,17 @@ const SprintManager = ({
     onTaskCreate,
     onRefreshTasks,
     onRefreshSprints,
-    // Demo props
+    // Props for initialization
     sprints: initialSprints = [],
-    members = [], // For demo mode
+    members = [],
     refreshSprints,
     refreshTasks,
     onCreateSprint,
     onUpdateSprint,
-    isDemo = false,
     disableCreate = false
 }) => {
     const [sprints, setSprints] = useState(initialSprints || []);
-    const [loading, setLoading] = useState(!isDemo);
+    const [loading, setLoading] = useState(true);
     const [showAddSprintModal, setShowAddSprintModal] = useState(false);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
@@ -957,29 +956,9 @@ const SprintManager = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Use appropriate members array based on mode
-    const membersToUse = isDemo ? members : allMembers;
+    const membersToUse = members;
 
-    useEffect(() => {
-        if (isDemo) {
-            // In demo mode, use the props directly
-            setSprints(initialSprints || []);
-            setLoading(false);
-        } else {
-            // In normal mode, load data from API
-            loadData();
-        }
-    }, [projectId, isDemo, initialSprints]);
-
-    // Update sprints when prop changes in demo mode
-    useEffect(() => {
-        if (isDemo && initialSprints) {
-            setSprints(initialSprints);
-        }
-    }, [isDemo, initialSprints]);
-
-    const loadData = async () => {
-        if (isDemo) return; // Skip API calls in demo mode
-
+    const loadData = useCallback(async () => {
         try {
             setLoading(true);
             const sprintsRes = await fetch(`/api/projects/${projectId}/sprints`);
@@ -994,7 +973,18 @@ const SprintManager = ({
         } finally {
             setLoading(false);
         }
-    };
+    }, [projectId]);
+
+    useEffect(() => {
+        // Load initial data or use provided sprints
+        if (initialSprints && initialSprints.length > 0) {
+            setSprints(initialSprints);
+            setLoading(false);
+        } else {
+            // Load data from API
+            loadData();
+        }
+    }, [projectId, loadData]); // Removed initialSprints from dependencies to prevent loops
 
     const handleCreateSprint = async (e) => {
         e.preventDefault();
@@ -1009,13 +999,13 @@ const SprintManager = ({
 
         setIsSubmitting(true);
         try {
-            if (isDemo && onCreateSprint) {
-                // In demo mode, use the provided function
+            if (onCreateSprint) {
+                // Use provided function
                 onCreateSprint(newSprint);
                 setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                 setShowAddSprintModal(false);
             } else {
-                // In normal mode, make API call
+                // Make API call
                 const response = await fetch(`/api/projects/${projectId}/sprints`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1223,7 +1213,7 @@ const SprintManager = ({
     const handleCreateTask = async (e) => {
         e.preventDefault();
         if (disableCreate) {
-            toast.info('Task creation is disabled in demo mode', {
+            toast.info('Task creation is disabled', {
                 position: 'top-right',
                 autoClose: 3000
             });
@@ -1322,7 +1312,7 @@ const SprintManager = ({
                             <button
                                 onClick={() => {
                                     if (disableCreate) {
-                                        toast.info('Task creation is disabled in demo mode', {
+                                        toast.info('Task creation is disabled', {
                                             position: 'top-right',
                                             autoClose: 3000
                                         });
@@ -1489,20 +1479,6 @@ const SprintManager = ({
                                 </div>
                             </div>
 
-                            {/* Showcase Banner */}
-                            {disableCreate && (
-                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span className="text-sm text-orange-700 dark:text-orange-300">
-                                            This is a showcase demo - sprint creation is disabled for viewing purposes only
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-
                             <form onSubmit={handleCreateSprint} className="p-3 space-y-3">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -1626,20 +1602,6 @@ const SprintManager = ({
                                     </button>
                                 </div>
                             </div>
-
-                            {/* Showcase Banner */}
-                            {disableCreate && (
-                                <div className="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800 px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span className="text-sm text-orange-700 dark:text-orange-300">
-                                            This is a showcase demo - task creation is disabled for viewing purposes only
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Form */}
                             <form onSubmit={handleCreateTask} className="p-3 space-y-3">

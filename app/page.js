@@ -14,10 +14,6 @@ export default function Home() {
     }
   }, [isLoaded, isSignedIn, router]);
 
-  const handleDemoClick = () => {
-    router.push('/showcase');
-  };
-
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-8">
       <div className="text-center max-w-2xl mx-auto">
@@ -27,19 +23,6 @@ export default function Home() {
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
           Collaborate with your team in real-time, manage tasks efficiently, and communicate seamlessly.
         </p>
-
-        {/* Demo Button - Prominente */}
-        <div className="mb-8">
-          <button
-            onClick={handleDemoClick}
-            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg mb-4"
-          >
-            🚀 Demo
-          </button>
-          <p className="text-sm text-muted-foreground">
-            Explore all features without registration • Read-only demonstration
-          </p>
-        </div>
 
         {/* Divider */}
         <div className="flex items-center gap-4 mb-6">
