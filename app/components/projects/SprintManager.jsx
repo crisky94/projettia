@@ -176,11 +176,66 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 )
             )}
 
-            {/* Sprint and Time Info */}
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-                {!isEditing && (
-                    <>
-                        {/* Status Badge with icon */}
+            {/* Sprint and Time Info Section */}
+            <div className="mb-4">
+                {isEditing ? (
+                    <div className="space-y-4 w-full">
+                        {/* Meta Fields Group */}
+                        <div className="space-y-4">
+                            {/* Sprint Selection */}
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Sprint Context</label>
+                                <select
+                                    value={editingTask.sprintId}
+                                    onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
+                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                >
+                                    <option value="">No sprint</option>
+                                    {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
+                                        <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Estimation Row */}
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Estimation (Hours)</label>
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        value={editingTask.estimatedHours}
+                                        onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                        placeholder="0.0"
+                                        min="0.5"
+                                        max="1000"
+                                        step="0.5"
+                                    />
+                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 pointer-events-none">hrs</span>
+                                </div>
+                            </div>
+
+                            {/* Assignee Selection */}
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Assignee</label>
+                                <select
+                                    value={editingTask.assigneeId}
+                                    onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
+                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                >
+                                    <option value="">Unassigned</option>
+                                    {allMembers.map(member => (
+                                        <option key={member.userId} value={member.userId}>
+                                            {member.user?.name || 'Unknown user'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2 flex-wrap">
+                        {/* Status Badge */}
                         {(() => {
                             const statusBadge = getStatusBadge(task.status);
                             return (
@@ -220,61 +275,21 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                 {formatEstimatedTime(task.estimatedHours)}
                             </div>
                         )}
-                    </>
-                )}
-
-                {isEditing && (
-                    <div className="flex flex-col sm:flex-row gap-2 w-full">
-                        <select
-                            value={editingTask.sprintId}
-                            onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                            className="flex-1 min-w-0 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        >
-                            <option value="">No sprint</option>
-                            {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
-                                <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
-                            ))}
-                        </select>
-                        <input
-                            type="number"
-                            value={editingTask.estimatedHours}
-                            onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
-                            className="w-full sm:w-24 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            placeholder="Hours"
-                            min="0.5"
-                            max="1000"
-                            step="0.5"
-                        />
                     </div>
                 )}
             </div>
 
-            {/* Assignee */}
-            {isEditing ? (
-                <select
-                    value={editingTask.assigneeId}
-                    onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                >
-                    <option value="">Unassigned</option>
-                    {allMembers.map(member => (
-                        <option key={member.userId} value={member.userId}>
-                            {member.user?.name || 'Unknown user'}
-                        </option>
-                    ))}
-                </select>
-            ) : (
-                task.assignee && (
-                    <div className="flex items-center gap-3 mt-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/80 dark:to-gray-900/80 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div className={`w-11 h-11 flex-shrink-0 bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name?.charAt(0)?.toUpperCase(), allMembers)} rounded-full flex items-center justify-center text-base font-bold text-white shadow-lg ring-2 ring-white/30 aspect-square`}>
-                            {task.assignee.name?.charAt(0)?.toUpperCase() || '?'}
-                        </div>
-                        <div className="flex-1">
-                            <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-1">Assigned to</div>
-                            <div className="text-base font-bold text-gray-900 dark:text-gray-100 leading-tight">{task.assignee.name}</div>
-                        </div>
+            {/* Assignee Card (View Mode Only) */}
+            {!isEditing && task.assignee && (
+                <div className="flex items-center gap-3 mt-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/80 dark:to-gray-900/80 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <div className={`w-11 h-11 flex-shrink-0 bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name?.charAt(0)?.toUpperCase(), allMembers)} rounded-full flex items-center justify-center text-base font-bold text-white shadow-lg ring-2 ring-white/30 aspect-square`}>
+                        {task.assignee.name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
-                )
+                    <div className="flex-1">
+                        <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-1">Assigned to</div>
+                        <div className="text-base font-bold text-gray-900 dark:text-gray-100 leading-tight">{task.assignee.name}</div>
+                    </div>
+                </div>
             )}
 
             {/* Action buttons positioned at bottom right */}
@@ -325,159 +340,161 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
             )}
 
             {/* Premium Full-Screen View Task Modal */}
-            {showViewModal && (
-                <div
-                    className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
-                    onClick={() => setShowViewModal(false)}
-                >
+            {
+                showViewModal && (
                     <div
-                        className="glass-card shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
-                        onClick={(e) => e.stopPropagation()}
+                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
+                        onClick={() => setShowViewModal(false)}
                     >
-                        {/* Header with Gradient Background */}
-                        <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
-                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
-                            <div className="flex items-start justify-between gap-6 relative z-10">
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        {(() => {
-                                            const statusBadge = getStatusBadge(task.status);
-                                            return (
-                                                <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${statusBadge.color}`}>
-                                                    <span className="mr-2">{statusBadge.icon}</span>
-                                                    {statusBadge.text}
+                        <div
+                            className="glass-card shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Header with Gradient Background */}
+                            <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
+                                <div className="flex items-start justify-between gap-6 relative z-10">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            {(() => {
+                                                const statusBadge = getStatusBadge(task.status);
+                                                return (
+                                                    <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${statusBadge.color}`}>
+                                                        <span className="mr-2">{statusBadge.icon}</span>
+                                                        {statusBadge.text}
+                                                    </span>
+                                                );
+                                            })()}
+                                            {task.estimatedHours && (
+                                                <span className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/70 border border-white/10 shadow-lg backdrop-blur-md">
+                                                    ⏱️ {formatEstimatedTime(task.estimatedHours)}
                                                 </span>
-                                            );
-                                        })()}
-                                        {task.estimatedHours && (
-                                            <span className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/70 border border-white/10 shadow-lg backdrop-blur-md">
-                                                ⏱️ {formatEstimatedTime(task.estimatedHours)}
-                                            </span>
-                                        )}
+                                            )}
+                                        </div>
+                                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
+                                            {task.title}
+                                        </h1>
                                     </div>
-                                    <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
-                                        {task.title}
-                                    </h1>
+                                    <button
+                                        onClick={() => setShowViewModal(false)}
+                                        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
+                                        title="Close"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Content area - Scrollable */}
+                            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar bg-transparent">
+                                {/* Description Section */}
+                                {task.description ? (
+                                    <div className="space-y-4">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                                            </svg>
+                                            Description
+                                        </h3>
+                                        <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
+                                            {task.description}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
+                                        <p className="text-white/40 italic text-sm">No description provided</p>
+                                    </div>
+                                )}
+
+                                {/* Metadata Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Assignee Card */}
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                            Assignee
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            {task.assignee ? (
+                                                <>
+                                                    <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), allMembers)} flex items-center justify-center text-white text-xl font-black shadow-xl ring-2 ring-white/10`}>
+                                                        {task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="text-xl font-bold text-white truncate">{task.assignee.name}</div>
+                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5">
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                            </svg>
+                                                            {task.assignee.email || 'No email available'}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
+                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
+                                                    <span>Unassigned</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Sprint Card */}
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                            Sprint Context
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            {task.sprint ? (
+                                                <>
+                                                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-2xl shadow-xl ring-2 ring-white/10 animate-pulse-slow">
+                                                        🚀
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="text-xl font-bold text-white truncate">{task.sprint.name}</div>
+                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5 font-medium">
+                                                            Part of current timeline
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
+                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">📋</div>
+                                                    <span>Not associated with any sprint</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between gap-4">
+                                <div className="text-xs text-white/30 font-medium">
+                                    Last updated: Just now
                                 </div>
                                 <button
                                     onClick={() => setShowViewModal(false)}
-                                    className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
-                                    title="Close"
+                                    className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                    <span>Close Details</span>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-
-                        {/* Content area - Scrollable */}
-                        <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar bg-transparent">
-                            {/* Description Section */}
-                            {task.description ? (
-                                <div className="space-y-4">
-                                    <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                                        </svg>
-                                        Description
-                                    </h3>
-                                    <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
-                                        {task.description}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
-                                    <p className="text-white/40 italic text-sm">No description provided</p>
-                                </div>
-                            )}
-
-                            {/* Metadata Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Assignee Card */}
-                                <div className="space-y-3">
-                                    <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                        Assignee
-                                    </h3>
-                                    <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
-                                        {task.assignee ? (
-                                            <>
-                                                <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), allMembers)} flex items-center justify-center text-white text-xl font-black shadow-xl ring-2 ring-white/10`}>
-                                                    {task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="text-xl font-bold text-white truncate">{task.assignee.name}</div>
-                                                    <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5">
-                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                        </svg>
-                                                        {task.assignee.email || 'No email available'}
-                                                    </div>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <div className="flex items-center gap-4 w-full text-white/40 italic">
-                                                <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
-                                                <span>Unassigned</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Sprint Card */}
-                                <div className="space-y-3">
-                                    <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                        Sprint Context
-                                    </h3>
-                                    <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
-                                        {task.sprint ? (
-                                            <>
-                                                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-2xl shadow-xl ring-2 ring-white/10 animate-pulse-slow">
-                                                    🚀
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="text-xl font-bold text-white truncate">{task.sprint.name}</div>
-                                                    <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5 font-medium">
-                                                        Part of current timeline
-                                                    </div>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <div className="flex items-center gap-4 w-full text-white/40 italic">
-                                                <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">📋</div>
-                                                <span>Not associated with any sprint</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between gap-4">
-                            <div className="text-xs text-white/30 font-medium">
-                                Last updated: Just now
-                            </div>
-                            <button
-                                onClick={() => setShowViewModal(false)}
-                                className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
-                            >
-                                <span>Close Details</span>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </button>
-                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

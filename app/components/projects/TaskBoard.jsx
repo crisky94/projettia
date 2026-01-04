@@ -54,7 +54,8 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         title: task.title,
         description: task.description || '',
         assigneeId: task.assignee?.id || '',
-        sprintId: task.sprint?.id || ''
+        sprintId: task.sprint?.id || '',
+        estimatedHours: task.estimatedHours || 0
     });
 
     // Handle inline editing
@@ -64,7 +65,8 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                 title: editingTask.title,
                 description: editingTask.description,
                 assigneeId: editingTask.assigneeId ? editingTask.assigneeId : null,
-                sprintId: editingTask.sprintId ? editingTask.sprintId : null
+                sprintId: editingTask.sprintId ? editingTask.sprintId : null,
+                estimatedHours: parseFloat(editingTask.estimatedHours) || 0
             };
 
             const response = await fetch(`/api/projects/${projectId}/tasks/${task.id}`, {
@@ -97,7 +99,8 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             title: task.title,
             description: task.description || '',
             assigneeId: task.assignee?.id || '',
-            sprintId: task.sprint?.id || ''
+            sprintId: task.sprint?.id || '',
+            estimatedHours: task.estimatedHours || 0
         });
         setIsEditing(false);
     };
@@ -144,18 +147,89 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             {...listeners}
             className={`task-card rounded-2xl border-2 p-5 transition-all duration-300 ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-2 hover:shadow-2xl cursor-grab active:cursor-grabbing hover:scale-[1.02]' : 'opacity-95'} backdrop-blur-sm`}
         >
-            {/* Title */}
-            <div className="mb-4">
-                {isEditing ? (
-                    <input
-                        type="text"
-                        value={editingTask.title}
-                        onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
-                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold"
-                        placeholder="Task title"
-                    />
-                ) : (
-                    <>
+            {/* Task Details Editor */}
+            {isEditing ? (
+                <div className="space-y-4 mb-4">
+                    {/* Title */}
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Objective Title</label>
+                        <input
+                            type="text"
+                            value={editingTask.title}
+                            onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
+                            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm font-semibold"
+                            placeholder="Task title"
+                        />
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Protocol Brief</label>
+                        <textarea
+                            value={editingTask.description}
+                            onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
+                            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
+                            placeholder="Task description"
+                            rows="2"
+                        />
+                    </div>
+
+                    {/* Meta Fields Group */}
+                    <div className="space-y-4">
+                        {/* Sprint Selection */}
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Sprint Context</label>
+                            <select
+                                value={editingTask.sprintId}
+                                onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
+                                className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
+                            >
+                                <option value="">No sprint</option>
+                                {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
+                                    <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Estimation Row */}
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Estimation (Hours)</label>
+                            <div className="relative">
+                                <input
+                                    type="number"
+                                    value={editingTask.estimatedHours}
+                                    onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
+                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
+                                    placeholder="0.0"
+                                    min="0"
+                                    step="0.5"
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 pointer-events-none">hrs</span>
+                            </div>
+                        </div>
+
+                        {/* Assignee Selection */}
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Assignee</label>
+                            <select
+                                value={editingTask.assigneeId}
+                                onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
+                                className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
+                            >
+                                <option value="">Unassigned</option>
+                                {allMembers.map(member => (
+                                    <option key={member.userId} value={member.userId}>
+                                        {member.user?.name || 'Unknown User'}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {/* View Mode Contents (Title, Description, etc.) */}
+                    <div className="mb-4">
                         <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
                             {isTitleLong ? truncateText(task.title, 50) : task.title}
                         </h3>
@@ -175,84 +249,55 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                 View more
                             </button>
                         )}
-                    </>
-                )}
-            </div>
+                    </div>
 
-            {/* Description */}
-            {isEditing ? (
-                <textarea
-                    value={editingTask.description}
-                    onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
-                    placeholder="Task description"
-                    rows="2"
-                />
-            ) : (
-                task.description && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
-                        {isDescriptionLong ? truncateText(task.description, 100) : task.description}
-                    </p>
-                )
-            )}
+                    {task.description && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
+                            {isDescriptionLong ? truncateText(task.description, 100) : task.description}
+                        </p>
+                    )}
 
-            {/* Assignee */}
-            {isEditing ? (
-                <select
-                    value={editingTask.assigneeId}
-                    onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
-                >
-                    <option value="">Unassigned</option>
-                    {allMembers.map(member => (
-                        <option key={member.userId} value={member.userId}>{member.user.name}</option>
-                    ))}
-                </select>
-            ) : (
-                <div className="flex items-center gap-3 mb-4">
-                    {assigneeName ? (
-                        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white flex items-center justify-center text-sm font-bold shadow-md ring-2 ring-white/20`}>
-                            {assigneeInitials}
+                    {/* Status & Assignee Summary */}
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            {assigneeName ? (
+                                <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white flex items-center justify-center text-sm font-bold shadow-md ring-2 ring-white/20`}>
+                                    {assigneeInitials}
+                                </div>
+                            ) : (
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white flex items-center justify-center text-sm font-bold shadow-md">
+                                    ?
+                                </div>
+                            )}
+                            <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                                {assigneeName || 'Unassigned'}
+                            </span>
                         </div>
-                    ) : (
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white flex items-center justify-center text-sm font-bold shadow-md">
-                            ?
+
+                        {task.estimatedHours > 0 && (
+                            <div className="flex items-center gap-1.5 px-2 py-1 bg-white/10 rounded-lg border border-white/5 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                ⏱️ {task.estimatedHours}h
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Sprint info Summary */}
+                    {task.sprint && (
+                        <div className="mb-4 p-4 bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-indigo-950/30 rounded-xl border-2 border-violet-200 dark:border-violet-800/30 shadow-md">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Sprint</div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{task.sprint.name}</div>
+                                </div>
+                            </div>
                         </div>
                     )}
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
-                        {assigneeName || 'Unassigned'}
-                    </span>
-                </div>
-            )}
-
-            {/* Sprint info */}
-            {!isEditing && task.sprint && (
-                <div className="mb-4 p-4 bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-indigo-950/30 rounded-xl border-2 border-violet-200 dark:border-violet-800/30 shadow-md">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                        </div>
-                        <div className="flex-1">
-                            <div className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Sprint</div>
-                            <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{task.sprint.name}</div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {isEditing && (
-                <select
-                    value={editingTask.sprintId}
-                    onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                    className="w-full p-2 mb-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                >
-                    <option value="">No sprint</option>
-                    {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
-                        <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
-                    ))}
-                </select>
+                </>
             )}
 
             {/* Action buttons */}
