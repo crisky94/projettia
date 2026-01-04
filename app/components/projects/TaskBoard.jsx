@@ -1562,130 +1562,150 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 {/* Full-Screen View Task Modal */}
                 {showViewModal && taskToView && (
                     <div
-                        className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
                         onClick={handleCloseViewModal}
-                        style={{
-                            position: 'fixed',
-                            top: '0',
-                            left: '0',
-                            right: '0',
-                            bottom: '0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
                     >
                         <div
-                            className="card-professional shadow-theme-xl rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
+                            className="glass-card shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Header */}
-                            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
-                                <div className="flex items-start justify-between gap-4">
+                            {/* Header with Gradient Background */}
+                            <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
+                                <div className="flex items-start justify-between gap-6 relative z-10">
                                     <div className="flex-1 min-w-0">
-                                        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2 break-words leading-tight overflow-hidden max-w-full" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                                            {taskToView.title}
-                                        </h1>
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${taskToView.status === 'PENDING' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/30 dark:text-amber-400' :
-                                                taskToView.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/30 dark:text-blue-300' :
-                                                    taskToView.status === 'COMPLETED' ? 'bg-green-100 text-green-800 dark:bg-green-500/30 dark:text-green-300' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-500/30 dark:text-gray-300'
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${taskToView.status === 'PENDING' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
+                                                taskToView.status === 'IN_PROGRESS' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                                                    taskToView.status === 'COMPLETED' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                                                        'bg-gray-500/20 text-gray-400'
                                                 }`}>
-                                                {taskToView.status === 'PENDING' ? '📋 Pending' :
-                                                    taskToView.status === 'IN_PROGRESS' ? '⚡ In Progress' :
-                                                        taskToView.status === 'COMPLETED' ? '✅ Completed' :
-                                                            taskToView.status}
+                                                <span className="mr-2">{
+                                                    taskToView.status === 'PENDING' ? '📋' :
+                                                        taskToView.status === 'IN_PROGRESS' ? '⚡' :
+                                                            taskToView.status === 'COMPLETED' ? '✅' : '📝'
+                                                }</span>
+                                                {taskToView.status.replace('_', ' ')}
                                             </span>
                                         </div>
+                                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
+                                            {taskToView.title}
+                                        </h1>
                                     </div>
                                     <button
                                         onClick={handleCloseViewModal}
-                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200 flex-shrink-0"
+                                        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
                                         title="Close"
                                     >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
 
                             {/* Content - Scrollable */}
-                            <div className="flex-1 overflow-y-auto max-h-[calc(80vh-140px)]">
-                                <div className="p-6 space-y-6">
-                                    {/* Description Section */}
-                                    {taskToView.description && (
-                                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
-                                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                Description
-                                            </h3>
-                                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm break-words overflow-wrap-anywhere max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word', whiteSpace: 'pre-wrap', maxWidth: '100%' }}>
-                                                {taskToView.description}
-                                            </div>
+                            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar">
+                                {/* Description Section */}
+                                {taskToView.description ? (
+                                    <div className="space-y-4">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                                            </svg>
+                                            Description
+                                        </h3>
+                                        <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
+                                            {taskToView.description}
                                         </div>
-                                    )}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
+                                        <p className="text-white/40 italic text-sm">No description provided</p>
+                                    </div>
+                                )}
 
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {/* Sprint Info */}
-                                        {taskToView.sprint && (
-                                            <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-violet-200 dark:border-violet-800">
-                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                                    <svg className="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                    </svg>
-                                                    Sprint
-                                                </h3>
-                                                <span className="bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 px-3 py-1 rounded-md text-sm font-medium inline-flex items-center gap-2">
-                                                    🚀 {taskToView.sprint.name}
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {/* Assignee */}
-                                        {taskToView.assignee && (
-                                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                    Assigned to
-                                                </h3>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                                {/* Metadata Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Assignee Card */}
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                            Assignee
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            {taskToView.assignee ? (
+                                                <>
+                                                    <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${getAvatarColor(taskToView.assignee.id, taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), members)} flex items-center justify-center text-white text-xl font-black shadow-xl ring-2 ring-white/10`}>
                                                         {taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white block">{taskToView.assignee.name}</span>
-                                                        {taskToView.assignee.email && (
-                                                            <div className="flex items-center gap-2 mt-1">
-                                                                <svg className="w-3 h-3 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                                </svg>
-                                                                <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300 truncate">{taskToView.assignee.email}</p>
-                                                            </div>
-                                                        )}
+                                                    <div className="min-w-0">
+                                                        <div className="text-xl font-bold text-white truncate">{taskToView.assignee.name}</div>
+                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5">
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                            </svg>
+                                                            {taskToView.assignee.email || 'No email available'}
+                                                        </div>
                                                     </div>
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
+                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
+                                                    <span>Unassigned</span>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Sprint Card */}
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                            Sprint Context
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            {taskToView.sprint ? (
+                                                <>
+                                                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-2xl shadow-xl ring-2 ring-white/10 animate-pulse-slow">
+                                                        🚀
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="text-xl font-bold text-white truncate">{taskToView.sprint.name}</div>
+                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5 font-medium">
+                                                            Part of current timeline
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
+                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">📋</div>
+                                                    <span>Not associated with any sprint</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Footer */}
-                            <div className="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={handleCloseViewModal}
-                                        className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
-                                    >
-                                        Close
-                                    </button>
+                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between gap-4">
+                                <div className="text-xs text-white/30 font-medium">
+                                    Last updated: Just now
                                 </div>
+                                <button
+                                    onClick={handleCloseViewModal}
+                                    className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
+                                >
+                                    <span>Close Details</span>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>
