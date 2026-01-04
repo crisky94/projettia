@@ -69,27 +69,62 @@ module.exports = {
                 '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
             },
             animation: {
-                'fade-in': 'fadeIn 0.2s ease-in-out',
+                'fade-in': 'fadeIn 0.3s ease-in-out',
+                'fade-in-up': 'fadeInUp 0.4s ease-out',
+                'fade-in-down': 'fadeInDown 0.4s ease-out',
                 'slide-up': 'slideUp 0.3s ease-out',
+                'slide-down': 'slideDown 0.3s ease-out',
                 'scale-in': 'scaleIn 0.2s ease-out',
+                'bounce-in': 'bounceIn 0.5s ease-out',
+                'shimmer': 'shimmer 2s infinite linear',
             },
             keyframes: {
                 fadeIn: {
                     '0%': { opacity: '0' },
                     '100%': { opacity: '1' },
                 },
+                fadeInUp: {
+                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                fadeInDown: {
+                    '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
                 slideUp: {
                     '0%': { transform: 'translateY(100%)', opacity: '0' },
+                    '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                slideDown: {
+                    '0%': { transform: 'translateY(-100%)', opacity: '0' },
                     '100%': { transform: 'translateY(0)', opacity: '1' },
                 },
                 scaleIn: {
                     '0%': { transform: 'scale(0.95)', opacity: '0' },
                     '100%': { transform: 'scale(1)', opacity: '1' },
                 },
+                bounceIn: {
+                    '0%': { transform: 'scale(0.3)', opacity: '0' },
+                    '50%': { transform: 'scale(1.05)' },
+                    '70%': { transform: 'scale(0.9)' },
+                    '100%': { transform: 'scale(1)', opacity: '1' },
+                },
+                shimmer: {
+                    '0%': { backgroundPosition: '-1000px 0' },
+                    '100%': { backgroundPosition: '1000px 0' },
+                },
             },
             fontFamily: {
-                sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                mono: ['SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'monospace'],
+                sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                mono: ['JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'monospace'],
+            },
+            letterSpacing: {
+                tighter: '-0.05em',
+                tight: '-0.025em',
+                normal: '0em',
+                wide: '0.025em',
+                wider: '0.05em',
+                widest: '0.1em',
             },
         },
     },

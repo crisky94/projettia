@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,61 +9,67 @@
 @import './button-utils.css';
 
 :root {
-  /* Dark theme only - professional dark mode */
-  --background: 12, 18, 36;
-  /* Navy oscuro profesional */
-  --foreground: 248, 250, 252;
-  /* Texto claro y limpio */
+  /* Enhanced Dark theme - professional and modern */
+  --background: 10, 15, 30;
+  /* Deep navy with subtle warmth */
+  --foreground: 250, 251, 252;
+  /* Crisp white text */
 
-  --card: 18, 32, 64;
-  /* Azul oscuro profesional para tarjetas */
-  --card-foreground: 226, 232, 240;
-  /* Texto elegante en tarjetas */
+  --card: 17, 24, 39;
+  /* Rich dark card background */
+  --card-foreground: 243, 244, 246;
+  /* Clean card text */
 
-  --border: 30, 58, 138;
-  /* Azul profundo para bordes */
-  --input: 30, 58, 138;
-  /* Bordes de inputs */
+  --border: 31, 41, 55;
+  /* Subtle borders */
+  --input: 31, 41, 55;
+  /* Input borders */
 
-  --primary: 147, 197, 253;
-  /* Azul suave para dark (blue-300) */
-  --primary-foreground: 17, 24, 39;
-  /* Texto oscuro sobre fondos claros */
+  --primary: 139, 92, 246;
+  /* Vibrant violet (violet-500) */
+  --primary-foreground: 255, 255, 255;
+  /* White on primary */
 
-  --accent: 196, 181, 253;
-  /* Lila suave profesional (violet-300) */
-  --accent-foreground: 17, 24, 39;
+  --accent: 236, 72, 153;
+  /* Pink accent (pink-500) */
+  --accent-foreground: 255, 255, 255;
 
-  --orange: 253, 230, 138;
-  /* Naranja suave profesional (amber-300) */
-  --orange-foreground: 17, 24, 39;
+  --orange: 251, 146, 60;
+  /* Warm orange (orange-400) */
+  --orange-foreground: 255, 255, 255;
 
-  --primary-dark: 96, 165, 250;
-  /* Hover más vivo (blue-400) */
+  --primary-dark: 124, 58, 237;
+  /* Deeper violet for hover (violet-600) */
 
-  --muted: 51, 65, 85;
-  /* Fondos apagados elegantes */
-  --muted-foreground: 148, 163, 184;
-  /* Texto apagado profesional */
+  --muted: 55, 65, 81;
+  /* Muted backgrounds */
+  --muted-foreground: 156, 163, 175;
+  /* Muted text */
 
-  --destructive: 248, 113, 113;
-  /* Rojo suave profesional (red-400) */
-  --destructive-foreground: 248, 250, 252;
+  --destructive: 239, 68, 68;
+  /* Professional red (red-500) */
+  --destructive-foreground: 255, 255, 255;
 
-  --success: 74, 222, 128;
-  /* Verde profesional (green-400) */
-  --warning: 250, 204, 21;
-  /* Amarillo profesional (yellow-400) */
+  --success: 34, 197, 94;
+  /* Vibrant green (green-500) */
+  --warning: 234, 179, 8;
+  /* Rich yellow (yellow-500) */
 
-  --ring: 96, 165, 250;
-  /* Focus ring azul profesional */
+  --ring: 139, 92, 246;
+  /* Violet focus ring */
 
-  /* Sombras para modo oscuro con mejor contraste */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  /* Professional shadow system */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Glass-morphism variables */
+  --glass-bg: rgba(17, 24, 39, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 /* Base styles for mobile-first design */
@@ -133,14 +141,16 @@ html {
 body {
   color: rgb(var(--foreground));
   background: rgb(var(--background));
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.4;
-  /* Tighter line height for mobile */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  /* Better line height for readability */
   /* Prevent horizontal overflow */
   overflow-x: hidden;
   /* Better font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Professional letter spacing */
+  letter-spacing: -0.011em;
   /* Mobile first sizing */
   min-height: 100vh;
   min-height: 100dvh;
@@ -800,6 +810,143 @@ a {
   .max-w-2xl,
   .max-w-xl {
     max-width: 100% !important;
+  }
+
+  /* ========================================
+     PROFESSIONAL UTILITY CLASSES
+     ======================================== */
+
+  /* Glass-morphism card effect */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 1rem;
+  }
+
+  /* Gradient text effects */
+  .gradient-text {
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-warm {
+    background: linear-gradient(135deg, rgb(var(--orange)) 0%, rgb(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Shimmer loading effect */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(to right,
+        rgb(var(--muted)) 0%,
+        rgb(var(--muted-foreground) / 0.2) 20%,
+        rgb(var(--muted)) 40%,
+        rgb(var(--muted)) 100%);
+    background-size: 1000px 100%;
+  }
+
+  /* Smooth shadow transitions */
+  .smooth-shadow {
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .smooth-shadow:hover {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  /* Professional button with gradient */
+  .btn-gradient {
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--primary-dark)) 100%);
+    color: rgb(var(--primary-foreground));
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .btn-gradient:active {
+    transform: translateY(0);
+  }
+
+  /* Animated gradient background */
+  @keyframes gradient-shift {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .bg-gradient-animated {
+    background: linear-gradient(-45deg,
+        rgb(var(--primary) / 0.1),
+        rgb(var(--accent) / 0.1),
+        rgb(var(--orange) / 0.1),
+        rgb(var(--primary) / 0.1));
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  /* Professional focus ring */
+  .focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: outline-color 0.2s;
+  }
+
+  .focus-ring:focus-visible {
+    outline-color: rgb(var(--ring));
+  }
+
+  /* Smooth scale animation */
+  .hover-scale {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-scale:active {
+    transform: scale(0.98);
   }
 }
 

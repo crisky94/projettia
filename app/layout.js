@@ -63,38 +63,51 @@ export default function RootLayout({ children }) {
           <meta name="format-detection" content="telephone=no" />
         </head>
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
-          <header className="flex justify-between items-center px-4 py-3 bg-card border-b border-border relative w-full z-50">
-            <div className="flex items-center gap-3">
-              <Image src="/logo.png" width={56} height={56} alt="Projettia logo" priority />
-            </div>
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <SignedOut>
-                <div className="flex gap-2">
-                  <SignInButton>
-                    <button className="text-sm px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton>
-                    <button className="bg-primary text-primary-foreground rounded-lg font-medium text-sm px-4 py-2 hover:opacity-90 transition-opacity">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
+          <header className="sticky top-0 z-50 glass-card border-b border-border/50 backdrop-blur-xl bg-card/80">
+            <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                  <Image
+                    src="/logo.png"
+                    width={56}
+                    height={56}
+                    alt="Projettia logo"
+                    priority
+                    className="relative rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-              </SignedOut>
-              <SignedIn>
-                <UserButton
-                  signOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-10 h-10",
-                      userButtonBox: "w-14 h-10",
-                      userButtonTrigger: "w-14 h-14"
-                    }
-                  }}
-                />
-              </SignedIn>
+                <h1 className="text-xl sm:text-2xl font-bold gradient-text hidden sm:block">Projettia</h1>
+              </div>
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
+                <SignedOut>
+                  <div className="flex gap-2">
+                    <SignInButton>
+                      <button className="text-sm px-4 py-2 rounded-lg border border-border hover:bg-muted transition-all duration-200 hover-scale font-medium">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                    <SignUpButton>
+                      <button className="btn-gradient text-sm px-4 py-2">
+                        Sign Up
+                      </button>
+                    </SignUpButton>
+                  </div>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton
+                    signOutUrl="/"
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-10 h-10 ring-2 ring-primary/20 hover:ring-primary/40 transition-all",
+                        userButtonBox: "w-14 h-10",
+                        userButtonTrigger: "w-14 h-14 hover:scale-105 transition-transform"
+                      }
+                    }}
+                  />
+                </SignedIn>
+              </div>
             </div>
           </header>
           <SignedIn>

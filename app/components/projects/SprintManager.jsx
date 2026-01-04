@@ -103,7 +103,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     };
 
     return (
-        <div className={`p-4 sm:p-6 lg:p-7 rounded-lg border-2 transition-all duration-200 hover:shadow-lg group w-full break-words relative min-h-[180px] min-w-0 ${getStatusStyles(task.status)}`}>
+        <div className={`p-5 sm:p-6 lg:p-7 rounded-2xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group w-full break-words relative min-h-[200px] min-w-0 backdrop-blur-sm ${getStatusStyles(task.status)}`}>
             {/* Header */}
             <div className="mb-3">
                 <div className="flex-1">
@@ -117,7 +117,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         />
                     ) : (
                         <div>
-                            <h3 className="font-semibold text-lg lg:text-xl mb-2 break-words overflow-hidden">
+                            <h3 className="font-bold text-lg lg:text-xl mb-2 break-words overflow-hidden bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                                 {isTitleLong ? truncateText(task.title, 50) : task.title}
                             </h3>
                             {shouldShowViewMore && (
@@ -143,20 +143,65 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 />
             ) : (
                 task.description && (
-                    <p className="text-sm opacity-80 mb-3 line-clamp-2">
+                    <p className="text-sm opacity-75 mb-3 line-clamp-2 leading-relaxed">
                         {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                     </p>
                 )
             )}
 
             {/* Sprint and Time Info */}
-            <div className="flex items-center justify-between mb-3 text-xs">
-                {isEditing ? (
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+                {!isEditing && (
+                    <>
+                        {/* Status Badge with icon */}
+                        {(() => {
+                            const statusBadge = getStatusBadge(task.status);
+                            return (
+                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs shadow-md ${statusBadge.color}`}>
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        {task.status === 'PENDING' && (
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                        )}
+                                        {task.status === 'IN_PROGRESS' && (
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                                        )}
+                                        {task.status === 'COMPLETED' && (
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        )}
+                                    </svg>
+                                    {statusBadge.text}
+                                </div>
+                            );
+                        })()}
+
+                        {/* Sprint Badge */}
+                        {task.sprint && (
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg font-semibold text-xs shadow-md">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                {task.sprint.name}
+                            </div>
+                        )}
+
+                        {/* Time Estimate Badge */}
+                        {task.estimatedHours && (
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold text-xs shadow-md">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                </svg>
+                                {formatEstimatedTime(task.estimatedHours)}
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {isEditing && (
                     <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <select
                             value={editingTask.sprintId}
                             onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                            className="flex-1 min-w-0 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            className="flex-1 min-w-0 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         >
                             <option value="">No sprint</option>
                             {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
@@ -167,35 +212,12 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             type="number"
                             value={editingTask.estimatedHours}
                             onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
-                            className="w-full sm:w-20 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            placeholder="0.5h"
+                            className="w-full sm:w-24 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            placeholder="Hours"
                             min="0.5"
                             max="1000"
                             step="0.5"
                         />
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-2 flex-wrap">
-                        {/* Status Badge */}
-                        {(() => {
-                            const statusBadge = getStatusBadge(task.status);
-                            return (
-                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}>
-                                    <span className="text-xs">{statusBadge.icon}</span>
-                                    {statusBadge.text}
-                                </span>
-                            );
-                        })()}
-                        {task.sprint && (
-                            <span className="bg-white/20 px-2 py-1 rounded-full font-medium text-xs">
-                                🚀 {task.sprint.name}
-                            </span>
-                        )}
-                        {task.estimatedHours && (
-                            <span className="bg-white/20 px-2 py-1 rounded-full font-medium text-xs">
-                                ⏱️ {formatEstimatedTime(task.estimatedHours)}
-                            </span>
-                        )}
                     </div>
                 )}
             </div>
@@ -205,9 +227,9 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 <select
                     value={editingTask.assigneeId}
                     onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
-                    <option value="">unasigned</option>
+                    <option value="">Unassigned</option>
                     {allMembers.map(member => (
                         <option key={member.userId} value={member.userId}>
                             {member.user?.name || 'Unknown user'}
@@ -216,30 +238,33 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 </select>
             ) : (
                 task.assignee && (
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs font-semibold">
+                    <div className="flex items-center gap-3 mt-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/80 dark:to-gray-900/80 rounded-xl border border-gray-200 dark:border-gray-700">
+                        <div className="w-11 h-11 flex-shrink-0 bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 rounded-full flex items-center justify-center text-base font-bold text-white shadow-lg ring-2 ring-white/30 aspect-square">
                             {task.assignee.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
-                        <span className="text-sm font-medium">{task.assignee.name}</span>
+                        <div className="flex-1">
+                            <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-1">Assigned to</div>
+                            <div className="text-base font-bold text-gray-900 dark:text-gray-100 leading-tight">{task.assignee.name}</div>
+                        </div>
                     </div>
                 )
             )}
 
             {/* Action buttons positioned at bottom right */}
             {!isEditing && (
-                <div className="absolute bottom-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="p-1.5 hover:bg-white/20 rounded-md transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700"
                         title="Edit task"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                     </button>
                     <button
                         onClick={() => onDeleteTask(task.id)}
-                        className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400 min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 text-red-600 dark:text-red-400 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700"
                         title="Delete task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -551,11 +576,11 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
     };
 
     return (
-        <div className={`rounded-xl border-2 bg-card text-slate-400 transition-all duration-200 w-full overflow-hidden ${getSprintStatusStyles(sprint.status)}`}>
+        <div className={`rounded-2xl border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 text-slate-400 transition-all duration-300 w-full overflow-hidden shadow-lg hover:shadow-2xl ${getSprintStatusStyles(sprint.status)}`}>
             {/* Sprint Header */}
             <div className="p-4 border-b border-current/20">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 flex-1">
                         <span className="text-2xl">{getStatusIcon(sprint.status)}</span>
                         {isEditing ? (
                             <div className="flex-1 space-y-2">
@@ -604,12 +629,31 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             </div>
                         ) : (
                             <div>
-                                <h3 className="text-lg font-bold">{sprint.name}</h3>
-                                <div className="flex items-center gap-4 text-sm opacity-80">
-                                    <span>📅 {formatDate(sprint.startDate)} - {formatDate(sprint.endDate)}</span>
-                                    <span>📊 {getCompletedTasksCount()}/{tasks.length} tasks</span>
+                                <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{sprint.name}</h3>
+                                <div className="flex items-center gap-3 mt-2 flex-wrap">
+                                    {/* Date Range */}
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold shadow-sm">
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                        </svg>
+                                        {formatDate(sprint.startDate)} - {formatDate(sprint.endDate)}
+                                    </div>
+                                    {/* Task Progress */}
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-xs font-semibold shadow-sm">
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                            <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                                        </svg>
+                                        {getCompletedTasksCount()}/{tasks.length} tasks
+                                    </div>
+                                    {/* Time Estimate */}
                                     {getTotalEstimatedHours() > 0 && (
-                                        <span>⏱️ {getTotalEstimatedHours()}h estimated</span>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg text-xs font-semibold shadow-sm">
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                            </svg>
+                                            {getTotalEstimatedHours()}h estimated
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -808,10 +852,10 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                         disabled={isSubmitting}
                                     >
                                         <option value="">unasigned</option>
-                                        {!Array.isArray(membersToUse) || membersToUse.length === 0 ? (
+                                        {!Array.isArray(allMembers) || allMembers.length === 0 ? (
                                             <option disabled>Loading members...</option>
                                         ) : (
-                                            membersToUse.map((member) => (
+                                            allMembers.map((member) => (
                                                 <option key={member.userId} value={member.userId}>
                                                     {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
                                                 </option>
@@ -1295,20 +1339,20 @@ const SprintManager = ({
         <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-10 bg-background overflow-x-hidden min-w-0">
             <div className="space-y-6 sm:space-y-10 w-full max-w-full sm:max-w-[1400px] 2xl:max-w-[1600px] mx-auto min-w-0">
                 {/* Header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 sm:p-6 lg:p-8">
+                <div className="bg-gradient-to-br from-white via-violet-50/30 to-purple-50/30 dark:from-gray-900 dark:via-violet-950/20 dark:to-purple-950/20 rounded-2xl shadow-xl border-2 border-violet-100 dark:border-violet-900/30 p-6 sm:p-8 lg:p-10 backdrop-blur-sm">
                     <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0 min-w-0">
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                <svg className="w-8 h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        <div className="flex items-center gap-5">
+                            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                                <svg className="w-10 h-10 lg:w-12 lg:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
                             <div>
-                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">Sprint Management</h2>
-                                <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg lg:text-xl">Organize tasks into time-boxed sprints</p>
+                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">Sprint Management</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mt-2 text-base lg:text-lg font-medium">Organize and track your team's work efficiently</p>
                             </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                             <button
                                 onClick={() => {
                                     if (disableCreate) {
@@ -1320,25 +1364,29 @@ const SprintManager = ({
                                     }
                                     setShowAddTaskModal(true);
                                 }}
-                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
+                                className={`px-6 py-3.5 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 hover:from-indigo-700 hover:via-purple-700 hover:to-violet-700 transform hover:scale-105 hover:shadow-2xl'} text-white rounded-xl font-bold shadow-xl transition-all duration-300 flex items-center gap-2.5 min-h-[52px] touch-action-manipulation group`}
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="hidden sm:inline text-lg">New Task</span>
-                                <span className="sm:hidden text-lg">Task</span>
+                                <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </div>
+                                <span className="hidden sm:inline text-base">New Task</span>
+                                <span className="sm:hidden text-base">Task</span>
                             </button>
                             <button
                                 onClick={() => {
                                     setShowAddSprintModal(true);
                                 }}
-                                className={`px-7 py-4 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105'} text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-h-[50px] touch-action-manipulation`}
+                                className={`px-6 py-3.5 ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 transform hover:scale-105 hover:shadow-2xl'} text-white rounded-xl font-bold shadow-xl transition-all duration-300 flex items-center gap-2.5 min-h-[52px] touch-action-manipulation group`}
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="hidden sm:inline text-lg">New Sprint</span>
-                                <span className="sm:hidden text-lg">Sprint</span>
+                                <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <span className="hidden sm:inline text-base">New Sprint</span>
+                                <span className="sm:hidden text-base">Sprint</span>
                             </button>
                         </div>
                     </div>
@@ -1364,12 +1412,13 @@ const SprintManager = ({
 
                     {/* Tasks without sprint */}
                     {getTasksWithoutSprint().length > 0 && (
-                        <div className="bg-card rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
-                            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 shadow-lg">
+                            <div className="p-5 border-b-2 border-gray-200 dark:border-gray-700">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                                        📋 Tasks without Sprint
-                                        <span className="text-sm font-normal">({getTasksWithoutSprint().length})</span>
+                                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-3">
+                                        <span className="text-2xl">📋</span>
+                                        <span>Tasks without Sprint</span>
+                                        <span className="text-sm font-semibold bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full">({getTasksWithoutSprint().length})</span>
                                     </h3>
                                 </div>
                             </div>

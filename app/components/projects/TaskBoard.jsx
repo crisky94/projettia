@@ -114,12 +114,12 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         return text.substring(0, maxLength) + '...';
     };
 
-    // Función para obtener estilos basados en el status (igual que SprintManager)
+    // Professional status styles with gradients
     const getStatusStyles = (status) => {
         const styles = {
-            PENDING: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/10 dark:border-amber-800 dark:text-amber-400',
-            IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/10 dark:border-blue-800 dark:text-blue-400',
-            COMPLETED: 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/10 dark:border-green-800 dark:text-green-400',
+            PENDING: 'bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50/30 border-amber-300 text-amber-800 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 dark:border-amber-700 dark:text-amber-300 shadow-lg shadow-amber-100/50 dark:shadow-amber-950/30',
+            IN_PROGRESS: 'bg-gradient-to-br from-blue-50 via-indigo-50/50 to-violet-50/30 border-blue-300 text-blue-800 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-violet-950/20 dark:border-blue-700 dark:text-blue-300 shadow-lg shadow-blue-100/50 dark:shadow-blue-950/30',
+            COMPLETED: 'bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50/30 border-green-300 text-green-800 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 dark:border-green-700 dark:text-green-300 shadow-lg shadow-green-100/50 dark:shadow-green-950/30',
         };
         return styles[status] || styles.PENDING;
     };
@@ -130,7 +130,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`task-card ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-1 cursor-grab' : 'opacity-95'}`}
+            className={`task-card rounded-2xl border-2 p-5 transition-all duration-300 ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-2 hover:shadow-2xl cursor-grab active:cursor-grabbing hover:scale-[1.02]' : 'opacity-95'} backdrop-blur-sm`}
         >
             {/* Title */}
             <div className="mb-4">
@@ -144,7 +144,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     />
                 ) : (
                     <>
-                        <h3 className="task-card-title text-foreground/90">
+                        <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
                             {isTitleLong ? truncateText(task.title, 50) : task.title}
                         </h3>
                         {shouldShowViewMore && (
@@ -153,9 +153,13 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                     e.stopPropagation?.();
                                     onViewTask && onViewTask(task);
                                 }}
-                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+                                className="mt-2 text-xs px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-all duration-200 hover:scale-105 inline-flex items-center gap-1"
                                 title="View full task"
                             >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
                                 View more
                             </button>
                         )}
@@ -174,7 +178,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                 />
             ) : (
                 task.description && (
-                    <p className="task-card-description text-muted-foreground truncate">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
                         {isDescriptionLong ? truncateText(task.description, 100) : task.description}
                     </p>
                 )
@@ -193,45 +197,50 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     ))}
                 </select>
             ) : (
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-3 mb-4">
                     {assigneeName ? (
-                        <div className={`task-assignee-avatar bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white`}>
+                        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${getAvatarColor(task.assignee.id, assigneeInitials, allMembers)} text-white flex items-center justify-center text-sm font-bold shadow-md ring-2 ring-white/20`}>
                             {assigneeInitials}
                         </div>
                     ) : (
-                        <div className="task-assignee-avatar bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white flex items-center justify-center text-sm font-bold shadow-md">
                             ?
                         </div>
                     )}
-                    <span className="task-assignee-name text-card-foreground truncate">
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
                         {assigneeName || 'Unassigned'}
                     </span>
                 </div>
             )}
 
             {/* Sprint info */}
-            {isEditing ? (
+            {!isEditing && task.sprint && (
+                <div className="mb-4 p-4 bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-indigo-950/30 rounded-xl border-2 border-violet-200 dark:border-violet-800/30 shadow-md">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        </div>
+                        <div className="flex-1">
+                            <div className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Sprint</div>
+                            <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{task.sprint.name}</div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isEditing && (
                 <select
                     value={editingTask.sprintId}
                     onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
+                    className="w-full p-2 mb-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                     <option value="">No sprint</option>
                     {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
                         <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
                     ))}
                 </select>
-            ) : (
-                task.sprint && (
-                    <div className="mb-4 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium opacity-80">Sprint:</span>
-                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-md text-xs font-medium truncate">
-                                🚀 {task.sprint.name}
-                            </span>
-                        </div>
-                    </div>
-                )
             )}
 
             {/* Action buttons */}
@@ -244,10 +253,10 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                     e.stopPropagation?.();
                                     setIsEditing(true);
                                 }}
-                                className="task-action-button hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+                                className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110"
                                 title="Edit task"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </button>
@@ -256,7 +265,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                     e.stopPropagation?.();
                                     onDeleteTask && onDeleteTask(task.id);
                                 }}
-                                className="task-action-button hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 transition-colors"
+                                className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 text-red-600 dark:text-red-400"
                                 title="Delete task"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,30 +411,30 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-4 flex-1 min-w-0">
-                        <div className={`task-status-icon 
-                            ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-                                status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                                    status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-transform duration-300 ring-2 ring-white/20
+                            ${status === 'PENDING' ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600' :
+                                status === 'IN_PROGRESS' ? 'bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600' :
+                                    status === 'COMPLETED' ? 'bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600' :
                                         'bg-gradient-to-br from-gray-500 to-gray-600'}
                         `}>
-                            <span className="text-white">
+                            <span className="text-2xl">
                                 {status === 'PENDING' ? '📋' : status === 'IN_PROGRESS' ? '⚡' : status === 'COMPLETED' ? '✅' : '📝'}
                             </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h3 className={`task-column-title ${getHeaderStyles(status)}`}>
+                            <h3 className={`text-xl font-bold mb-1 ${getHeaderStyles(status)}`}>
                                 {title.replace(/^[📋⚡✅📝]\s*/, '')}
                             </h3>
-                            <p className="task-column-subtitle text-muted-foreground">
-                                {status === 'PENDING' ? 'Pending tasks to start' :
-                                    status === 'IN_PROGRESS' ? 'Tasks in active development' :
-                                        status === 'COMPLETED' ? 'Successfully completed tasks' :
+                            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                                {status === 'PENDING' ? 'Ready to start' :
+                                    status === 'IN_PROGRESS' ? 'Work in progress' :
+                                        status === 'COMPLETED' ? 'Done and dusted' :
                                             'Task status'}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`task-count-badge ${getBadgeStyles(status)}`}>
+                        <span className={`px-4 py-2 rounded-xl font-bold text-sm shadow-lg ${getBadgeStyles(status)}`}>
                             {tasks.length}
                         </span>
                     </div>
