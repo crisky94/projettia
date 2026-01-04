@@ -4,6 +4,43 @@ import { CSS } from '@dnd-kit/utilities';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
+/**
+ * Global helper to get consistent avatar colors based on user ID and initials.
+ * Handles collisions by rotating through a color palette for members with same initials.
+ */
+const getAvatarColor = (userId, initials, allMembersList) => {
+    const colors = [
+        'from-violet-500 to-purple-600',
+        'from-blue-500 to-indigo-600',
+        'from-green-500 to-emerald-600',
+        'from-pink-500 to-rose-600',
+        'from-orange-500 to-amber-600',
+        'from-teal-500 to-cyan-600',
+        'from-red-500 to-pink-600',
+        'from-indigo-500 to-blue-600',
+        'from-emerald-500 to-teal-600',
+        'from-purple-500 to-violet-600'
+    ];
+
+    if (!allMembersList || !Array.isArray(allMembersList)) {
+        return colors[0];
+    }
+
+    const membersWithSameInitials = allMembersList.filter(member => {
+        if (!member?.user?.name) return false;
+        const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        return memberInitials === initials;
+    });
+
+    if (membersWithSameInitials.length <= 1) {
+        return colors[0];
+    }
+
+    const memberIndex = membersWithSameInitials.findIndex(member => (member.userId === userId || member.id === userId));
+    return colors[memberIndex !== -1 ? memberIndex % colors.length : 0];
+};
+
+
 const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
@@ -73,31 +110,6 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
         zIndex: isDragging ? 1000 : 1,
     };
 
-    // Helper: consistent avatar color when initials collide across members
-    const getAvatarColor = (userId, initials, allMembersList) => {
-        const colors = [
-            'from-blue-500 to-purple-600',
-            'from-green-500 to-teal-600',
-            'from-pink-500 to-rose-600',
-            'from-orange-500 to-red-600',
-            'from-indigo-500 to-blue-600',
-            'from-purple-500 to-pink-600',
-            'from-teal-500 to-cyan-600',
-            'from-yellow-500 to-orange-600',
-            'from-emerald-500 to-green-600',
-            'from-violet-500 to-purple-600',
-        ];
-
-        const membersWithSameInitials = allMembersList.filter(member => {
-            const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            return memberInitials === initials;
-        });
-
-        if (membersWithSameInitials.length === 1) return colors[0];
-
-        const memberIndex = membersWithSameInitials.findIndex(member => member.userId === userId);
-        return colors[memberIndex % colors.length];
-    };
 
     const assigneeName = task.assignee?.name || null;
     const assigneeInitials = assigneeName
@@ -1156,34 +1168,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     {Array.isArray(members) && members.map((member) => {
                                         const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
-                                        // Function to get avatar color based on initials conflicts
-                                        const getAvatarColor = (userId, initials, allMembers) => {
-                                            const colors = [
-                                                'from-violet-500 to-purple-600',
-                                                'from-blue-500 to-indigo-600',
-                                                'from-green-500 to-emerald-600',
-                                                'from-pink-500 to-rose-600',
-                                                'from-orange-500 to-amber-600',
-                                                'from-teal-500 to-cyan-600',
-                                                'from-red-500 to-pink-600',
-                                                'from-indigo-500 to-blue-600',
-                                                'from-emerald-500 to-teal-600',
-                                                'from-purple-500 to-violet-600'
-                                            ];
-
-                                            // Find all members with the same initials
-                                            const membersWithSameInitials = allMembers.filter(m => {
-                                                const memberInitials = m.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                                                return memberInitials === initials;
-                                            });
-
-                                            if (membersWithSameInitials.length === 1) {
-                                                return colors[0];
-                                            }
-
-                                            const memberIndex = membersWithSameInitials.findIndex(m => m.userId === userId);
-                                            return colors[memberIndex % colors.length];
-                                        };
 
                                         const avatarColor = getAvatarColor(member.userId, initials, members);
 
@@ -1693,10 +1677,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             </div>
 
                             {/* Footer */}
-                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between gap-4">
-                                <div className="text-xs text-white/30 font-medium">
-                                    Last updated: Just now
-                                </div>
+                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-end gap-4">
                                 <button
                                     onClick={handleCloseViewModal}
                                     className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
