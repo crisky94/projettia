@@ -4,9 +4,93 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 // Component to display a task card with sprint information
-const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], sprints = [] }) => {
+// --- Global Helper Functions ---
+
+const getStatusStyles = (status) => {
+    const styles = {
+        PENDING: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/10 dark:border-amber-800 dark:text-amber-400',
+        IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/10 dark:border-blue-800 dark:text-blue-400',
+        COMPLETED: 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/10 dark:border-green-800 dark:text-green-400',
+        CANCELLED: 'bg-red-50 border-red-200 text-red-700 dark:bg-red-900/10 dark:border-red-800 dark:text-red-400'
+    };
+    return styles[status] || styles.PENDING;
+};
+
+const getStatusBadge = (status) => {
+    const statusConfig = {
+        'PENDING': { color: 'text-amber-600 bg-amber-200', icon: '⏳', text: 'Pending' },
+        'IN_PROGRESS': { color: 'text-blue-600 bg-blue-200', icon: '⚡', text: 'In Progress' },
+        'COMPLETED': { color: 'text-green-600 bg-green-100', icon: '✅', text: 'Completed' },
+        'CANCELLED': { color: 'text-red-600 bg-red-100', icon: '❌', text: 'Cancelled' }
+    };
+    return statusConfig[status] || { color: 'text-gray-700 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
+};
+
+const formatEstimatedTime = (hours) => {
+    if (!hours) return null;
+    if (hours < 1) {
+        const minutes = Math.round(hours * 60);
+        return `${minutes}min`;
+    }
+    if (hours >= 8) return `${Math.round(hours / 8)}d`;
+    return `${hours}h`;
+};
+
+const truncateText = (text, maxLength) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+};
+
+const getAvatarColor = (userId, initials, allMembersList) => {
+    const colors = [
+        'from-blue-500 to-purple-600', 'from-green-500 to-teal-600',
+        'from-pink-500 to-rose-600', 'from-orange-500 to-red-600',
+        'from-indigo-500 to-blue-600', 'from-purple-500 to-pink-600',
+        'from-teal-500 to-cyan-600', 'from-yellow-500 to-orange-600',
+        'from-emerald-500 to-green-600', 'from-violet-500 to-purple-600',
+    ];
+    const membersWithSameInitials = (allMembersList || []).filter(member => {
+        if (!member.user?.name) return false;
+        const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        return memberInitials === initials;
+    });
+    if (membersWithSameInitials.length <= 1) return colors[0];
+    const memberIndex = membersWithSameInitials.findIndex(member => member.userId === userId);
+    return colors[memberIndex !== -1 ? memberIndex % colors.length : 0];
+};
+
+const getSprintStatusStyles = (status) => {
+    switch (status) {
+        case 'ACTIVE': return 'bg-emerald-500/10 border-emerald-500 text-emerald-500 border-2';
+        case 'COMPLETED': return 'bg-blue-500/10 border-blue-500 text-blue-500 border-2';
+        case 'PLANNED':
+        case 'PLANNING': return 'bg-violet-500/10 border-violet-500 text-violet-500 border-2';
+        case 'CANCELLED': return 'bg-red-500/10 border-red-500 text-red-500 border-2';
+        default: return 'bg-gray-500/10 border-gray-500 text-gray-500 border-2';
+    }
+};
+
+const getStatusIcon = (status) => {
+    switch (status) {
+        case 'ACTIVE': return '⚡';
+        case 'COMPLETED': return '✨';
+        case 'PLANNED':
+        case 'PLANNING': return '📅';
+        case 'CANCELLED': return '❌';
+        default: return '🔋';
+    }
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return 'Not set';
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+// --- Components ---
+
+const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, onViewTask, allMembers = [], sprints = [] }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [showViewModal, setShowViewModal] = useState(false);
     const [editingTask, setEditingTask] = useState({
         title: task.title,
         description: task.description || '',
@@ -15,177 +99,42 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
         estimatedHours: task.estimatedHours || ''
     });
 
-    const getStatusStyles = (status) => {
-        // Background adapts to light/dark; borders darken in dark mode for contrast
-        const styles = {
-            PENDING: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/10 dark:border-amber-800 dark:text-amber-400',
-            IN_PROGRESS: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/10 dark:border-blue-800 dark:text-blue-400',
-            COMPLETED: 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/10 dark:border-green-800 dark:text-green-400',
-            CANCELLED: 'bg-red-50 border-red-200 text-red-700 dark:bg-red-900/10 dark:border-red-800 dark:text-red-400'
-        };
-        return styles[status] || styles.PENDING;
-    };
-
-    const getStatusBadge = (status) => {
-        const statusConfig = {
-            'PENDING': {
-                color: 'text-amber-600 bg-amber-200',
-                icon: '⏳',
-                text: 'Pending'
-            },
-            'IN_PROGRESS': {
-                color: 'text-blue-600 bg-blue-200',
-                icon: '⚡',
-                text: 'In Progress'
-            },
-            'COMPLETED': {
-                color: 'text-green-600 bg-green-100',
-                icon: '✅',
-                text: 'Completed'
-            },
-            'CANCELLED': {
-                color: 'text-red-600 bg-red-100',
-                icon: '❌',
-                text: 'Cancelled'
-            }
-        };
-        return statusConfig[status] || { color: 'text-gray-700 bg-gray-100 dark:bg-gray-700', icon: '❓', text: status };
-    };
-
-    const handleSave = async () => {
-        try {
-            await onUpdateTask(task.id, {
-                title: editingTask.title,
-                description: editingTask.description,
-                assigneeId: editingTask.assigneeId || null,
-                sprintId: editingTask.sprintId || null,
-                estimatedHours: editingTask.estimatedHours ? parseFloat(editingTask.estimatedHours) : null
-            });
-            setIsEditing(false);
-            toast.success('Task updated successfully !');
-        } catch (error) {
-            console.error('Error updating task: ', error);
-            toast.error('Error updating task ');
-        }
-    };
-
-    const handleCancel = () => {
-        setEditingTask({
-            title: task.title,
-            description: task.description || '',
-            assigneeId: task.assignee?.id || '',
-            sprintId: task.sprint?.id || '',
-            estimatedHours: task.estimatedHours || ''
-        });
-        setIsEditing(false);
-    };
-
-    const formatEstimatedTime = (hours) => {
-        if (!hours) return null;
-        if (hours < 1) {
-            // Convert to minutes and handle decimal precision
-            const minutes = Math.round(hours * 60);
-            return `${minutes}min`;
-        }
-        if (hours >= 8) return `${Math.round(hours / 8)}d`;
-        // Show hours as they are
-        return `${hours}h`;
-    };
-
-    // Helper functions to determine if content is too long
     const isTitleLong = task.title && task.title.length > 50;
-    const isDescriptionLong = task.description && task.description.length > 100;
-    // Always show View More option since most content is now hidden in the card
-    const shouldShowViewMore = true;
 
-    const truncateText = (text, maxLength) => {
-        if (!text || text.length <= maxLength) return text;
-        return text.substring(0, maxLength) + '...';
-    };
-
-    // Helper: consistent avatar color when initials collide across members
-    const getAvatarColor = (userId, initials, allMembersList) => {
-        const colors = [
-            'from-blue-500 to-purple-600',
-            'from-green-500 to-teal-600',
-            'from-pink-500 to-rose-600',
-            'from-orange-500 to-red-600',
-            'from-indigo-500 to-blue-600',
-            'from-purple-500 to-pink-600',
-            'from-teal-500 to-cyan-600',
-            'from-yellow-500 to-orange-600',
-            'from-emerald-500 to-green-600',
-            'from-violet-500 to-purple-600',
-        ];
-
-        const membersWithSameInitials = (allMembersList || []).filter(member => {
-            if (!member.user?.name) return false;
-            const memberInitials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            return memberInitials === initials;
-        });
-
-        if (membersWithSameInitials.length <= 1) return colors[0];
-
-        const memberIndex = membersWithSameInitials.findIndex(member => member.userId === userId);
-        return colors[memberIndex !== -1 ? memberIndex % colors.length : 0];
-    };
 
     return (
         <div className={`p-5 sm:p-6 lg:p-7 rounded-2xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group w-full break-words relative min-h-[200px] min-w-0 backdrop-blur-sm ${getStatusStyles(task.status)}`}>
-            {/* Header */}
-            <div className="mb-3">
-                <div className="flex-1">
-                    {isEditing ? (
-                        <input
-                            type="text"
-                            value={editingTask.title}
-                            onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
-                            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            placeholder="Task title"
-                        />
-                    ) : (
-                        <div>
-                            <h3 className="font-bold text-lg lg:text-xl mb-2 break-words overflow-hidden bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                                {isTitleLong ? truncateText(task.title, 50) : task.title}
-                            </h3>
-                            <button
-                                onClick={() => setShowViewModal(true)}
-                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center gap-1 group/btn"
-                                title="Ver tarea completa"
-                            >
-                                <span>View more</span>
-                                <svg className="w-3 h-3 transition-transform group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
+            {/* Header / Title */}
+            <div className="mb-4">
+                {isEditing ? (
+                    <div className="space-y-4">
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Objective Title</label>
+                            <input
+                                type="text"
+                                value={editingTask.title}
+                                onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
+                                className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm font-semibold"
+                                placeholder="Task title"
+                            />
                         </div>
-                    )}
-                </div>
-            </div>            {/* Description */}
-            {/* Description - Only visible in Edit Mode, otherwise hidden behind Ver Más */}
-            {isEditing && (
-                <textarea
-                    value={editingTask.description}
-                    onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 mb-3"
-                    placeholder="Task description"
-                    rows="2"
-                />
-            )}
-
-            {/* Sprint and Time Info Section - Only visible in Edit Mode */}
-            {isEditing && (
-                <div className="mb-4">
-                    <div className="space-y-4 w-full">
-                        {/* Meta Fields Group */}
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Protocol Brief</label>
+                            <textarea
+                                value={editingTask.description}
+                                onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
+                                className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
+                                placeholder="Task description"
+                                rows="2"
+                            />
+                        </div>
                         <div className="space-y-4">
-                            {/* Sprint Selection */}
                             <div className="space-y-1">
                                 <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Sprint Context</label>
                                 <select
                                     value={editingTask.sprintId}
                                     onChange={(e) => setEditingTask({ ...editingTask, sprintId: e.target.value })}
-                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
                                 >
                                     <option value="">No sprint</option>
                                     {sprints.filter(s => s.status !== 'COMPLETED').map(sprint => (
@@ -193,8 +142,6 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                     ))}
                                 </select>
                             </div>
-
-                            {/* Estimation Row */}
                             <div className="space-y-1">
                                 <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Estimation (Hours)</label>
                                 <div className="relative">
@@ -202,56 +149,85 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                         type="number"
                                         value={editingTask.estimatedHours}
                                         onChange={(e) => setEditingTask({ ...editingTask, estimatedHours: e.target.value })}
-                                        className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                        className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
                                         placeholder="0.0"
-                                        min="0.5"
-                                        max="1000"
+                                        min="0"
                                         step="0.5"
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 pointer-events-none">hrs</span>
                                 </div>
                             </div>
-
-                            {/* Assignee Selection */}
                             <div className="space-y-1">
                                 <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Assignee</label>
                                 <select
                                     value={editingTask.assigneeId}
                                     onChange={(e) => setEditingTask({ ...editingTask, assigneeId: e.target.value })}
-                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500 outline-none transition-all shadow-sm"
+                                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-sm"
                                 >
                                     <option value="">Unassigned</option>
                                     {allMembers.map(member => (
                                         <option key={member.userId} value={member.userId}>
-                                            {member.user?.name || 'Unknown user'}
+                                            {member.user?.name || 'Unknown User'}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                ) : (
+                    <>
+                        <div className="pr-20">
+                            <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
+                                {isTitleLong ? truncateText(task.title, 50) : task.title}
+                            </h3>
+                        </div>
+                        <button
+                            onClick={() => onViewTask(task)}
+                            className="mt-2 text-xs px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-all duration-200 hover:scale-105 inline-flex items-center gap-1 group/btn"
+                            title="View full task"
+                        >
+                            <svg className="w-3 h-3 transition-transform group-hover/btn:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View more
+                        </button>
 
-            {/* Assignee Card (View Mode Only) */}
-            {!isEditing && task.assignee && (
-                <div className="flex items-center gap-3 mt-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/80 dark:to-gray-900/80 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <div className={`w-11 h-11 flex-shrink-0 bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name?.charAt(0)?.toUpperCase(), allMembers)} rounded-full flex items-center justify-center text-base font-bold text-white shadow-lg ring-2 ring-white/30 aspect-square`}>
-                        {task.assignee.name?.charAt(0)?.toUpperCase() || '?'}
-                    </div>
-                    <div className="flex-1">
-                        <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-1">Assigned to</div>
-                        <div className="text-base font-bold text-gray-900 dark:text-gray-100 leading-tight">{task.assignee.name}</div>
-                    </div>
-                </div>
-            )}
+                        <div className="mt-4">
+                            <div className="flex items-center gap-3">
+                                {task.assignee ? (
+                                    <div className={`w-10 h-10 rounded-full flex-shrink-0 bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), allMembers)} text-white flex items-center justify-center text-sm font-bold shadow-md ring-2 ring-white/20`}>
+                                        {task.assignee.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                                    </div>
+                                ) : (
+                                    <div className="w-10 h-10 rounded-full flex-shrink-0 bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white flex items-center justify-center text-sm font-bold shadow-md">
+                                        ?
+                                    </div>
+                                )}
+                                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                                    {task.assignee?.name || 'Unassigned'}
+                                </span>
+                            </div>
+                        </div>
 
-            {/* Action buttons positioned at bottom right */}
-            {!isEditing && (
-                <div className="absolute bottom-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        {task.estimatedHours > 0 && (
+                            <div className="absolute bottom-5 right-5 flex items-center gap-1.5 px-3 py-1.5 bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-xl border border-white/10 dark:border-gray-700 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                                <svg className="w-3.5 h-3.5 text-primary animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span className="text-xs font-black text-gray-700 dark:text-white tracking-widest uppercase">{formatEstimatedTime(task.estimatedHours)}</span>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+
+            {/* Action buttons */}
+            {!isEditing ? (
+                <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 min-h-[36px] min-w-[36px] flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-700"
                         title="Edit task"
                     >
                         <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,7 +236,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                     </button>
                     <button
                         onClick={() => onDeleteTask(task.id)}
-                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 text-red-600 dark:text-red-400 min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 text-red-600 dark:text-red-400 min-h-[36px] min-w-[36px] flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-700"
                         title="Delete task"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,10 +244,8 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                         </svg>
                     </button>
                 </div>
-            )}
-
-            {isEditing && (
-                <div className="absolute bottom-3 right-3 flex gap-1">
+            ) : (
+                <div className="absolute top-4 right-4 flex gap-1">
                     <button
                         onClick={handleSave}
                         className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
@@ -293,148 +267,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                 </div>
             )}
 
-            {/* Premium Full-Screen View Task Modal */}
-            {
-                showViewModal && (
-                    <div
-                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
-                        onClick={() => setShowViewModal(false)}
-                    >
-                        <div
-                            className="glass-card shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Header with Gradient Background */}
-                            <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
-                                <div className="flex items-start justify-between gap-6 relative z-10">
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            {(() => {
-                                                const statusBadge = getStatusBadge(task.status);
-                                                return (
-                                                    <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${statusBadge.color}`}>
-                                                        <span className="mr-2">{statusBadge.icon}</span>
-                                                        {statusBadge.text}
-                                                    </span>
-                                                );
-                                            })()}
-                                            {task.estimatedHours && (
-                                                <span className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/70 border border-white/10 shadow-lg backdrop-blur-md">
-                                                    ⏱️ {formatEstimatedTime(task.estimatedHours)}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
-                                            {task.title}
-                                        </h1>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowViewModal(false)}
-                                        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
-                                        title="Close"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Content area - Scrollable */}
-                            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar bg-transparent">
-                                {/* Description Section */}
-                                {task.description ? (
-                                    <div className="space-y-4">
-                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                                            </svg>
-                                            Description
-                                        </h3>
-                                        <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
-                                            {task.description}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
-                                        <p className="text-white/40 italic text-sm">No description provided</p>
-                                    </div>
-                                )}
-
-                                {/* Metadata Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Assignee Card */}
-                                    <div className="space-y-3">
-                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                            Assignee
-                                        </h3>
-                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
-                                            {task.assignee ? (
-                                                <>
-                                                    <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${getAvatarColor(task.assignee.id, task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), allMembers)} flex items-center justify-center text-white text-xl font-black shadow-xl ring-2 ring-white/10`}>
-                                                        {task.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <div className="text-xl font-bold text-white truncate">{task.assignee.name}</div>
-                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5">
-                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                            </svg>
-                                                            {task.assignee.email || 'No email available'}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
-                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
-                                                    <span>Unassigned</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Sprint Card */}
-                                    <div className="space-y-3">
-                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
-                                            <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                            </svg>
-                                            Sprint Context
-                                        </h3>
-                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
-                                            {task.sprint ? (
-                                                <>
-                                                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-2xl shadow-xl ring-2 ring-white/10 animate-pulse-slow">
-                                                        🚀
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <div className="text-xl font-bold text-white truncate">{task.sprint.name}</div>
-                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5 font-medium">
-                                                            Part of current timeline
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
-                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">📋</div>
-                                                    <span>Not associated with any sprint</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                )
-            }
-        </div >
+        </div>
     );
 };
 
@@ -459,6 +292,7 @@ TaskCard.propTypes = {
     isAdmin: PropTypes.bool.isRequired,
     onUpdateTask: PropTypes.func.isRequired,
     onDeleteTask: PropTypes.func.isRequired,
+    onViewTask: PropTypes.func.isRequired,
     allMembers: PropTypes.arrayOf(PropTypes.shape({
         userId: PropTypes.string.isRequired,
         user: PropTypes.shape({
@@ -473,45 +307,16 @@ TaskCard.propTypes = {
 };
 
 // Component to display a sprint with its tasks
-const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, allMembers, projectId, onTaskCreate }) => {
+const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, onViewTask, onViewSprint, onAddTaskToSprint, allMembers }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-    const [newTask, setNewTask] = useState({
-        title: '',
-        description: '',
-        assigneeId: '',
-        estimatedHours: ''
-    });
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [editingSprint, setEditingSprint] = useState({
         name: sprint.name,
         description: sprint.description || '',
-        startDate: sprint.startDate.split('T')[0],
-        endDate: sprint.endDate.split('T')[0],
+        startDate: sprint.startDate,
+        endDate: sprint.endDate,
         status: sprint.status
     });
-
-    const getSprintStatusStyles = (status) => {
-        // Only the border reflects the sprint status color; content stays neutral (black in light, white in dark)
-        const styles = {
-            PLANNING: 'border-gray-400 dark:border-gray-500',
-            ACTIVE: 'border-blue-500 dark:border-blue-400',
-            COMPLETED: 'border-green-500 dark:border-green-400',
-            CANCELLED: 'border-red-500 dark:border-red-400'
-        };
-        return styles[status] || styles.PLANNING;
-    };
-
-    const getStatusIcon = (status) => {
-        const icons = {
-            PLANNING: '📋',
-            ACTIVE: '🚀',
-            COMPLETED: '✅',
-            CANCELLED: '❌'
-        };
-        return icons[status] || icons.PLANNING;
-    };
 
     const handleSaveSprint = async () => {
         try {
@@ -528,70 +333,11 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
         setEditingSprint({
             name: sprint.name,
             description: sprint.description || '',
-            startDate: sprint.startDate.split('T')[0],
-            endDate: sprint.endDate.split('T')[0],
+            startDate: sprint.startDate,
+            endDate: sprint.endDate,
             status: sprint.status
         });
         setIsEditing(false);
-    };
-
-    const handleCreateTask = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        try {
-            const response = await fetch(`/api/projects/${projectId}/tasks`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: newTask.title,
-                    description: newTask.description,
-                    assigneeId: newTask.assigneeId || null,
-                    sprintId: sprint.id,
-                    // Convert minutes input to hours (e.g., 30 -> 0.5)
-                    estimatedHours: newTask.estimatedHours ? Number(newTask.estimatedHours) / 60 : null,
-                    status: 'PENDING'
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to create task');
-            }
-
-            const createdTask = await response.json();
-
-            // Notify parent component
-            if (onTaskCreate) {
-                onTaskCreate(createdTask);
-            }
-
-            setShowAddTaskModal(false);
-            setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
-
-            // Show success notification
-            toast.success('Task created successfully! ', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-        } catch (error) {
-            console.error('Error creating task: ', error);
-            toast.error('Error creating task ', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
     };
 
     const getTotalEstimatedHours = () => {
@@ -600,14 +346,6 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
 
     const getCompletedTasksCount = () => {
         return tasks.filter(task => task.status === 'COMPLETED').length;
-    };
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
     };
 
     return (
@@ -639,7 +377,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     </select>
                                     <input
                                         type="date"
-                                        value={editingSprint.startDate}
+                                        value={editingSprint.startDate.split('T')[0]}
                                         onChange={(e) => {
                                             const newStartDate = e.target.value;
                                             const updates = { startDate: newStartDate };
@@ -655,9 +393,9 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     />
                                     <input
                                         type="date"
-                                        value={editingSprint.endDate}
+                                        value={editingSprint.endDate.split('T')[0]}
                                         onChange={(e) => setEditingSprint({ ...editingSprint, endDate: e.target.value })}
-                                        min={editingSprint.startDate || undefined}
+                                        min={editingSprint.startDate.split('T')[0] || undefined}
                                         className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     />
                                 </div>
@@ -665,6 +403,16 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                         ) : (
                             <div>
                                 <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{sprint.name}</h3>
+                                <button
+                                    onClick={() => onViewSprint(sprint)}
+                                    className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center gap-1 group/btn mt-1"
+                                    title="View sprint details"
+                                >
+                                    <span>View more</span>
+                                    <svg className="w-3 h-3 transition-transform group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
                                 <div className="flex items-center gap-3 mt-2 flex-wrap">
                                     {/* Date Range */}
                                     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold shadow-sm">
@@ -700,7 +448,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             {!isEditing ? (
                                 <>
                                     <button
-                                        onClick={() => setShowAddTaskModal(true)}
+                                        onClick={() => onAddTaskToSprint(sprint)}
                                         className="p-2 hover:bg-white/20 rounded-md transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-action-manipulation"
                                         title="Add new task to this sprint"
                                     >
@@ -765,8 +513,8 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                     </div>
                 </div>
 
-                {/* Sprint Description */}
-                {isEditing ? (
+                {/* Sprint Description when editing */}
+                {isEditing && (
                     <textarea
                         value={editingSprint.description}
                         onChange={(e) => setEditingSprint({ ...editingSprint, description: e.target.value })}
@@ -774,10 +522,6 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                         placeholder="Sprint description"
                         rows="2"
                     />
-                ) : (
-                    sprint.description && (
-                        <p className="mt-3 text-sm opacity-80">{sprint.description}</p>
-                    )
                 )}
             </div>
 
@@ -792,7 +536,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                             <span>No tasks in this sprint</span>
                         </div>
                     ) : (
-                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6">
                             {tasks.map(task => (
                                 <TaskCard
                                     key={task.id}
@@ -800,158 +544,13 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     isAdmin={isAdmin}
                                     onUpdateTask={onUpdateTask}
                                     onDeleteTask={onDeleteTask}
+                                    onViewTask={onViewTask}
                                     allMembers={allMembers}
                                     sprints={[]}
                                 />
                             ))}
                         </div>
                     )}
-                </div>
-            )}
-
-            {/* Add Task Modal */}
-            {showAddTaskModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-                    <div className="bg-card rounded-xl shadow-2xl w-full max-w-md border border-border">
-                        <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
-                                    <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
-                                        <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                    </div>
-                                    Add Task to Sprint
-                                </h2>
-                                <button
-                                    onClick={() => {
-                                        setShowAddTaskModal(false);
-                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
-                                    }}
-                                    className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    disabled={isSubmitting}
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
-                                Creating task for: <span className="font-semibold">{sprint.name}</span>
-                            </p>
-                        </div>
-
-                        {/* Form */}
-                        <form onSubmit={handleCreateTask} className="p-3 space-y-3">
-                            <div>
-                                <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Task Title *
-                                </label>
-                                <input
-                                    id="task-title"
-                                    type="text"
-                                    value={newTask.title}
-                                    onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                    placeholder="Enter task title..."
-                                    required
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Description
-                                </label>
-                                <textarea
-                                    id="task-description"
-                                    value={newTask.description}
-                                    onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
-                                    rows="3"
-                                    placeholder="Describe the task details..."
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label htmlFor="task-assignee" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Assign to
-                                    </label>
-                                    <select
-                                        id="task-assignee"
-                                        value={newTask.assigneeId}
-                                        onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        disabled={isSubmitting}
-                                    >
-                                        <option value="">unasigned</option>
-                                        {!Array.isArray(allMembers) || allMembers.length === 0 ? (
-                                            <option disabled>Loading members...</option>
-                                        ) : (
-                                            allMembers.map((member) => (
-                                                <option key={member.userId} value={member.userId}>
-                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
-                                                </option>
-                                            ))
-                                        )}
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="task-minutes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Estimated Time (minutes)
-                                    </label>
-                                    <input
-                                        id="task-minutes"
-                                        type="number"
-                                        min="30"
-                                        step="30"
-                                        value={newTask.estimatedHours}
-                                        onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="30, 60, 90..."
-                                        required
-                                        disabled={isSubmitting}
-                                    />
-                                    <p className="text-xs text-gray-700 mt-1">Mínimo 30 minutos. Incrementos de 30.</p>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setShowAddTaskModal(false);
-                                        setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
-                                    }}
-                                    className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
-                                    disabled={isSubmitting}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                        ? 'bg-violet-400 text-white cursor-not-allowed'
-                                        : 'bg-violet-500 text-white '
-                                        }`}
-                                    disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? (
-                                        <span className="flex items-center gap-2">
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            Creating...
-                                        </span>
-                                    ) : (
-                                        'Create Task'
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             )}
         </div>
@@ -973,10 +572,13 @@ SprintCard.propTypes = {
     onDeleteTask: PropTypes.func.isRequired,
     onUpdateSprint: PropTypes.func.isRequired,
     onDeleteSprint: PropTypes.func.isRequired,
+    onViewTask: PropTypes.func.isRequired,
+    onViewSprint: PropTypes.func.isRequired,
+    onAddTaskToSprint: PropTypes.func.isRequired,
     allMembers: PropTypes.array.isRequired,
-    projectId: PropTypes.string.isRequired,
-    onTaskCreate: PropTypes.func.isRequired
 };
+
+
 
 /**
  * SprintManager Component
@@ -1005,7 +607,6 @@ const SprintManager = ({
     onRefreshSprints,
     // Props for initialization
     sprints: initialSprints = [],
-    members = [],
     refreshSprints,
     refreshTasks,
     onCreateSprint,
@@ -1033,9 +634,14 @@ const SprintManager = ({
         estimatedHours: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showTaskViewModal, setShowTaskViewModal] = useState(false);
+    const [taskToView, setTaskToView] = useState(null);
+    const [showSprintViewModal, setShowSprintViewModal] = useState(false);
+    const [sprintToView, setSprintToView] = useState(null);
+    const [targetSprintForNewTask, setTargetSprintForNewTask] = useState(null);
 
     // Use appropriate members array based on mode
-    const membersToUse = members;
+    const membersToUse = allMembers;
 
     const loadData = useCallback(async () => {
         try {
@@ -1137,7 +743,7 @@ const SprintManager = ({
         setShowDeleteSprintModal(true);
     };
 
-    const confirmDeleteSprint = async () => {
+    const handleConfirmDeleteSprint = async () => {
         if (!sprintToDelete) return;
         setIsSubmitting(true);
         try {
@@ -1221,11 +827,10 @@ const SprintManager = ({
         }
     };
 
-    const cancelDeleteSprint = () => {
+    const handleCancelDeleteSprint = () => {
         setShowDeleteSprintModal(false);
         setSprintToDelete(null);
     };
-    // ...existing code...
 
     const handleUpdateTask = async (taskId, updateData) => {
         try {
@@ -1269,19 +874,33 @@ const SprintManager = ({
             if (response.ok) {
                 // Notify parent component to update shared state
                 if (onTaskDelete && taskToDelete) {
-                    onTaskDelete(taskToDelete);
+                    onTaskDelete(taskToDelete.id);
                 }
-                toast.success('Task deleted successfully!');
-                setShowDeleteTaskModal(false);
-                setTaskToDelete(null);
             } else {
-                const error = await response.json();
-                toast.error(error.error || 'Error deleting task');
+                toast.error('Failed to delete task');
             }
         } catch (error) {
             console.error('Error deleting task:', error);
-            toast.error('Error deleting task');
+            toast.error('Network error while deleting task');
+        } finally {
+            setShowDeleteTaskModal(false);
+            setTaskToDelete(null);
         }
+    };
+
+    const handleViewTask = (task) => {
+        setTaskToView(task);
+        setShowTaskViewModal(true);
+    };
+
+    const handleViewSprint = (sprint) => {
+        setSprintToView(sprint);
+        setShowSprintViewModal(true);
+    };
+
+    const handleAddTaskToSprint = (sprint) => {
+        setTargetSprintForNewTask(sprint);
+        setShowAddTaskModal(true);
     };
 
     const handleCancelDeleteTask = () => {
@@ -1310,6 +929,7 @@ const SprintManager = ({
                     title: newTask.title,
                     description: newTask.description,
                     assigneeId: newTask.assigneeId || null,
+                    sprintId: targetSprintForNewTask?.id || null,
                     // Convert minutes input to hours (e.g., 30 -> 0.5)
                     estimatedHours: newTask.estimatedHours ? Number(newTask.estimatedHours) / 60 : null,
                     status: 'PENDING'
@@ -1371,8 +991,8 @@ const SprintManager = ({
     }
 
     return (
-        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8 xl:px-10 bg-background overflow-x-hidden min-w-0">
-            <div className="space-y-6 sm:space-y-10 w-full max-w-full sm:max-w-[1400px] 2xl:max-w-[1600px] mx-auto min-w-0">
+        <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-12 bg-background overflow-x-hidden min-w-0">
+            <div className="space-y-6 sm:space-y-10 w-full mx-auto min-w-0">
                 {/* Header */}
                 <div className="bg-gradient-to-br from-white via-violet-50/30 to-purple-50/30 dark:from-gray-900 dark:via-violet-950/20 dark:to-purple-950/20 rounded-2xl shadow-xl border-2 border-violet-100 dark:border-violet-900/30 p-6 sm:p-8 lg:p-10 backdrop-blur-sm">
                     <div className="flex flex-col items-center text-center space-y-4 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:space-y-0 min-w-0">
@@ -1439,6 +1059,9 @@ const SprintManager = ({
                             onDeleteTask={handleDeleteTask}
                             onUpdateSprint={handleUpdateSprint}
                             onDeleteSprint={handleDeleteSprint}
+                            onViewTask={handleViewTask}
+                            onViewSprint={handleViewSprint}
+                            onAddTaskToSprint={handleAddTaskToSprint}
                             allMembers={membersToUse}
                             projectId={projectId}
                             onTaskCreate={onTaskCreate}
@@ -1453,12 +1076,11 @@ const SprintManager = ({
                                     <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-3">
                                         <span className="text-2xl">📋</span>
                                         <span>Tasks without Sprint</span>
-                                        <span className="text-sm font-semibold bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full">({getTasksWithoutSprint().length})</span>
                                     </h3>
                                 </div>
                             </div>
                             <div className="p-4">
-                                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6">
                                     {getTasksWithoutSprint().map(task => (
                                         <TaskCard
                                             key={task.id}
@@ -1466,6 +1088,7 @@ const SprintManager = ({
                                             isAdmin={isAdmin}
                                             onUpdateTask={handleUpdateTask}
                                             onDeleteTask={handleDeleteTask}
+                                            onViewTask={handleViewTask}
                                             allMembers={membersToUse}
                                             sprints={sprints}
                                         />
@@ -1475,6 +1098,8 @@ const SprintManager = ({
                         </div>
                     )}
                 </div>
+
+
 
 
                 {/* Modal de confirmación para eliminar sprint */}
@@ -1513,14 +1138,14 @@ const SprintManager = ({
                                 {/* Actions */}
                                 <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
                                     <button
-                                        onClick={cancelDeleteSprint}
+                                        onClick={handleCancelDeleteSprint}
                                         className="w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
                                         disabled={isSubmitting}
                                     >
                                         Cancel
                                     </button>
                                     <button
-                                        onClick={confirmDeleteSprint}
+                                        onClick={handleConfirmDeleteSprint}
                                         className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
                                         disabled={isSubmitting}
                                     >
@@ -1852,6 +1477,214 @@ const SprintManager = ({
                                         </svg>
                                         <span>Delete task</span>
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Task Details Modal (Moved to root to avoid transform issues) */}
+                {showTaskViewModal && taskToView && (
+                    <div
+                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
+                        onClick={() => setShowTaskViewModal(false)}
+                    >
+                        <div
+                            className="glass-card shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
+                                <div className="flex items-start justify-between gap-6 relative z-10">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            {(() => {
+                                                const statusBadge = getStatusBadge(taskToView.status);
+                                                return (
+                                                    <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${statusBadge.color}`}>
+                                                        <span className="mr-2">{statusBadge.icon}</span>
+                                                        {statusBadge.text}
+                                                    </span>
+                                                );
+                                            })()}
+                                            {taskToView.estimatedHours && (
+                                                <span className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/70 border border-white/10 shadow-lg backdrop-blur-md">
+                                                    ⏱️ {formatEstimatedTime(taskToView.estimatedHours)}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
+                                            {taskToView.title}
+                                        </h1>
+                                    </div>
+                                    <button
+                                        onClick={() => setShowTaskViewModal(false)}
+                                        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar bg-transparent">
+                                {taskToView.description ? (
+                                    <div className="space-y-4">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                                            </svg>
+                                            Description
+                                        </h3>
+                                        <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
+                                            {taskToView.description}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
+                                        <p className="text-white/40 italic text-sm">No description provided</p>
+                                    </div>
+                                )}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                            Assignee
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            {taskToView.assignee ? (
+                                                <>
+                                                    <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${getAvatarColor(taskToView.assignee.id, taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), membersToUse)} flex items-center justify-center text-white text-xl font-black shadow-xl ring-2 ring-white/10`}>
+                                                        {taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="text-xl font-bold text-white truncate">{taskToView.assignee.name}</div>
+                                                        <div className="text-sm text-white/50 truncate flex items-center gap-1.5 mt-0.5">
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                            </svg>
+                                                            {taskToView.assignee.email || 'No email available'}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="flex items-center gap-4 w-full text-white/40 italic">
+                                                    <div className="h-14 w-14 rounded-2xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
+                                                    <span>Unassigned</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            Sprint Context
+                                        </h3>
+                                        <div className="bg-white/5 rounded-2xl p-5 border border-white/5 flex items-center gap-4 hover:bg-white/10 transition-colors shadow-lg">
+                                            <div className="h-14 w-14 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl border border-indigo-500/30">
+                                                🏁
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="text-xl font-bold text-white truncate">
+                                                    {sprints.find(s => s.id === taskToView.sprintId)?.name || 'Backlog'}
+                                                </div>
+                                                <div className="text-sm text-white/50 truncate">Sprint Association</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Sprint Details Modal (Moved to root) */}
+                {showSprintViewModal && sprintToView && (
+                    <div
+                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
+                        onClick={() => setShowSprintViewModal(false)}
+                    >
+                        <div
+                            className="glass-card shadow-2xl rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-white/10"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="relative px-8 py-8 border-b border-white/5 bg-gradient-to-br from-violet-500/20 via-background to-blue-500/10">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-blue-500 to-violet-500 animate-shimmer bg-[length:200%_100%]"></div>
+                                <div className="flex items-start justify-between gap-6 relative z-10">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/10 ${getSprintStatusStyles(sprintToView.status).replace('border-2', '')} bg-opacity-20`}>
+                                                <span className="mr-2">{getStatusIcon(sprintToView.status)}</span>
+                                                {sprintToView.status}
+                                            </span>
+                                            <span className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/70 border border-white/10 shadow-lg backdrop-blur-md">
+                                                📅 {formatDate(sprintToView.startDate)} - {formatDate(sprintToView.endDate)}
+                                            </span>
+                                        </div>
+                                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight break-words tracking-tight">
+                                            {sprintToView.name}
+                                        </h1>
+                                    </div>
+                                    <button
+                                        onClick={() => setShowSprintViewModal(false)}
+                                        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 hover-lift"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8 custom-scrollbar bg-transparent">
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                                        </svg>
+                                        Sprint Description
+                                    </h3>
+                                    {sprintToView.description ? (
+                                        <div className="text-white/80 leading-relaxed text-lg whitespace-pre-wrap bg-white/5 p-6 rounded-2xl border border-white/5 shadow-inner">
+                                            {sprintToView.description}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 bg-white/5 rounded-2xl border border-dashed border-white/10 text-white/40 italic text-sm">
+                                            No description provided for this sprint
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-bold text-white/50 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        Sprint Progress
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center shadow-lg backdrop-blur-sm">
+                                            <div className="text-3xl font-black text-white mb-1">
+                                                {(() => {
+                                                    const sprintTasks = tasks.filter(t => t.sprintId === sprintToView.id);
+                                                    const completed = sprintTasks.filter(t => t.status === 'COMPLETED').length;
+                                                    return `${completed}/${sprintTasks.length}`;
+                                                })()}
+                                            </div>
+                                            <div className="text-xs font-bold text-white/40 uppercase tracking-widest">Tasks Completed</div>
+                                        </div>
+                                        <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center shadow-lg backdrop-blur-sm">
+                                            <div className="text-3xl font-black text-white mb-1">
+                                                {(() => {
+                                                    const sprintTasks = tasks.filter(t => t.sprintId === sprintToView.id);
+                                                    return sprintTasks.reduce((acc, t) => acc + (parseFloat(t.estimatedHours) || 0), 0);
+                                                })()}h
+                                            </div>
+                                            <div className="text-xs font-bold text-white/40 uppercase tracking-widest">Total Estimated Time</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

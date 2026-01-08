@@ -423,8 +423,8 @@ export default function ProjectPage({ params }) {
     }
 
     return (
-        <div className="bg-background">
-            <div className="max-w-7xl mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-8">
+        <div className="bg-background min-h-screen">
+            <div className="w-full mx-auto py-4 px-4 sm:py-6 sm:px-6 lg:px-12">
                 <div className="flex flex-col gap-6 mb-8">
                     <div className="flex items-center justify-between w-full">
                         <button
@@ -543,7 +543,7 @@ export default function ProjectPage({ params }) {
                 </div>
 
                 {/* Tab Content */}
-                <div className="w-full max-w-7xl mx-auto">
+                <div className="w-full mx-auto pb-12">
                     <div className="grid grid-cols-1 gap-4">
                         <div className="lg:col-span-2 w-full max-w-none mx-auto">
                             {activeTab === 'kanban' && (
@@ -839,15 +839,15 @@ export default function ProjectPage({ params }) {
                         </div>
                     </div>
                 )}
-                {/* Minimizable Chat Component */}
-                {user && (
-                    <MinimizableChat
-                        projectId={project.id}
-                        user={user}
-                        projectName={project.name}
-                    />
-                )}
             </div>
+            {/* Minimizable Chat Component */}
+            {user && (
+                <MinimizableChat
+                    projectId={project.id}
+                    user={user}
+                    projectName={project.name}
+                />
+            )}
         </div>
     );
 }
