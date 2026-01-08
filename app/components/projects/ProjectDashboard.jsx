@@ -240,7 +240,7 @@ export default function ProjectDashboard({ userId }) {
                                                     </svg>
                                                 </div>
                                                 <span className="text-sm font-bold text-white/70">
-                                                    {memberCount} <span className="text-[10px] text-white/30 uppercase ml-1">Crew</span>
+                                                    {memberCount} <span className="text-[10px] text-white/30 uppercase ml-1">Members</span>
                                                 </span>
                                             </div>
                                             <div className="flex items-center gap-2.5">

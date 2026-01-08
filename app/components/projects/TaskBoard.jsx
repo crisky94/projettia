@@ -122,7 +122,8 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
     // Helper functions to determine if content is too long
     const isTitleLong = task.title && task.title.length > 50;
     const isDescriptionLong = task.description && task.description.length > 100;
-    const shouldShowViewMore = isTitleLong || isDescriptionLong;
+    // Always show View More option since most content is now hidden in the card
+    const shouldShowViewMore = true;
 
     const truncateText = (text, maxLength) => {
         if (!text || text.length <= maxLength) return text;
@@ -233,29 +234,23 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                         <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
                             {isTitleLong ? truncateText(task.title, 50) : task.title}
                         </h3>
-                        {shouldShowViewMore && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation?.();
-                                    onViewTask && onViewTask(task);
-                                }}
-                                className="mt-2 text-xs px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-all duration-200 hover:scale-105 inline-flex items-center gap-1"
-                                title="View full task"
-                            >
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                View more
-                            </button>
-                        )}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation?.();
+                                onViewTask && onViewTask(task);
+                            }}
+                            className="mt-2 text-xs px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-all duration-200 hover:scale-105 inline-flex items-center gap-1 group/btn"
+                            title="View full task"
+                        >
+                            <svg className="w-3 h-3 transition-transform group-hover/btn:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View more
+                        </button>
                     </div>
 
-                    {task.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
-                            {isDescriptionLong ? truncateText(task.description, 100) : task.description}
-                        </p>
-                    )}
+                    {/* Description - Hidden behind Ver Detalles */}
 
                     {/* Status & Assignee Summary */}
                     <div className="flex items-center justify-between mb-4">
@@ -273,30 +268,11 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                 {assigneeName || 'Unassigned'}
                             </span>
                         </div>
-
-                        {task.estimatedHours > 0 && (
-                            <div className="flex items-center gap-1.5 px-2 py-1 bg-white/10 rounded-lg border border-white/5 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                ⏱️ {task.estimatedHours}h
-                            </div>
-                        )}
                     </div>
 
-                    {/* Sprint info Summary */}
-                    {task.sprint && (
-                        <div className="mb-4 p-4 bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-indigo-950/30 rounded-xl border-2 border-violet-200 dark:border-violet-800/30 shadow-md">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                </div>
-                                <div className="flex-1">
-                                    <div className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Sprint</div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{task.sprint.name}</div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {/* Sprint & Time info - Hidden behind Ver Detalles */}
+
+
                 </>
             )}
 
@@ -343,7 +319,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             </button>
                             <button
                                 onClick={handleCancel}
-                                className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
+                                className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
                                 title="Cancel"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1721,18 +1697,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                 </div>
                             </div>
 
-                            {/* Footer */}
-                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-end gap-4">
-                                <button
-                                    onClick={handleCloseViewModal}
-                                    className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
-                                >
-                                    <span>Close Details</span>
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </button>
-                            </div>
+
                         </div>
                     </div>
                 )}

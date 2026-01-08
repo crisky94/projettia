@@ -26,6 +26,11 @@ export async function GET() {
                 ],
             },
             include: {
+                tasks: {
+                    select: {
+                        status: true
+                    }
+                },
                 _count: {
                     select: {
                         tasks: true,
@@ -95,6 +100,11 @@ export async function POST(request) {
                 },
             },
             include: {
+                tasks: {
+                    select: {
+                        status: true
+                    }
+                },
                 _count: {
                     select: {
                         tasks: true,

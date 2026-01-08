@@ -95,7 +95,8 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
     // Helper functions to determine if content is too long
     const isTitleLong = task.title && task.title.length > 50;
     const isDescriptionLong = task.description && task.description.length > 100;
-    const shouldShowViewMore = isTitleLong || isDescriptionLong;
+    // Always show View More option since most content is now hidden in the card
+    const shouldShowViewMore = true;
 
     const truncateText = (text, maxLength) => {
         if (!text || text.length <= maxLength) return text;
@@ -147,20 +148,22 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             <h3 className="font-bold text-lg lg:text-xl mb-2 break-words overflow-hidden bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                                 {isTitleLong ? truncateText(task.title, 50) : task.title}
                             </h3>
-                            {shouldShowViewMore && (
-                                <button
-                                    onClick={() => setShowViewModal(true)}
-                                    className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 block"
-                                    title="Ver tarea completa"
-                                >
-                                    Ver más
-                                </button>
-                            )}
+                            <button
+                                onClick={() => setShowViewModal(true)}
+                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center gap-1 group/btn"
+                                title="Ver tarea completa"
+                            >
+                                <span>View more</span>
+                                <svg className="w-3 h-3 transition-transform group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
                         </div>
                     )}
                 </div>
             </div>            {/* Description */}
-            {isEditing ? (
+            {/* Description - Only visible in Edit Mode, otherwise hidden behind Ver Más */}
+            {isEditing && (
                 <textarea
                     value={editingTask.description}
                     onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
@@ -168,17 +171,11 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                     placeholder="Task description"
                     rows="2"
                 />
-            ) : (
-                task.description && (
-                    <p className="text-sm opacity-75 mb-3 line-clamp-2 leading-relaxed">
-                        {isDescriptionLong ? truncateText(task.description, 100) : task.description}
-                    </p>
-                )
             )}
 
-            {/* Sprint and Time Info Section */}
-            <div className="mb-4">
-                {isEditing ? (
+            {/* Sprint and Time Info Section - Only visible in Edit Mode */}
+            {isEditing && (
+                <div className="mb-4">
                     <div className="space-y-4 w-full">
                         {/* Meta Fields Group */}
                         <div className="space-y-4">
@@ -233,51 +230,8 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                             </div>
                         </div>
                     </div>
-                ) : (
-                    <div className="flex items-center gap-2 flex-wrap">
-                        {/* Status Badge */}
-                        {(() => {
-                            const statusBadge = getStatusBadge(task.status);
-                            return (
-                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs shadow-md ${statusBadge.color}`}>
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        {task.status === 'PENDING' && (
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                                        )}
-                                        {task.status === 'IN_PROGRESS' && (
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
-                                        )}
-                                        {task.status === 'COMPLETED' && (
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        )}
-                                    </svg>
-                                    {statusBadge.text}
-                                </div>
-                            );
-                        })()}
-
-                        {/* Sprint Badge */}
-                        {task.sprint && (
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg font-semibold text-xs shadow-md">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                {task.sprint.name}
-                            </div>
-                        )}
-
-                        {/* Time Estimate Badge */}
-                        {task.estimatedHours && (
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold text-xs shadow-md">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                                </svg>
-                                {formatEstimatedTime(task.estimatedHours)}
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
 
             {/* Assignee Card (View Mode Only) */}
             {!isEditing && task.assignee && (
@@ -329,7 +283,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                     </button>
                     <button
                         onClick={handleCancel}
-                        className="p-1.5 hover:bg-gray-500/20 rounded-md transition-colors"
+                        className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
                         title="Cancel"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,21 +429,7 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, allMembers = [], 
                                 </div>
                             </div>
 
-                            {/* Footer */}
-                            <div className="px-8 py-6 border-t border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between gap-4">
-                                <div className="text-xs text-white/30 font-medium">
-                                    Last updated: Just now
-                                </div>
-                                <button
-                                    onClick={() => setShowViewModal(false)}
-                                    className="btn-gradient px-8 py-3 text-sm flex items-center gap-2"
-                                >
-                                    <span>Close Details</span>
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </button>
-                            </div>
+
                         </div>
                     </div>
                 )
