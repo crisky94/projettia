@@ -155,7 +155,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             style={style}
             {...attributes}
             {...listeners}
-            className={`task-card rounded-2xl border-2 p-5 transition-all duration-300 ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-2 hover:shadow-2xl cursor-grab active:cursor-grabbing hover:scale-[1.02]' : 'opacity-95'} backdrop-blur-sm`}
+            className={`task-card group rounded-2xl border-2 p-5 transition-all duration-300 ${getStatusStyles(task.status)} ${canDrag ? 'hover:-translate-y-2 hover:shadow-2xl cursor-grab active:cursor-grabbing hover:scale-[1.02]' : 'opacity-95'} backdrop-blur-sm`}
         >
             {/* Task Details Editor */}
             {isEditing ? (
@@ -291,59 +291,57 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
             )}
 
             {/* Action buttons */}
-            {isAdmin && (
-                <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    {!isEditing ? (
-                        <>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation?.();
-                                    setIsEditing(true);
-                                }}
-                                className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110"
-                                title="Edit task"
-                            >
-                                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation?.();
-                                    onDeleteTask && onDeleteTask(task.id);
-                                }}
-                                className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 text-red-600 dark:text-red-400"
-                                title="Delete task"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </>
-                    ) : (
-                        <div className="flex gap-1">
-                            <button
-                                onClick={handleSave}
-                                className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
-                                title="Save changes"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
-                                title="Cancel"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
+            <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                {!isEditing ? (
+                    <>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation?.();
+                                onUpdateTask && onUpdateTask('edit', task);
+                            }}
+                            className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110"
+                            title="Edit task"
+                        >
+                            <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation?.();
+                                onDeleteTask && onDeleteTask(task.id);
+                            }}
+                            className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 text-red-600 dark:text-red-400"
+                            title="Delete task"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </>
+                ) : (
+                    <div className="flex gap-1">
+                        <button
+                            onClick={handleSave}
+                            className="p-1.5 hover:bg-green-500/20 rounded-md transition-colors text-green-600 dark:text-green-400"
+                            title="Save changes"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={handleCancel}
+                            className="p-1.5 hover:bg-red-500/20 rounded-md transition-colors text-red-600 dark:text-red-400"
+                            title="Cancel"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
@@ -988,10 +986,14 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
     // Abrir modal de edición
     const handleOpenEditTask = (action, task) => {
-        // Inline editing is now handled directly in TaskCard component
-        // This function is kept for compatibility but does nothing
         if (action === 'edit' && task) {
-            console.log('Edit task requested for:', task.title);
+            setTaskToEdit(task);
+            setEditTask({
+                title: task.title,
+                description: task.description || '',
+                assigneeId: task.assignee ? task.assignee.id : ''
+            });
+            setShowEditTaskModal(true);
         }
     };
 
@@ -1309,15 +1311,29 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         />
                                     </div>
                                     {/* Modal de edición de tarea - DISABLED - Using inline editing now */}
-                                    {false && showEditTaskModal && taskToEdit && (
-                                        <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
-                                            <div className="bg-card rounded-xl shadow-2xl w-full max-w-sm border border-border">
-                                                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                                    <h2 className="text-xl font-bold text-card-foreground">Edit Task</h2>
+                                    {showEditTaskModal && taskToEdit && (
+                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                            <div className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] border border-white/5 relative flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200" style={{ maxWidth: '500px' }}>
+                                                {/* Premium Top Border Gradient */}
+                                                <div className="absolute top-0 left-0 w-full h-[6px] bg-gradient-to-r from-[#c084fc] via-[#e879f9] to-[#c084fc]"></div>
+
+                                                <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between mt-2">
+                                                    <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                                                        <span className="text-2xl">✏️</span>
+                                                        Edit Task
+                                                    </h2>
+                                                    <button
+                                                        onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
+                                                        className="text-white/40 hover:text-white transition-colors"
+                                                    >
+                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
-                                                <form onSubmit={handleSaveEditTask} className="p-4 space-y-4">
-                                                    <div>
-                                                        <label htmlFor="edit-title" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                <form onSubmit={handleSaveEditTask} className="p-6 space-y-5 overflow-y-auto max-h-[70vh]">
+                                                    <div className="space-y-2">
+                                                        <label htmlFor="edit-title" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
                                                             Title
                                                         </label>
                                                         <input
@@ -1325,68 +1341,58 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                             type="text"
                                                             value={editTask.title}
                                                             onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
-                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all"
                                                             required
                                                             disabled={isSubmitting}
                                                         />
                                                     </div>
-                                                    <div>
-                                                        <label htmlFor="edit-description" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    <div className="space-y-2">
+                                                        <label htmlFor="edit-description" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
                                                             Description
                                                         </label>
                                                         <textarea
                                                             id="edit-description"
                                                             value={editTask.description}
                                                             onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
-                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none"
-                                                            rows="2"
+                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all resize-none min-h-[100px]"
+                                                            rows="4"
                                                             disabled={isSubmitting}
                                                         />
                                                     </div>
-                                                    <div>
-                                                        <label htmlFor="edit-assignee" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    <div className="space-y-2">
+                                                        <label htmlFor="edit-assignee" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
                                                             Assign to
                                                         </label>
                                                         <select
                                                             id="edit-assignee"
                                                             value={editTask.assigneeId}
                                                             onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all appearance-none cursor-pointer"
                                                             disabled={isSubmitting}
                                                         >
                                                             <option value="">Unassigned</option>
                                                             {members.map((member) => (
-                                                                <option key={member.userId} value={member.userId}>
+                                                                <option key={member.userId} value={member.userId} className="bg-[#0b0f19]">
                                                                     {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
                                                                 </option>
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                                    <div className="flex gap-3 pt-4 border-t border-white/5">
                                                         <button
                                                             type="button"
                                                             onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                                            className="w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted transition-colors touch-action-manipulation flex items-center justify-center"
+                                                            className="flex-1 px-4 py-3 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl font-bold transition-all"
                                                             disabled={isSubmitting}
                                                         >
                                                             Cancel
                                                         </button>
                                                         <button
                                                             type="submit"
-                                                            className={`w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting
-                                                                ? 'bg-blue-400 text-white cursor-not-allowed'
-                                                                : 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-md'
-                                                                }`}
+                                                            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#c084fc] to-[#e879f9] hover:from-[#b074ec] hover:to-[#d869e9] text-white rounded-xl font-bold shadow-lg shadow-purple-500/20 transition-all flex items-center justify-center gap-2"
                                                             disabled={isSubmitting}
                                                         >
-                                                            {isSubmitting ? (
-                                                                <>
-                                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                                    <span>Saving...</span>
-                                                                </>
-                                                            ) : (
-                                                                'Save Changes'
-                                                            )}
+                                                            {isSubmitting ? 'Saving...' : 'Save Changes'}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -1585,8 +1591,8 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                         onClick={handleCloseViewModal}
                     >
                         <div
-                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-full max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
-                            style={{ maxWidth: '425px' }}
+                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
+                            style={{ maxWidth: '600px' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Premium Top Border Gradient */}
@@ -1646,7 +1652,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Description</h3>
                                     </div>
                                     <div className="bg-[#161b2a] p-5 rounded-[24px] border border-white/5 shadow-inner">
-                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap">
+                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap break-words">
                                             {taskToView.description || <span className="italic text-white/30">No description provided</span>}
                                         </div>
                                     </div>

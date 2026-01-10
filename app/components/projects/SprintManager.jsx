@@ -1490,8 +1490,8 @@ const SprintManager = ({
                         onClick={() => setShowTaskViewModal(false)}
                     >
                         <div
-                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-full max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
-                            style={{ maxWidth: '425px' }}
+                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
+                            style={{ maxWidth: '600px' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Premium Top Border Gradient */}
@@ -1544,7 +1544,7 @@ const SprintManager = ({
                                         <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Description</h3>
                                     </div>
                                     <div className="bg-[#161b2a] p-5 rounded-[24px] border border-white/5 shadow-inner">
-                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap">
+                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap break-words">
                                             {taskToView.description || <span className="italic text-white/30">No description provided</span>}
                                         </div>
                                     </div>
@@ -1613,8 +1613,8 @@ const SprintManager = ({
                         onClick={() => setShowSprintViewModal(false)}
                     >
                         <div
-                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-full max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
-                            style={{ maxWidth: '425px' }}
+                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
+                            style={{ maxWidth: '600px' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Premium Top Border Gradient */}
@@ -1665,7 +1665,7 @@ const SprintManager = ({
                                         <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Sprint Description</h3>
                                     </div>
                                     <div className="bg-[#161b2a] p-5 rounded-[24px] border border-white/5 shadow-inner">
-                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap">
+                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap break-words">
                                             {sprintToView.description || <span className="italic text-white/30">No description provided for this sprint</span>}
                                         </div>
                                     </div>
