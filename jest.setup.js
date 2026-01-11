@@ -43,8 +43,35 @@ jest.mock('@clerk/nextjs', () => ({
     SignUp: () => <div>Sign Up Mock</div>,
 }))
 
-// Mock fetch globally
-global.fetch = jest.fn()
+// Mock fetch globally with proper response
+global.fetch = jest.fn(() =>
+    Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+        text: () => Promise.resolve(''),
+        status: 200,
+    })
+)
+
+// Suppress console errors in tests
+const originalError = console.error
+beforeAll(() => {
+    console.error = (...args) => {
+        if (
+            typeof args[0] === 'string' &&
+            (args[0].includes('Warning: ReactDOM.render') ||
+                args[0].includes('Warning: An update to') ||
+                args[0].includes('Not wrapped in act'))
+        ) {
+            return
+        }
+        originalError.call(console, ...args)
+    }
+})
+
+afterAll(() => {
+    console.error = originalError
+})
 
 // Reset mocks after each test
 afterEach(() => {

@@ -1,0 +1,7 @@
+# Test coverage
+coverage/
+*.coverage
+.nyc_output
+
+# Jest
+.jest-cache/
