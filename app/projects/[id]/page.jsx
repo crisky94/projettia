@@ -582,7 +582,7 @@ export default function ProjectPage({ params }) {
 
                 {/* Modal to view/manage members */}
                 {showMembersModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-2 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 pt-32">
                         <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-border">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg sm:text-xl font-bold text-card-foreground">Project Members</h2>
@@ -755,7 +755,7 @@ export default function ProjectPage({ params }) {
 
                 {/* Project deletion confirmation modal */}
                 {showDeleteConfirmModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="fixed inset-2 bg-black bg-opacity-50 flex items-start justify-center z-50 pt-32">
                         <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
                             <div className="flex items-center mb-4">
                                 <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
