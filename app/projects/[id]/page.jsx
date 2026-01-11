@@ -651,7 +651,7 @@ export default function ProjectPage({ params }) {
                 )}
 
                 {showAddMemberModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-2 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                         <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md border border-border">
                             <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Add Member</h2>
                             <form onSubmit={handleAddMember}>
@@ -685,7 +685,7 @@ export default function ProjectPage({ params }) {
 
                 {/* Modal to edit project */}
                 {showEditProjectModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="fixed inset-2 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
                             <h2 className="text-xl font-bold mb-4 text-card-foreground">Edit Project</h2>
                             <form onSubmit={handleSaveProject}>
