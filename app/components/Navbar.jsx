@@ -104,7 +104,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useClerk, SignOutButton} from '@clerk/nextjs';
+import { useClerk, SignOutButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar({ user }) {
@@ -112,10 +112,10 @@ export default function Navbar({ user }) {
   const { signOut } = useClerk();
   const router = useRouter();
 
-const handleLogout = async () => {
-  await signOut(); // cierra sesión en Clerk
-  router.push('/'); // redirige manualmente a la página principal
-};
+  const handleLogout = async () => {
+    await signOut(); // cierra sesión en Clerk
+    router.push('/'); // redirige manualmente a la página principal
+  };
 
   return (
     <nav className="bg-card shadow border-b border-border">
@@ -142,11 +142,11 @@ const handleLogout = async () => {
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-card-foreground text-sm">{user.name}</span>
-            <SignOutButton afterSignOutUrl="/">
-  <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded">
-    Logout
-  </button>
-</SignOutButton>
+                <SignOutButton afterSignOutUrl="/">
+                  <button className="px-4 py-2 bg-red-500 text-white rounded">
+                    Logout
+                  </button>
+                </SignOutButton>
               </div>
             ) : (
               <Link
@@ -192,11 +192,11 @@ const handleLogout = async () => {
                   <div className="flex px-3 py-3 text-sm min-h-[44px] items-center">
                     {user.name}
                   </div>
-               <SignOutButton afterSignOutUrl="/">
-  <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded">
-    Logout
-  </button>
-</SignOutButton>
+                  <SignOutButton afterSignOutUrl="/">
+                    <button className="px-4 py-2 bg-red-500 text-white rounded">
+                      Logout
+                    </button>
+                  </SignOutButton>
                 </>
               ) : (
                 <Link

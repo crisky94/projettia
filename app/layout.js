@@ -43,7 +43,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en" className="h-full">
         <head>
           {/* Set initial theme early to avoid FOUC */}
@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
                 </SignedOut>
                 <SignedIn>
                   <UserButton
-                    signOutUrl="/"
+                    afterSignOutUrl="/"
                     appearance={{
                       elements: {
                         avatarBox: "w-10 h-10 ring-2 ring-primary/20 hover:ring-primary/40 transition-all",
@@ -110,9 +110,7 @@ export default function RootLayout({ children }) {
               </div>
             </div>
           </header>
-          <SignedIn>
-            <AuthRedirect />
-          </SignedIn>
+          <AuthRedirect />
           <main className="min-h-screen-safe flex-1 safe-area-inset-bottom relative z-10 pt-4">
             {children}
           </main>
