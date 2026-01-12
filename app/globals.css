@@ -828,7 +828,7 @@ a {
   }
 
   .shimmer {
-    animation: shimmer 2s infinite linear;
+    animation: shimmer 5s infinite linear;
     background: linear-gradient(to right,
         rgb(var(--muted)) 0%,
         rgb(var(--muted-foreground) / 0.2) 20%,

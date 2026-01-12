@@ -100,9 +100,9 @@ export default function RootLayout({ children }) {
                     afterSignOutUrl="/"
                     appearance={{
                       elements: {
-                        avatarBox: "w-10 h-10 border-2 border-primary/30 hover:border-primary transition-all shadow-md",
-                        userButtonBox: "w-12 h-12",
-                        userButtonTrigger: "w-12 h-12 hover:scale-105 transition-transform"
+                        avatarBox: "w-10 h-10 ring-2 ring-primary/20 hover:ring-primary/40 transition-all",
+                        userButtonBox: "w-14 h-10",
+                        userButtonTrigger: "w-14 h-14 hover:scale-105 transition-transform"
                       }
                     }}
                   />

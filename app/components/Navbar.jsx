@@ -39,22 +39,10 @@ export default function Navbar({ user }) {
           {/* Desktop menu */}
           <div className="hidden sm:flex sm:items-center">
             {user ? (
-              <div className="flex items-center space-y-0 space-x-3 sm:space-x-4">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-primary/30 shadow-md flex items-center justify-center overflow-hidden bg-muted transition-all group-hover:border-primary/50">
-                    {user.image ? (
-                      <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 text-primary font-bold text-sm">
-                        {user.name?.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <span className="text-card-foreground text-sm font-medium hidden sm:block">{user.name}</span>
+              <div className="flex items-center space-x-4">
+                <span className="text-card-foreground text-sm">{user.name}</span>
                 <SignOutButton afterSignOutUrl="/">
-                  <button className="px-3 py-1.5 sm:px-4 sm:py-2 bg-destructive/10 hover:bg-destructive text-destructive hover:text-destructive-foreground text-xs sm:text-sm font-medium rounded-lg transition-all border border-destructive/20">
+                  <button className="px-4 py-2 bg-red-500 text-white rounded">
                     Logout
                   </button>
                 </SignOutButton>
@@ -100,27 +88,14 @@ export default function Navbar({ user }) {
               </Link>
               {user ? (
                 <>
-                  <div className="flex px-3 py-3 items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full border-2 border-primary/30 shadow-md flex items-center justify-center overflow-hidden bg-muted">
-                      {user.image ? (
-                        <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 text-primary font-bold text-sm">
-                          {user.name?.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-sm font-medium text-card-foreground">
-                      {user.name}
-                    </div>
+                  <div className="flex px-3 py-3 text-sm min-h-[44px] items-center">
+                    {user.name}
                   </div>
-                  <div className="px-3 pb-3">
-                    <SignOutButton afterSignOutUrl="/">
-                      <button className="w-full px-4 py-2 bg-destructive/10 hover:bg-destructive text-destructive hover:text-destructive-foreground text-sm font-medium rounded-lg transition-all border border-destructive/20 text-center">
-                        Logout
-                      </button>
-                    </SignOutButton>
-                  </div>
+                  <SignOutButton afterSignOutUrl="/">
+                    <button className="px-4 py-2 bg-red-500 text-white rounded">
+                      Logout
+                    </button>
+                  </SignOutButton>
                 </>
               ) : (
                 <Link
@@ -141,7 +116,6 @@ export default function Navbar({ user }) {
 
 Navbar.propTypes = {
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string
+    name: PropTypes.string.isRequired
   })
 };

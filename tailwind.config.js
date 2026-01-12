@@ -76,7 +76,7 @@ module.exports = {
                 'slide-down': 'slideDown 0.3s ease-out',
                 'scale-in': 'scaleIn 0.2s ease-out',
                 'bounce-in': 'bounceIn 0.5s ease-out',
-                'shimmer': 'shimmer 2s infinite linear',
+                'shimmer': 'shimmer 5s infinite linear',
             },
             keyframes: {
                 fadeIn: {

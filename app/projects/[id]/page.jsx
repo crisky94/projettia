@@ -428,7 +428,7 @@ export default function ProjectPage({ params }) {
                 <div className="flex flex-col gap-6 mb-8">
                     <div className="flex items-center justify-between w-full">
                         <button
-                            onClick={() => window.location.href = '/projects'}
+                            onClick={() => window.location.href = '/dashboard'}
                             className="glass-card hover-lift px-5 py-2.5 text-sm font-semibold flex items-center gap-2.5 border border-white/10 group active:scale-95 transition-all"
                         >
                             <svg className="w-5 h-5 text-primary group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

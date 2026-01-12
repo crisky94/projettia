@@ -126,7 +126,7 @@ export default function ProjectDashboard({ userId }) {
         <div className="w-full max-w-7xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8 bg-transparent">
             {/* Dashboard Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-                <div className="space-y-2"> 
+                <div className="space-y-2">
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tighter uppercase leading-none">
                         Workspaces
                     </h1>
@@ -282,37 +282,37 @@ export default function ProjectDashboard({ userId }) {
             {/* Premium Create Project Modal */}
             {showCreateModal && (
                 <div
-                    className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
+                    className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto"
                     onClick={() => !creating && setShowCreateModal(false)}
                 >
                     <div
-                        className="glass-card shadow-2xl rounded-3xl w-full max-w-lg overflow-hidden flex flex-col border border-white/10"
+                        className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header with Gradient Background */}
-                        <div className="relative px-10 py-10 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
+                        <div className="relative px-6 py-6 border-b border-white/5 bg-gradient-to-br from-primary/20 via-background to-accent/10">
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
                             <div className="flex items-center justify-between relative z-10">
-                                <div className="space-y-1">
-                                    <h2 className="text-3xl font-black text-white uppercase tracking-tight">New Project</h2>
-                                    <p className="text-white/40 text-sm font-bold uppercase tracking-widest">Initialization Protocol</p>
+                                <div className="space-y-0.5">
+                                    <h2 className="text-xl font-black text-white uppercase tracking-tight">New Project</h2>
+                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest">Initialization Protocol</p>
                                 </div>
                                 <button
                                     onClick={() => setShowCreateModal(false)}
-                                    className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                     title="Cancel"
                                     disabled={creating}
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <form onSubmit={handleCreateProject} className="p-10 space-y-8">
-                            <div className="space-y-3">
-                                <label htmlFor="projectName" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+                        <form onSubmit={handleCreateProject} className="p-6 space-y-4">
+                            <div className="space-y-2">
+                                <label htmlFor="projectName" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                     Strategic Identifier
                                 </label>
                                 <input
@@ -320,44 +320,44 @@ export default function ProjectDashboard({ userId }) {
                                     type="text"
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-lg font-bold placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner"
+                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-white text-base font-bold placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner"
                                     placeholder="Project Name..."
                                     required
                                     disabled={creating}
                                 />
                             </div>
 
-                            <div className="space-y-3">
-                                <label htmlFor="projectDescription" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+                            <div className="space-y-2">
+                                <label htmlFor="projectDescription" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                     Operational Context
                                 </label>
                                 <textarea
                                     id="projectDescription"
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-base font-medium placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all min-h-[140px] shadow-inner resize-none"
+                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all min-h-[100px] shadow-inner resize-none"
                                     placeholder="Brief objectives and scope..."
-                                    rows={4}
+                                    rows={3}
                                     disabled={creating}
                                 />
                             </div>
 
-                            <div className="flex flex-col gap-4 pt-4">
+                            <div className="flex flex-col gap-3 pt-2">
                                 <button
                                     type="submit"
                                     disabled={creating}
-                                    className={`btn-gradient w-full py-5 rounded-2xl flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group ${creating ? 'opacity-50 cursor-not-allowed' : ''
+                                    className={`btn-gradient w-full py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all group ${creating ? 'opacity-50 cursor-not-allowed' : ''
                                         }`}
                                 >
                                     {creating ? (
                                         <>
-                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                            <span className="font-extrabold uppercase tracking-widest">Encrypting...</span>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                            <span className="font-extrabold text-xs uppercase tracking-widest">Encrypting...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <span className="font-extrabold uppercase tracking-widest">Deploy Pipeline</span>
-                                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <span className="font-extrabold text-xs uppercase tracking-widest">Deploy Pipeline</span>
+                                            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7-7 7" />
                                             </svg>
                                         </>
@@ -366,7 +366,7 @@ export default function ProjectDashboard({ userId }) {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="w-full py-4 text-[10px] font-black text-white/30 uppercase tracking-[0.3em] hover:text-white transition-colors"
+                                    className="w-full py-2 text-[9px] font-black text-white/30 uppercase tracking-[0.3em] hover:text-white transition-colors"
                                     disabled={creating}
                                 >
                                     Cancel Operations
