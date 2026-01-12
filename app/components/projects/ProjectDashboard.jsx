@@ -250,7 +250,7 @@ export default function ProjectDashboard({ userId }) {
                                                     </svg>
                                                 </div>
                                                 <span className="text-sm font-bold text-white/70">
-                                                    {taskCount} <span className="text-[10px] text-white/30 uppercase ml-1">Targets</span>
+                                                    {taskCount} <span className="text-[10px] text-white/30 uppercase ml-1">Tasks</span>
                                                 </span>
                                             </div>
                                         </div>

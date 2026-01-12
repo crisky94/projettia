@@ -63,11 +63,11 @@ export default function RootLayout({ children }) {
           <meta name="format-detection" content="telephone=no" />
         </head>
         <body className="font-sans antialiased bg-background text-foreground h-full overflow-x-hidden">
-          <header className="sticky top-0 z-50 glass-card border-b border-border/50 backdrop-blur-xl bg-card/80">
+          <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl border-b border-white/10 shadow-lg rounded-b-[2.5rem] rounded-t-none">
             <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3">
               <div className="flex items-center gap-3">
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
                   <Image
                     src="/logo.png"
                     width={56}
