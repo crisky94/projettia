@@ -126,7 +126,7 @@ export default function ProjectDashboard({ userId }) {
         <div className="w-full max-w-7xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8 bg-transparent">
             {/* Dashboard Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-                <div className="space-y-2">
+                <div className="space-y-2"> 
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tighter uppercase leading-none">
                         Workspaces
                     </h1>
