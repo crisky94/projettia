@@ -584,13 +584,15 @@ export default function ProjectPage({ params }) {
                 {showMembersModal && (
                     <div className="fixed inset-2 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 pt-32">
                         <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border border-border">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-card-foreground">Project Members</h2>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-card-foreground">Project Members</h2>
                                 <button
                                     onClick={() => setShowMembersModal(false)}
-                                    className="text-muted-foreground hover:text-card-foreground transition-colors p-2 -m-2"
+                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10"
                                 >
-                                    ✕
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                             </div>
                             <div className="space-y-3">
@@ -653,7 +655,17 @@ export default function ProjectPage({ params }) {
                 {showAddMemberModal && (
                     <div className="fixed inset-2 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                         <div className="bg-card p-4 sm:p-6 rounded-lg w-full max-w-md border border-border">
-                            <h2 className="text-lg sm:text-xl font-bold mb-4 text-card-foreground">Add Member</h2>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-card-foreground">Add Member</h2>
+                                <button
+                                    onClick={() => setShowAddMemberModal(false)}
+                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                             <form onSubmit={handleAddMember}>
                                 <input
                                     type="email"
@@ -687,7 +699,18 @@ export default function ProjectPage({ params }) {
                 {showEditProjectModal && (
                     <div className="fixed inset-2 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                            <h2 className="text-xl font-bold mb-4 text-card-foreground">Edit Project</h2>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-card-foreground">Edit Project</h2>
+                                <button
+                                    onClick={() => setShowEditProjectModal(false)}
+                                    disabled={editingProject}
+                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10 disabled:opacity-50"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                             <form onSubmit={handleSaveProject}>
                                 <div className="mb-4">
                                     <label htmlFor="editProjectName" className="block text-card-foreground text-sm font-bold mb-2">
@@ -757,17 +780,27 @@ export default function ProjectPage({ params }) {
                 {showDeleteConfirmModal && (
                     <div className="fixed inset-2 bg-black bg-opacity-50 flex items-start justify-center z-50 pt-32">
                         <div className="bg-card p-6 rounded-lg w-96 max-w-[90vw] border border-border">
-                            <div className="flex items-center mb-4">
-                                <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-destructive/20">
-                                    <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-destructive/20">
+                                        <svg className="w-6 h-6 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <div className="ml-4">
+                                        <h3 className="text-lg font-bold text-card-foreground">
+                                            {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleCancelDelete}
+                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-card-foreground">
-                                        {deleteConfirmStep === 1 ? 'Confirm Deletion' : 'Final Confirmation'}
-                                    </h3>
-                                </div>
+                                </button>
                             </div>
                             <div className="mb-6">
                                 {deleteConfirmStep === 1 ? (

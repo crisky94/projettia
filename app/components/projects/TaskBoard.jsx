@@ -554,7 +554,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                         <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <span className="font-medium text-sm md:text-base">Soltar aquí</span>
+                                        <span className="font-medium text-sm md:text-base uppercase">Drop here</span>
                                     </div>
                                 </div>
                             )}
@@ -1115,319 +1115,352 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
     };
 
     return (
-        <div className="task-board-container">
-            <div className="w-full mx-auto">
+        <>
+            <div className="task-board-container">
+                <div className="w-full mx-auto">
 
-                {/* Page header */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 lg:p-6 mb-6 lg:mb-8">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                        {/* Left: Title and description */}
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                    <svg className="w-4 h-4 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
-                                    </svg>
+                    {/* Page header */}
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 lg:p-6 mb-6 lg:mb-8">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                            {/* Left: Title and description */}
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                        <svg className="w-4 h-4 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z" />
+                                        </svg>
+                                    </div>
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white">Task Board</h1>
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+                                <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg">Manage and organize project tasks efficiently</p>
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg">Manage and organize project tasks efficiently</p>
-                        </div>
 
-                        {/* Right: Actions */}
-                        <div className="flex gap-3">
-                            {/* Add Task button - Available to all members */}
-                            <button
-                                onClick={() => {
-                                    setShowAddTaskModal(true);
-                                    // Auto-scroll to top to ensure modal is visible
-                                    setTimeout(() => {
-                                        console.log('Executing add task scroll...');
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                        document.documentElement.scrollTop = 0;
-                                        document.body.scrollTop = 0;
-                                    }, 300);
-                                }}
-                                className={`w-full sm:w-auto ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'} text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2`}
-                            >
-                                <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                </svg>
-                                <span className="hidden sm:inline text-sm md:text-base">New Task</span>
-                                <span className="sm:hidden text-sm">Add Task</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Project Members Section */}
-                <div className="mb-6 lg:mb-8">
-                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
-                        <div className="px-4 lg:px-6 py-4 lg:py-5 border-b border-gray-200 dark:border-gray-800">
-                            <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                                    <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            {/* Right: Actions */}
+                            <div className="flex gap-3">
+                                {/* Add Task button - Available to all members */}
+                                <button
+                                    onClick={() => {
+                                        setShowAddTaskModal(true);
+                                        // Auto-scroll to top to ensure modal is visible
+                                        setTimeout(() => {
+                                            console.log('Executing add task scroll...');
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            document.documentElement.scrollTop = 0;
+                                            document.body.scrollTop = 0;
+                                        }, 300);
+                                    }}
+                                    className={`w-full sm:w-auto ${disableCreate ? 'bg-gray-400 cursor-default' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'} text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2`}
+                                >
+                                    <svg className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                     </svg>
-                                </div>
-                                <div>
-                                    <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white">Team Members</h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                                        {members.length} {members.length === 1 ? 'member' : 'members'} in the project
-                                    </p>
-                                </div>
+                                    <span className="hidden sm:inline text-sm md:text-base">New Task</span>
+                                    <span className="sm:hidden text-sm">Add Task</span>
+                                </button>
                             </div>
                         </div>
-                        <div className="px-4 py-3 lg:py-4">
-                            {members.length === 0 ? (
-                                <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                                    {isLoadingMembers ? (
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                            <span className="text-base">Loading team members...</span>
-                                        </div>
-                                    ) : (
-                                        <div className="text-center space-y-3">
-                                            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto">
-                                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <p className="text-base font-medium text-gray-700 dark:text-gray-300">No members in this project</p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">Invite people to start collaborating</p>
-                                            </div>
-                                        </div>
-                                    )}
+                    </div>
+
+                    {/* Project Members Section */}
+                    <div className="mb-6 lg:mb-8">
+                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+                            <div className="px-4 lg:px-6 py-4 lg:py-5 border-b border-gray-200 dark:border-gray-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                                        <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white">Team Members</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            {members.length} {members.length === 1 ? 'member' : 'members'} in the project
+                                        </p>
+                                    </div>
                                 </div>
-                            ) : (
-                                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-items-stretch">{/* Better responsive grid for member cards */}
-                                    {Array.isArray(members) && members.map((member) => {
-                                        const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-
-
-                                        const avatarColor = getAvatarColor(member.userId, initials, members);
-
-                                        return (
-                                            <div
-                                                key={member.userId}
-                                                className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 w-full min-h-[90px]"
-                                            >
-                                                <div className={`w-12 h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200 flex-shrink-0`}>
-                                                    {initials}
+                            </div>
+                            <div className="px-4 py-3 lg:py-4">
+                                {members.length === 0 ? (
+                                    <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                        {isLoadingMembers ? (
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                <span className="text-base">Loading team members...</span>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center space-y-3">
+                                                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+                                                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                    </svg>
                                                 </div>
-                                                <div className="flex flex-col flex-1 min-w-0 gap-2">
-                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                                                        <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
-                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium inline-block flex-shrink-0 self-start sm:self-auto w-fit ${member.role === 'ADMIN'
-                                                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                                                            : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                                                            }`}>
-                                                            {member.role === 'ADMIN' ? 'Admin' : 'Member'}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <span className="text-sm lg:text-base text-gray-600 dark:text-gray-300 truncate font-medium">
-                                                            {member.user.email || 'No email provided'}
-                                                        </span>
-                                                    </div>
+                                                <div>
+                                                    <p className="text-base font-medium text-gray-700 dark:text-gray-300">No members in this project</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">Invite people to start collaborating</p>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-items-stretch">{/* Better responsive grid for member cards */}
+                                        {Array.isArray(members) && members.map((member) => {
+                                            const initials = member.user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+
+
+                                            const avatarColor = getAvatarColor(member.userId, initials, members);
+
+                                            return (
+                                                <div
+                                                    key={member.userId}
+                                                    className="group flex items-center bg-gray-50 dark:bg-gray-800/50 px-4 py-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 w-full min-h-[90px]"
+                                                >
+                                                    <div className={`w-12 h-12 bg-gradient-to-br ${avatarColor} rounded-full flex items-center justify-center text-white text-sm font-bold mr-4 shadow-lg ring-2 ring-white dark:ring-gray-900 group-hover:scale-105 transition-transform duration-200 flex-shrink-0`}>
+                                                        {initials}
+                                                    </div>
+                                                    <div className="flex flex-col flex-1 min-w-0 gap-2">
+                                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                                                            <span className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{member.user.name}</span>
+                                                            <span className={`text-xs px-2 py-1 rounded-full font-medium inline-block flex-shrink-0 self-start sm:self-auto w-fit ${member.role === 'ADMIN'
+                                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                                                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                                                }`}>
+                                                                {member.role === 'ADMIN' ? 'Admin' : 'Member'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                            </svg>
+                                                            <span className="text-sm lg:text-base text-gray-600 dark:text-gray-300 truncate font-medium">
+                                                                {member.user.email || 'No email provided'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Task Board Section */}
+                    <div className="mb-6 lg:mb-8">
+                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+                            <div className="px-4 lg:px-6 py-4 lg:py-5">
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCorners}
+                                    onDragStart={handleDragStart}
+                                    onDragEnd={handleDragEnd}
+                                >
+                                    {/* Cards - Responsive Kanban Board */}
+                                    {/* Mobile: Stack vertically (rows), Desktop: Side by side (columns) */}
+                                    <div className="flex flex-col md:flex-row md:gap-6 space-y-6 md:space-y-0">
+                                        {/* To Do's - First column/row */}
+                                        <div className="flex-1 min-w-0">
+                                            <TaskRow
+                                                title="📋 To Do's"
+                                                status="PENDING"
+                                                tasks={tasks.filter(task => task.status === 'PENDING')}
+                                                isAdmin={isAdmin}
+                                                currentUserId={currentUserId}
+                                                allMembers={members}
+                                                sprints={sprints}
+                                                onDeleteTask={handleDeleteTask}
+                                                onUpdateTask={handleOpenEditTask}
+                                                onViewTask={handleViewTask}
+                                                projectId={projectId}
+                                                refreshTasks={refreshTasks}
+                                            />
+                                        </div>
+
+                                        {/* In Progress - Second column/row */}
+                                        <div className="flex-1 min-w-0">
+                                            <TaskRow
+                                                title="⚡ In Progress"
+                                                status="IN_PROGRESS"
+                                                tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
+                                                isAdmin={isAdmin}
+                                                currentUserId={currentUserId}
+                                                allMembers={members}
+                                                sprints={sprints}
+                                                onDeleteTask={handleDeleteTask}
+                                                onUpdateTask={handleOpenEditTask}
+                                                onViewTask={handleViewTask}
+                                                projectId={projectId}
+                                                refreshTasks={refreshTasks}
+                                            />
+                                        </div>
+
+                                        {/* Completed - Third column/row */}
+                                        <div className="flex-1 min-w-0">
+                                            <TaskRow
+                                                title="✅ Completed"
+                                                status="COMPLETED"
+                                                tasks={tasks.filter(task => task.status === 'COMPLETED')}
+                                                isAdmin={isAdmin}
+                                                currentUserId={currentUserId}
+                                                allMembers={members}
+                                                sprints={sprints}
+                                                onDeleteTask={handleDeleteTask}
+                                                onUpdateTask={handleOpenEditTask}
+                                                onViewTask={handleViewTask}
+                                                projectId={projectId}
+                                                refreshTasks={refreshTasks}
+                                            />
+                                        </div>
+                                    </div>
+                                </DndContext>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Task Board Section */}
-                <div className="mb-6 lg:mb-8">
-                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
-                        <div className="px-4 lg:px-6 py-4 lg:py-5">
-                            <DndContext
-                                sensors={sensors}
-                                collisionDetection={closestCorners}
-                                onDragStart={handleDragStart}
-                                onDragEnd={handleDragEnd}
-                            >
-                                {/* Cards - Responsive Kanban Board */}
-                                {/* Mobile: Stack vertically (rows), Desktop: Side by side (columns) */}
-                                <div className="flex flex-col md:flex-row md:gap-6 space-y-6 md:space-y-0">
-                                    {/* To Do's - First column/row */}
-                                    <div className="flex-1 min-w-0">
-                                        <TaskRow
-                                            title="📋 To Do's"
-                                            status="PENDING"
-                                            tasks={tasks.filter(task => task.status === 'PENDING')}
-                                            isAdmin={isAdmin}
-                                            currentUserId={currentUserId}
-                                            allMembers={members}
-                                            sprints={sprints}
-                                            onDeleteTask={handleDeleteTask}
-                                            onUpdateTask={handleOpenEditTask}
-                                            onViewTask={handleViewTask}
-                                            projectId={projectId}
-                                            refreshTasks={refreshTasks}
-                                        />
-                                    </div>
+            {/* Modals moved outside container to avoid board-specific CSS overrides */}
+            <div className="project-modals-portal">
 
-                                    {/* In Progress - Second column/row */}
-                                    <div className="flex-1 min-w-0">
-                                        <TaskRow
-                                            title="⚡ In Progress"
-                                            status="IN_PROGRESS"
-                                            tasks={tasks.filter(task => task.status === 'IN_PROGRESS')}
-                                            isAdmin={isAdmin}
-                                            currentUserId={currentUserId}
-                                            allMembers={members}
-                                            sprints={sprints}
-                                            onDeleteTask={handleDeleteTask}
-                                            onUpdateTask={handleOpenEditTask}
-                                            onViewTask={handleViewTask}
-                                            projectId={projectId}
-                                            refreshTasks={refreshTasks}
-                                        />
-                                    </div>
+                {/* Modal de edición de tarea */}
+                {showEditTaskModal && taskToEdit && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowEditTaskModal(false);
+                            setTaskToEdit(null);
+                        }
+                    }}>
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                            {/* Shimmer Border */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
-                                    {/* Completed - Third column/row */}
-                                    <div className="flex-1 min-w-0">
-                                        <TaskRow
-                                            title="✅ Completed"
-                                            status="COMPLETED"
-                                            tasks={tasks.filter(task => task.status === 'COMPLETED')}
-                                            isAdmin={isAdmin}
-                                            currentUserId={currentUserId}
-                                            allMembers={members}
-                                            sprints={sprints}
-                                            onDeleteTask={handleDeleteTask}
-                                            onUpdateTask={handleOpenEditTask}
-                                            onViewTask={handleViewTask}
-                                            projectId={projectId}
-                                            refreshTasks={refreshTasks}
-                                        />
-                                    </div>
-                                    {/* Modal de edición de tarea - DISABLED - Using inline editing now */}
-                                    {showEditTaskModal && taskToEdit && (
-                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                                            <div className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] border border-white/5 relative flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200" style={{ maxWidth: '500px' }}>
-                                                {/* Premium Top Border Gradient */}
-                                                <div className="absolute top-0 left-0 w-full h-[6px] bg-gradient-to-r from-[#c084fc] via-[#e879f9] to-[#c084fc]"></div>
-
-                                                <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between mt-2">
-                                                    <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                                                        <span className="text-2xl">✏️</span>
-                                                        Edit Task
-                                                    </h2>
-                                                    <button
-                                                        onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                                        className="text-white/40 hover:text-white transition-colors"
-                                                    >
-                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <form onSubmit={handleSaveEditTask} className="p-6 space-y-5 overflow-y-auto max-h-[70vh]">
-                                                    <div className="space-y-2">
-                                                        <label htmlFor="edit-title" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
-                                                            Title
-                                                        </label>
-                                                        <input
-                                                            id="edit-title"
-                                                            type="text"
-                                                            value={editTask.title}
-                                                            onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
-                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all"
-                                                            required
-                                                            disabled={isSubmitting}
-                                                        />
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <label htmlFor="edit-description" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
-                                                            Description
-                                                        </label>
-                                                        <textarea
-                                                            id="edit-description"
-                                                            value={editTask.description}
-                                                            onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
-                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all resize-none min-h-[100px]"
-                                                            rows="4"
-                                                            disabled={isSubmitting}
-                                                        />
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <label htmlFor="edit-assignee" className="text-xs font-black uppercase tracking-wider text-[#c084fc]">
-                                                            Assign to
-                                                        </label>
-                                                        <select
-                                                            id="edit-assignee"
-                                                            value={editTask.assigneeId}
-                                                            onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                                            className="w-full bg-[#161b2a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#c084fc]/50 focus:ring-1 focus:ring-[#c084fc]/50 transition-all appearance-none cursor-pointer"
-                                                            disabled={isSubmitting}
-                                                        >
-                                                            <option value="">Unassigned</option>
-                                                            {members.map((member) => (
-                                                                <option key={member.userId} value={member.userId} className="bg-[#0b0f19]">
-                                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="flex gap-3 pt-4 border-t border-white/5">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                                            className="flex-1 px-4 py-3 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl font-bold transition-all"
-                                                            disabled={isSubmitting}
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#c084fc] to-[#e879f9] hover:from-[#b074ec] hover:to-[#d869e9] text-white rounded-xl font-bold shadow-lg shadow-purple-500/20 transition-all flex items-center justify-center gap-2"
-                                                            disabled={isSubmitting}
-                                                        >
-                                                            {isSubmitting ? 'Saving...' : 'Save Changes'}
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </DndContext>
-                        </div>
-                    </div>
-                </div>
-
-                {showAddTaskModal && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Truly centered on viewport */}
-                        <div className="card-professional shadow-theme-xl rounded-2xl w-full" style={{ maxWidth: '425px' }}>
                             {/* Header */}
-                            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                            <div className="relative px-6 py-5 border-b border-white/5 bg-gradient-to-br from-primary/10 via-background to-accent/5">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-xl font-bold text-card-foreground flex items-center gap-2">
-                                        <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
-                                            <svg className="w-3 h-3 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    <div>
+                                        <h2 className="text-xl font-black text-white uppercase tracking-tight">Edit Task</h2>
+                                        <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-0.5">Update Parameters</p>
+                                    </div>
+                                    <button
+                                        onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
+                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <form onSubmit={handleSaveEditTask} className="px-6 py-5 space-y-3.5">
+                                <div className="space-y-1">
+                                    <label htmlFor="edit-title" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Objective Title</label>
+                                    <input
+                                        id="edit-title"
+                                        type="text"
+                                        value={editTask.title}
+                                        onChange={(e) => setEditTask(prev => ({ ...prev, title: e.target.value }))}
+                                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-base font-bold placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner"
+                                        required
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label htmlFor="edit-description" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Protocol Description</label>
+                                    <textarea
+                                        id="edit-description"
+                                        value={editTask.description}
+                                        onChange={(e) => setEditTask(prev => ({ ...prev, description: e.target.value }))}
+                                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-sm font-medium placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner resize-none min-h-[80px]"
+                                        rows="2"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label htmlFor="edit-assignee" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Assigned Operative</label>
+                                    <div className="relative">
+                                        <select
+                                            id="edit-assignee"
+                                            value={editTask.assigneeId}
+                                            onChange={(e) => setEditTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-sm font-bold appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="" className="bg-background">Unassigned</option>
+                                            {members.map((member) => (
+                                                <option key={member.userId} value={member.userId} className="bg-background text-sm">
+                                                    {member.user.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                             </svg>
                                         </div>
-                                        New Task
-                                    </h2>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5">
+                                    <button
+                                        type="submit"
+                                        className="btn-gradient w-full py-3.5 rounded-xl flex items-center justify-center gap-2 text-white font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99]"
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? (
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                Save Changes
+                                            </>
+                                        )}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
+                                        className="py-1 text-[9px] font-black text-white/30 uppercase tracking-[0.3em] hover:text-white transition-colors"
+                                        disabled={isSubmitting}
+                                    >
+                                        Discard Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {showAddTaskModal && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowAddTaskModal(false);
+                            setNewTask({ title: '', description: '', assigneeId: '' });
+                        }
+                    }}>
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                            {/* Shimmer Border */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
+
+                            {/* Header */}
+                            <div className="relative px-6 py-5 border-b border-white/5 bg-gradient-to-br from-primary/10 via-background to-accent/5">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-xl font-black text-white uppercase tracking-tight">New Task</h2>
+                                        <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-0.5">Initialize Objective</p>
+                                    </div>
                                     <button
                                         onClick={() => {
                                             setShowAddTaskModal(false);
                                             setNewTask({ title: '', description: '', assigneeId: '' });
                                         }}
-                                        className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors p-2 rounded-lg min-h-[32px] min-w-[32px] flex items-center justify-center touch-action-manipulation hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                         disabled={isSubmitting}
                                     >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
@@ -1435,93 +1468,87 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                             </div>
 
                             {/* Form */}
-                            <form onSubmit={handleCreateTask} className="p-4 space-y-4">
-                                <div>
-                                    <label htmlFor="title" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Task Title
-                                    </label>
+                            <form onSubmit={handleCreateTask} className="px-6 py-5 space-y-3.5">
+                                <div className="space-y-1">
+                                    <label htmlFor="title" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Objective Title</label>
                                     <input
                                         id="title"
                                         type="text"
                                         value={newTask.title}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-                                        className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        placeholder="Enter task title..."
+                                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-base font-bold placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner"
+                                        placeholder="Enter designation..."
                                         required
                                         disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
-                                <div>
-                                    <label htmlFor="description" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Description
-                                    </label>
+                                <div className="space-y-1">
+                                    <label htmlFor="description" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Protocol Description</label>
                                     <textarea
                                         id="description"
                                         value={newTask.description}
                                         onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                        className="input-professional w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors resize-none"
+                                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-sm font-medium placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all shadow-inner resize-none min-h-[80px]"
+                                        placeholder="Outline the protocol..."
                                         rows="2"
-                                        placeholder="Describe the task details..."
                                         disabled={isSubmitting || disableCreate}
                                     />
                                 </div>
 
-                                <div>
-                                    <label htmlFor="assignee" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Assign to
-                                    </label>
-                                    <select
-                                        id="assignee"
-                                        value={newTask.assigneeId}
-                                        onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 transition-colors"
-                                        disabled={isSubmitting || disableCreate}
-                                    >
-                                        <option value="">unasigned</option>
-                                        {!Array.isArray(members) || members.length === 0 ? (
-                                            <option disabled>Loading members...</option>
-                                        ) : (
-                                            members.map((member) => (
-                                                <option key={member.userId} value={member.userId}>
-                                                    {member.user.name} ({member.role === 'ADMIN' ? 'Admin' : 'Member'})
+                                <div className="space-y-1">
+                                    <label htmlFor="assignee" className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Assigned Operative</label>
+                                    <div className="relative">
+                                        <select
+                                            id="assignee"
+                                            value={newTask.assigneeId}
+                                            onChange={(e) => setNewTask(prev => ({ ...prev, assigneeId: e.target.value }))}
+                                            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-white text-sm font-bold appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                                            disabled={isSubmitting || disableCreate}
+                                        >
+                                            <option value="" className="bg-background">Unassigned</option>
+                                            {members.map((member) => (
+                                                <option key={member.userId} value={member.userId} className="bg-background text-sm">
+                                                    {member.user.name}
                                                 </option>
-                                            ))
-                                        )}
-                                    </select>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Actions */}
-                                <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5">
+                                    <button
+                                        type="submit"
+                                        className="btn-gradient w-full py-3.5 rounded-xl flex items-center justify-center gap-2 text-white font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99]"
+                                        disabled={isSubmitting || disableCreate}
+                                    >
+                                        {isSubmitting ? (
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                                Initialize Task
+                                            </>
+                                        )}
+                                    </button>
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setShowAddTaskModal(false);
                                             setNewTask({ title: '', description: '', assigneeId: '' });
                                         }}
-                                        className="input-professional w-full sm:w-auto px-4 py-3 sm:py-2 text-muted-foreground hover:text-card-foreground font-medium transition-colors text-sm min-h-[44px] sm:min-h-[36px] rounded-lg border border-border hover:bg-muted touch-action-manipulation flex items-center justify-center"
+                                        className="py-1 text-[9px] font-black text-white/30 uppercase tracking-[0.3em] hover:text-white transition-colors"
                                         disabled={isSubmitting}
                                     >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className={`button-professional w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg font-medium shadow-theme-sm transition-all duration-200 text-sm min-h-[44px] sm:min-h-[36px] touch-action-manipulation flex items-center justify-center gap-2 ${isSubmitting || disableCreate
-                                            ? 'bg-gray-400 text-white cursor-not-allowed'
-                                            : 'bg-violet-500 text-white hover:shadow-theme-md'
-                                            }`}
-                                        disabled={isSubmitting || disableCreate}
-                                    >
-                                        {isSubmitting ? (
-                                            <>
-                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                <span>Creating...</span>
-                                            </>
-                                        ) : disableCreate ? (
-                                            'Creation Disabled'
-                                        ) : (
-                                            'Create Task'
-                                        )}
+                                        Abort Request
                                     </button>
                                 </div>
                             </form>
@@ -1531,52 +1558,57 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="card-professional shadow-theme-xl rounded-2xl w-full max-w-sm mx-auto">
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
+                        if (e.target === e.currentTarget) handleCancelDeleteTask();
+                    }}>
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                            {/* Danger Shimmer Border */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
+
                             {/* Header */}
-                            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                                        <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            <div className="relative px-6 py-5 border-b border-white/5 bg-gradient-to-br from-red-500/10 via-background to-orange-500/5">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-red-500/20 text-red-500 border border-red-500/20 shadow-lg shadow-red-500/10">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-black text-white uppercase tracking-tight">Delete Task</h2>
+                                            <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-0.5">Termination Protocol</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleCancelDeleteTask}
+                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold text-card-foreground">
-                                            Delete task
-                                        </h3>
-                                        <p className="text-base text-gray-700 dark:text-gray-400 mt-1">
-                                            This action cannot be undone
-                                        </p>
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
 
                             {/* Content */}
-                            <div className="p-4">
-                                <div className="mb-6">
-                                    <p className="text-gray-700 dark:text-gray-400 text-lg leading-relaxed">
-                                        Are you sure you want to delete the task{' '}
-                                        <span className="font-semibold text-card-foreground break-words">"{taskToDelete.title}"</span>?
-                                    </p>
-                                </div>
+                            <div className="px-6 py-5 space-y-5">
+                                <p className="text-white/60 text-sm leading-relaxed text-center">
+                                    Are you sure you want to terminate <span className="text-white font-bold">"{taskToDelete.title}"</span>? Data will be purged from the protocol.
+                                </p>
 
                                 {/* Actions */}
-                                <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-2">
-                                    <button
-                                        onClick={handleCancelDeleteTask}
-                                        className="input-professional w-full sm:w-auto px-6 py-3 sm:py-2.5 text-muted-foreground hover:text-foreground font-medium border border-border rounded-xl hover:bg-muted transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center"
-                                    >
-                                        Cancel
-                                    </button>
+                                <div className="flex flex-col gap-2.5">
                                     <button
                                         onClick={handleConfirmDeleteTask}
-                                        className="button-professional w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium shadow-theme-sm hover:shadow-theme-md transition-all duration-200 min-h-[44px] sm:min-h-[40px] touch-action-manipulation flex items-center justify-center gap-2"
+                                        className="w-full py-3.5 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-black uppercase tracking-widest text-[11px] rounded-xl shadow-lg shadow-red-500/20 transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
                                     >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        <span>Delete task</span>
+                                        Confirm Deletion
+                                    </button>
+                                    <button
+                                        onClick={handleCancelDeleteTask}
+                                        className="py-1 text-[9px] font-black text-white/30 uppercase tracking-[0.3em] hover:text-white transition-colors"
+                                    >
+                                        Abort Request
                                     </button>
                                 </div>
                             </div>
@@ -1586,125 +1618,82 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Full-Screen View Task Modal */}
                 {showViewModal && taskToView && (
-                    <div
-                        className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-300"
-                        onClick={handleCloseViewModal}
-                    >
-                        <div
-                            className="bg-[#0b0f19] shadow-2xl rounded-[32px] w-[90%] max-h-[85vh] overflow-hidden flex flex-col border border-white/5 relative"
-                            style={{ maxWidth: '600px' }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Premium Top Border Gradient */}
-                            <div className="absolute top-0 left-0 w-full h-[6px] bg-gradient-to-r from-[#c084fc] via-[#e879f9] to-[#c084fc]"></div>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={handleCloseViewModal}>
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative" onClick={(e) => e.stopPropagation()}>
+                            {/* Shimmer Border */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
                             {/* Header Section */}
-                            <div className="px-6 py-6 border-b border-white/5">
-                                <div className="flex items-start justify-between gap-6">
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-3 mb-6">
+                            <div className="relative px-6 py-5 border-b border-white/5 bg-gradient-to-br from-primary/10 via-background to-accent/5">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center gap-2">
                                             {(() => {
-                                                const statusEmoji = taskToView.status === 'PENDING' ? '📋' :
-                                                    taskToView.status === 'IN_PROGRESS' ? '⚡' :
-                                                        taskToView.status === 'COMPLETED' ? '✅' : '📝';
-                                                const statusColor = taskToView.status === 'PENDING' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                                    taskToView.status === 'IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                                                        taskToView.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                                                            'bg-gray-500/10 text-gray-400 border-gray-500/20';
+                                                const statusStyles = getStatusStyles(taskToView.status);
                                                 return (
-                                                    <span className={`px-5 py-2.5 rounded-2xl text-[13px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg ${statusColor} border`}>
-                                                        <span className="text-base">{statusEmoji}</span>
+                                                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10 ${statusStyles}`}>
                                                         {taskToView.status.replace('_', ' ')}
                                                     </span>
                                                 );
                                             })()}
                                             {taskToView.estimatedHours && (
-                                                <span className="px-5 py-2.5 rounded-2xl text-[13px] font-bold bg-white/5 text-white/60 border border-white/10 flex items-center gap-2">
-                                                    <span className="text-base">⏱️</span>
+                                                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">
                                                     {formatEstimatedTime(taskToView.estimatedHours)}
                                                 </span>
                                             )}
                                         </div>
-                                        <h1 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight break-words">
-                                            {taskToView.title}
-                                        </h1>
+                                        <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight">{taskToView.title}</h2>
                                     </div>
                                     <button
                                         onClick={handleCloseViewModal}
-                                        className="h-12 w-12 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/40 hover:text-white transition-all duration-300 group"
-                                        title="Close"
+                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                     >
-                                        <svg className="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Content Section - Scrollable */}
-                            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 custom-scrollbar bg-transparent">
+                            {/* Content Section */}
+                            <div className="px-6 py-5 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                                 {/* Description */}
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-3 text-[#c084fc]">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                                        </svg>
-                                        <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Description</h3>
-                                    </div>
-                                    <div className="bg-[#161b2a] p-5 rounded-[24px] border border-white/5 shadow-inner">
-                                        <div className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap break-words">
-                                            {taskToView.description || <span className="italic text-white/30">No description provided</span>}
-                                        </div>
+                                <div className="space-y-2">
+                                    <h3 className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Operational Description</h3>
+                                    <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                                        <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+                                            {taskToView.description || <span className="italic text-white/20 uppercase tracking-widest text-[10px]">No description record found</span>}
+                                        </p>
                                     </div>
                                 </div>
 
-                                {/* Metadata Grid */}
-                                <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-2 gap-6">
                                     {/* Sprint */}
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3 text-[#c084fc]">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                            <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Sprint Context</h3>
-                                        </div>
-                                        <div className="bg-[#161b2a] p-4 rounded-[24px] border border-white/5 flex items-center gap-5 shadow-lg group hover:border-[#c084fc]/30 transition-all duration-300">
-                                            <div className="h-16 w-16 min-w-[64px] rounded-[22px] bg-[#2d2a45] flex items-center justify-center text-2xl border border-white/5">
-                                                🏁
-                                            </div>
-                                            <div className="min-w-0">
-                                                <div className="text-lg font-bold text-white truncate">
-                                                    {taskToView.sprint?.name || 'Backlog'}
-                                                </div>
-                                                <div className="text-sm text-white/40 truncate italic">Sprint Association</div>
+                                    <div className="space-y-2">
+                                        <h3 className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Iteration</h3>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-xs border border-primary/20">🏁</div>
+                                            <div className="text-[11px] font-black text-white uppercase tracking-wider">
+                                                {taskToView.sprint?.name || 'Backlog'}
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Assignee */}
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3 text-[#e879f9]">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                            <h3 className="text-[13px] font-black uppercase tracking-[0.2em]">Assignee</h3>
-                                        </div>
-                                        <div className="bg-[#161b2a] p-4 rounded-[24px] border border-white/5 flex items-center gap-5 shadow-lg group hover:border-[#e879f9]/30 transition-all duration-300">
+                                    <div className="space-y-2">
+                                        <h3 className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Assigned Operative</h3>
+                                        <div className="flex items-center gap-3">
                                             {taskToView.assignee ? (
                                                 <>
-                                                    <div className={`h-16 w-12 rounded-full bg-gradient-to-br ${getAvatarColor(taskToView.assignee.id, taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), members)} flex items-center justify-center text-white text-base font-black shadow-xl ring-2 ring-white/10`}>
+                                                    <div className={`h-8 w-8 rounded-full bg-gradient-to-br ${getAvatarColor(taskToView.assignee.id, taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(), members)} flex items-center justify-center text-[10px] font-black text-white border border-white/10`}>
                                                         {taskToView.assignee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                                                     </div>
-                                                    <div className="min-w-0">
-                                                        <div className="text-lg font-bold text-white truncate">{taskToView.assignee.name}</div>
-                                                        <div className="text-sm text-white/40 truncate">{taskToView.assignee.email || 'No email available'}</div>
+                                                    <div className="text-[11px] font-black text-white uppercase tracking-wider truncate">
+                                                        {taskToView.assignee.name.split(' ')[0]}
                                                     </div>
                                                 </>
                                             ) : (
-                                                <div className="flex items-center gap-5 w-full text-white/30 italic">
-                                                    <div className="h-16 w-12 rounded-full bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-xl">?</div>
-                                                    <span className="text-lg">Unassigned</span>
-                                                </div>
+                                                <div className="text-[10px] italic text-white/20 uppercase tracking-widest">Unassigned</div>
                                             )}
                                         </div>
                                     </div>
@@ -1714,7 +1703,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     </div>
                 )}
             </div>
-        </div>
+        </>
     );
 };
 

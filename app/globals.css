@@ -729,9 +729,12 @@ a {
     line-height: 1.5 !important;
   }
 
-  /* FULL WIDTH UTILIZATION - Make containers use full screen width */
-  .task-board-container,
-  .task-board-container>div,
+  /* FULL WIDTH UTILIZATION - Force container to use full screen width */
+  .task-board-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
   .task-board-container .w-full {
     width: 100% !important;
     max-width: 100vw !important;
