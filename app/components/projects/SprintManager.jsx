@@ -102,6 +102,32 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, onViewTask, allMe
     const isTitleLong = task.title && task.title.length > 50;
 
 
+    const handleSave = async () => {
+        try {
+            const payload = {
+                ...editingTask,
+                estimatedHours: parseFloat(editingTask.estimatedHours) || 0
+            };
+            await onUpdateTask(task.id, payload);
+            setIsEditing(false);
+            toast.success('Task updated successfully!');
+        } catch (error) {
+            console.error('Error updating task:', error);
+            toast.error('Error updating task');
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingTask({
+            title: task.title,
+            description: task.description || '',
+            assigneeId: task.assignee?.id || '',
+            sprintId: task.sprint?.id || '',
+            estimatedHours: task.estimatedHours || ''
+        });
+        setIsEditing(false);
+    };
+
     return (
         <div className={`p-5 sm:p-6 lg:p-7 rounded-2xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group w-full break-words relative min-h-[200px] min-w-0 backdrop-blur-sm ${getStatusStyles(task.status)}`}>
             {/* Header / Title */}
@@ -307,7 +333,7 @@ TaskCard.propTypes = {
 };
 
 // Component to display a sprint with its tasks
-const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, onViewTask, onViewSprint, onAddTaskToSprint, allMembers }) => {
+const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpdateSprint, onDeleteSprint, onViewTask, onViewSprint, onAddTaskToSprint, allMembers, sprints }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [editingSprint, setEditingSprint] = useState({
@@ -546,7 +572,7 @@ const SprintCard = ({ sprint, tasks, isAdmin, onUpdateTask, onDeleteTask, onUpda
                                     onDeleteTask={onDeleteTask}
                                     onViewTask={onViewTask}
                                     allMembers={allMembers}
-                                    sprints={[]}
+                                    sprints={sprints}
                                 />
                             ))}
                         </div>
@@ -1063,6 +1089,7 @@ const SprintManager = ({
                             onViewSprint={handleViewSprint}
                             onAddTaskToSprint={handleAddTaskToSprint}
                             allMembers={membersToUse}
+                            sprints={sprints}
                             projectId={projectId}
                             onTaskCreate={onTaskCreate}
                         />
@@ -1428,11 +1455,9 @@ const SprintManager = ({
                                     </div>
                                     <button
                                         onClick={handleCancelDeleteTask}
-                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                     >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
+                                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                                     </button>
                                 </div>
                             </div>

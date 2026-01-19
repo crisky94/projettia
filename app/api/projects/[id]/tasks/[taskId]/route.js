@@ -96,9 +96,15 @@ export async function PATCH(request, { params }) {
         if (status !== undefined) updateData.status = status;
         if (title !== undefined) updateData.title = title;
         if (description !== undefined) updateData.description = description;
-        if (assigneeId !== undefined) updateData.assigneeId = assigneeId;
-        if (sprintId !== undefined) updateData.sprintId = sprintId;
-        if (estimatedHours !== undefined) updateData.estimatedHours = estimatedHours ? parseFloat(estimatedHours) : null;
+        if (assigneeId !== undefined) updateData.assigneeId = assigneeId || null;
+        if (sprintId !== undefined) updateData.sprintId = sprintId || null;
+        if (estimatedHours !== undefined) {
+            if (estimatedHours === '' || estimatedHours === null || estimatedHours === undefined) {
+                updateData.estimatedHours = null;
+            } else {
+                updateData.estimatedHours = parseFloat(estimatedHours);
+            }
+        }
         updateData.updatedAt = new Date();
 
         // Actualizar la tarea
