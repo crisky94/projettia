@@ -914,33 +914,6 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
         }
         setIsSubmitting(true);
         try {
-            // Use parent function if provided
-            if (onCreateTask) {
-                const taskData = {
-                    title: newTask.title,
-                    description: newTask.description,
-                    assigneeId: newTask.assigneeId || null,
-                    status: 'PENDING'
-                };
-
-                onCreateTask(taskData);
-
-                setShowAddTaskModal(false);
-                setNewTask({ title: '', description: '', assigneeId: '' });
-
-                // Show success notification
-                toast.success('✅ Task created successfully! You can now manage and track its progress. ', {
-                    position: 'top-right',
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
-                return;
-            }
-
-            // Default API call
             const response = await fetch(`/api/projects/${projectId}/tasks`, {
                 method: 'POST',
                 headers: {
@@ -953,21 +926,24 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                     status: 'PENDING'
                 }),
             });
+
             if (!response.ok) {
                 throw new Error('Failed to create task');
             }
 
             const createdTask = await response.json();
-            await refreshTasks();
-            // Refresh tasks from server to ensure we have the most up-to-date data
 
-            // Notify parent component
+            // Notify parent component to update dashboard state
             if (onTaskCreate) {
                 onTaskCreate(createdTask);
+            } else {
+                // Fallback: manually refresh if no parent handler
+                await refreshTasks();
             }
 
             setShowAddTaskModal(false);
             setNewTask({ title: '', description: '', assigneeId: '' });
+
 
             // Show success notification
             toast.success('✅ Task created successfully! You can now manage and track its progress. ', {
@@ -1342,9 +1318,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Modal de edición de tarea */}
                 {showEditTaskModal && taskToEdit && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1357,10 +1335,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     </div>
                                     <button
                                         onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
-                                    />
-                                    Edit Task
-                                    Update Parameters
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10 p-1"
+                                    >
+                                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                                    </button>
+
                                 </div>
                             </div>
 
@@ -1447,9 +1426,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 )}
 
                 {showAddTaskModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1564,9 +1545,11 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Danger Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1621,9 +1604,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
                 {/* Full-Screen View Task Modal */}
                 {showViewModal && taskToView && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-black/80 backdrop-blur-md" />
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative" onClick={(e) => e.stopPropagation()}>
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 

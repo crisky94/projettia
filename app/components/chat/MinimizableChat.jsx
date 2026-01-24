@@ -356,15 +356,16 @@ export default function MinimizableChat({ projectId, user, projectName }) {
             <button
                 onClick={toggleChat}
                 aria-label="Open chat"
-                className="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-blue-800 hover:bg-blue-900 text-white shadow-theme-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-800 transition-all duration-200 hover:scale-105"
+                className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-800 hover:bg-blue-900 text-white shadow-2xl flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-800/50 transition-all duration-300 hover:scale-110 active:scale-95 group"
             >
-                <svg className="w-6 h-6 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
                 {hasUnreadMessages && (
-                    <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-red-500 rounded-full ring-1 sm:ring-2 ring-white animate-pulse"></span>
+                    <span className="absolute top-1 right-1 sm:top-2 sm:right-2 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 rounded-full ring-2 sm:ring-4 ring-white animate-pulse shadow-lg"></span>
                 )}
             </button>
+
         );
     }
 

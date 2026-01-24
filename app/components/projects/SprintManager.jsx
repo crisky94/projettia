@@ -1133,9 +1133,11 @@ const SprintManager = ({
 
                 {/* Modal de confirmación para eliminar sprint */}
                 {showDeleteSprintModal && sprintToDelete && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Danger Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1195,9 +1197,11 @@ const SprintManager = ({
 
                 {/* Add Sprint Modal */}
                 {showAddSprintModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1301,9 +1305,11 @@ const SprintManager = ({
 
                 {/* Add Task Modal (for tasks without sprint) */}
                 {showAddTaskModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1425,9 +1431,11 @@ const SprintManager = ({
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Danger Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1483,9 +1491,11 @@ const SprintManager = ({
 
                 {/* Task Details Modal (Moved to root to avoid transform issues) */}
                 {showTaskViewModal && taskToView && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
@@ -1576,9 +1586,11 @@ const SprintManager = ({
 
                 {/* Sprint Details Modal (Moved to root) */}
                 {showSprintViewModal && sprintToView && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="fixed inset-0 z-[9999] grid place-items-center p-4 overflow-y-auto">
+                        <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
 
-                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative">
+                        <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative animate-in zoom-in-95 duration-200">
+
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
 
