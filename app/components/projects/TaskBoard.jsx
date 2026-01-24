@@ -49,6 +49,21 @@ const formatEstimatedTime = (hours) => {
     return `${hours}h`;
 };
 
+const truncateText = (text, maxLength) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+};
+
+const getStatusStyles = (status) => {
+    const styles = {
+        PENDING: 'bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50/30 border-amber-300 text-amber-800 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 dark:border-amber-700 dark:text-amber-300 shadow-lg shadow-amber-100/50 dark:shadow-amber-950/30',
+        IN_PROGRESS: 'bg-gradient-to-br from-blue-50 via-indigo-50/50 to-violet-50/30 border-blue-300 text-blue-800 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-violet-950/20 dark:border-blue-700 dark:text-blue-300 shadow-lg shadow-blue-100/50 dark:shadow-blue-950/30',
+        COMPLETED: 'bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50/30 border-green-300 text-green-800 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 dark:border-green-700 dark:text-green-300 shadow-lg shadow-green-100/50 dark:shadow-green-950/30',
+    };
+    return styles[status] || styles.PENDING;
+};
+
+
 
 const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
@@ -86,7 +101,14 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
 
             if (!response.ok) throw new Error('Error updating task');
 
+            const updatedTask = await response.json();
+
             setIsEditing(false);
+
+            // Notify parent component
+            if (onTaskUpdate) {
+                onTaskUpdate(updatedTask);
+            }
 
             // Refresh tasks to show updated data
             if (refreshTasks) {
@@ -134,20 +156,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
     // Always show View More option since most content is now hidden in the card
     const shouldShowViewMore = true;
 
-    const truncateText = (text, maxLength) => {
-        if (!text || text.length <= maxLength) return text;
-        return text.substring(0, maxLength) + '...';
-    };
 
-    // Professional status styles with gradients
-    const getStatusStyles = (status) => {
-        const styles = {
-            PENDING: 'bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50/30 border-amber-300 text-amber-800 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 dark:border-amber-700 dark:text-amber-300 shadow-lg shadow-amber-100/50 dark:shadow-amber-950/30',
-            IN_PROGRESS: 'bg-gradient-to-br from-blue-50 via-indigo-50/50 to-violet-50/30 border-blue-300 text-blue-800 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-violet-950/20 dark:border-blue-700 dark:text-blue-300 shadow-lg shadow-blue-100/50 dark:shadow-blue-950/30',
-            COMPLETED: 'bg-gradient-to-br from-green-50 via-emerald-50/50 to-teal-50/30 border-green-300 text-green-800 dark:from-green-950/40 dark:via-emerald-950/30 dark:to-teal-950/20 dark:border-green-700 dark:text-green-300 shadow-lg shadow-green-100/50 dark:shadow-green-950/30',
-        };
-        return styles[status] || styles.PENDING;
-    };
 
     return (
         <div
@@ -297,7 +306,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                         <button
                             onClick={(e) => {
                                 e.stopPropagation?.();
-                                onUpdateTask && onUpdateTask('edit', task);
+                                setIsEditing(true);
                             }}
                             className="p-2 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110"
                             title="Edit task"
@@ -1015,7 +1024,14 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Error updating task');
+            const updatedTask = await response.json();
+
             await refreshTasks();
+
+            if (onTaskUpdate) {
+                onTaskUpdate(updatedTask);
+            }
+
             setShowEditTaskModal(false);
             setTaskToEdit(null);
             toast.success('Task updated successfully! ');
@@ -1343,12 +1359,10 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                     </div>
                                     <button
                                         onClick={() => { setShowEditTaskModal(false); setTaskToEdit(null); }}
-                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                    />
+                                    Edit Task
+                                    Update Parameters
                                 </div>
                             </div>
 
@@ -1460,7 +1474,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                         className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                         disabled={isSubmitting}
                                     >
-                                       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                                     </button>
                                 </div>
                             </div>
