@@ -203,7 +203,9 @@ const TaskCard = ({ task, isAdmin, onUpdateTask, onDeleteTask, onViewTask, allMe
                 ) : (
                     <>
                         <div className="pr-20">
-                            <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight">
+                            <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight break-all">
+
+
                                 {isTitleLong ? truncateText(task.title, 50) : task.title}
                             </h3>
                         </div>
@@ -1490,7 +1492,8 @@ const SprintManager = ({
                             {/* Header */}
                             <div className="relative px-6 py-6 border-b border-white/5 bg-gradient-to-br from-primary/10 via-background to-accent/5">
                                 <div className="flex items-start justify-between gap-4">
-                                    <div className="space-y-1">
+                                    <div className="space-y-1 min-w-0 flex-1">
+
                                         <div className="flex items-center gap-2">
                                             {(() => {
                                                 const statusBadge = getStatusBadge(taskToView.status);
@@ -1506,7 +1509,9 @@ const SprintManager = ({
                                                 </span>
                                             )}
                                         </div>
-                                        <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight">{taskToView.title}</h2>
+                                        <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight break-all">{taskToView.title}</h2>
+
+
                                     </div>
                                     <button
                                         onClick={() => setShowTaskViewModal(false)}
@@ -1525,7 +1530,8 @@ const SprintManager = ({
                                 <div className="space-y-2">
                                     <h3 className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Operational Description</h3>
                                     <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                                        <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap">
+                                        <p className="text-white/70 leading-relaxed text-sm whitespace-pre-wrap break-words">
+
                                             {taskToView.description || <span className="italic text-white/20 uppercase tracking-widest text-[10px]">No description record found</span>}
                                         </p>
                                     </div>
