@@ -1131,9 +1131,8 @@ const SprintManager = ({
 
                 {/* Modal de confirmación para eliminar sprint */}
                 {showDeleteSprintModal && sprintToDelete && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) handleCancelDeleteSprint();
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Danger Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
@@ -1194,12 +1193,8 @@ const SprintManager = ({
 
                 {/* Add Sprint Modal */}
                 {showAddSprintModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) {
-                            setShowAddSprintModal(false);
-                            setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
-                        }
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
@@ -1304,12 +1299,8 @@ const SprintManager = ({
 
                 {/* Add Task Modal (for tasks without sprint) */}
                 {showAddTaskModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) {
-                            setShowAddTaskModal(false);
-                            setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
-                        }
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
@@ -1326,7 +1317,7 @@ const SprintManager = ({
                                             setShowAddTaskModal(false);
                                             setNewTask({ title: '', description: '', assigneeId: '', estimatedHours: '' });
                                         }}
-                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                         disabled={isSubmitting}
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1432,9 +1423,8 @@ const SprintManager = ({
 
                 {/* Task deletion confirmation modal */}
                 {showDeleteTaskModal && taskToDelete && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) handleCancelDeleteTask();
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-sm overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Danger Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500 animate-shimmer bg-[length:200%_100%]"></div>
@@ -1491,9 +1481,8 @@ const SprintManager = ({
 
                 {/* Task Details Modal (Moved to root to avoid transform issues) */}
                 {showTaskViewModal && taskToView && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) setShowTaskViewModal(false);
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
@@ -1521,7 +1510,7 @@ const SprintManager = ({
                                     </div>
                                     <button
                                         onClick={() => setShowTaskViewModal(false)}
-                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1581,9 +1570,8 @@ const SprintManager = ({
 
                 {/* Sprint Details Modal (Moved to root) */}
                 {showSprintViewModal && sprintToView && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto" onClick={(e) => {
-                        if (e.target === e.currentTarget) setShowSprintViewModal(false);
-                    }}>
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md grid place-items-center z-[9999] p-4 animate-in fade-in duration-300 overflow-y-auto">
+
                         <div className="glass-card shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col border border-white/10 relative">
                             {/* Shimmer Border */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer bg-[length:200%_100%]"></div>
