@@ -23,19 +23,42 @@ export async function GET() {
             );
         }
 
-        // Get or create the user in our database
-        const dbUser = await prisma.user.upsert({
-            where: { id: userId },
-            update: {
-                name: user.firstName + ' ' + user.lastName,
-                email: user.emailAddresses[0].emailAddress,
-            },
-            create: {
-                id: userId,
-                name: user.firstName + ' ' + user.lastName,
-                email: user.emailAddresses[0].emailAddress,
-            },
+        // Get or create the user in our database with robust conflict handling
+        const email = user.emailAddresses[0].emailAddress;
+        const name = user.firstName + ' ' + user.lastName;
+
+        let dbUser = await prisma.user.findUnique({
+            where: { id: userId }
         });
+
+        if (!dbUser) {
+            // Check for record with same email but different ID
+            const existingByEmail = await prisma.user.findUnique({
+                where: { email }
+            });
+
+            if (existingByEmail) {
+                console.log(`Clashing email detected: ${email}. Releasing email from old ID ${existingByEmail.id}`);
+                await prisma.user.update({
+                    where: { id: existingByEmail.id },
+                    data: { email: `${email}_old_${Date.now()}` }
+                });
+            }
+
+            dbUser = await prisma.user.create({
+                data: {
+                    id: userId,
+                    name,
+                    email,
+                },
+            });
+        } else {
+            // Update existing user
+            dbUser = await prisma.user.update({
+                where: { id: userId },
+                data: { name, email }
+            });
+        }
 
         // Return the user data
         return NextResponse.json({

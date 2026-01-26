@@ -69,6 +69,7 @@ export async function POST(request) {
         const { name, description } = await request.json();
 
         // Primero, asegurarse de que el usuario existe
+        // Usamos una lógica más robusta para evitar conflictos de email en producción
         let user = await prisma.user.findUnique({
             where: { id: userId }
         });
@@ -76,11 +77,34 @@ export async function POST(request) {
         if (!user) {
             // Si el usuario no existe, obtener los datos de Clerk y crearlo
             const clerkUser = await currentUser();
+            const email = clerkUser.emailAddresses[0].emailAddress;
+            const name = `${clerkUser.firstName} ${clerkUser.lastName}`.trim();
+
+            // Verificar si ya existe un usuario con este email pero diferente ID
+            const existingUserByEmail = await prisma.user.findUnique({
+                where: { email }
+            });
+
+            if (existingUserByEmail) {
+                console.log(`Detectada colisión de email para ${email}. ID antiguo: ${existingUserByEmail.id}, ID nuevo: ${userId}`);
+                // Si el email ya está en uso por otro registro (ID diferente),
+                // renombramos el email del registro antiguo para liberar el email real.
+                // Esto permite que el usuario actual pueda iniciar sesión/crear proyectos.
+                try {
+                    await prisma.user.update({
+                        where: { id: existingUserByEmail.id },
+                        data: { email: `${email}_old_${Date.now()}` }
+                    });
+                } catch (updateError) {
+                    console.error('Error al renombrar usuario conflictivo:', updateError);
+                }
+            }
+
             user = await prisma.user.create({
                 data: {
                     id: userId,
-                    email: clerkUser.emailAddresses[0].emailAddress,
-                    name: `${clerkUser.firstName} ${clerkUser.lastName}`.trim(),
+                    email: email,
+                    name: name,
                     role: 'USER',
                 }
             });
