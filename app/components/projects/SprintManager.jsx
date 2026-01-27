@@ -1217,7 +1217,7 @@ const SprintManager = ({
                                             setShowAddSprintModal(false);
                                             setNewSprint({ name: '', description: '', startDate: '', endDate: '' });
                                         }}
-                                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
+                                        className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-300 border border-white/10"
                                         disabled={isSubmitting}
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

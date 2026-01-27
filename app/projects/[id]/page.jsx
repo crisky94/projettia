@@ -657,7 +657,7 @@ export default function ProjectPage({ params }) {
                                 <h2 className="text-xl font-bold text-card-foreground">Add Member</h2>
                                 <button
                                     onClick={() => setShowAddMemberModal(false)}
-                                    className="h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10"
+                                    className="flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all duration-300 border border-white/10"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
