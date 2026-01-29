@@ -65,7 +65,7 @@ const getStatusStyles = (status) => {
 
 
 
-const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
+const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onTaskUpdate, onViewTask, projectId, refreshTasks }) => {
     const canDrag = isAdmin || (task?.assignee?.id && task.assignee.id === currentUserId);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: task.id.toString(),
@@ -250,7 +250,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                     {/* View Mode Contents (Title, Description, etc.) */}
                     <div className="mb-4">
                         <div className="pr-20">
-                            <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-tight break-all">
+                            <h3 className="text-lg font-bold mb-1 text-black dark:from-white dark:to-gray-300 dark:bg-clip-text dark:text-transparent leading-tight break-all">
 
 
                                 {isTitleLong ? truncateText(task.title, 50) : task.title}
@@ -284,7 +284,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                                     ?
                                 </div>
                             )}
-                            <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                            <span className="text-sm font-semibold text-black dark:text-gray-200 leading-tight">
                                 {assigneeName || 'Unassigned'}
                             </span>
                         </div>
@@ -295,7 +295,7 @@ const TaskCard = ({ task, isAdmin, currentUserId, allMembers = [], sprints = [],
                             <svg className="w-3.5 h-3.5 text-primary animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span className="text-xs font-black text-gray-700 dark:text-white tracking-widest uppercase">{formatEstimatedTime(task.estimatedHours)}</span>
+                            <span className="text-xs font-black text-black dark:text-white tracking-widest uppercase">{formatEstimatedTime(task.estimatedHours)}</span>
                         </div>
                     )}
                 </>
@@ -399,7 +399,7 @@ TaskCard.propTypes = {
     refreshTasks: PropTypes.func
 };
 
-const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onViewTask, projectId, refreshTasks }) => {
+const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = [], sprints = [], onDeleteTask, onUpdateTask, onTaskUpdate, onViewTask, projectId, refreshTasks }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: status,
     });
@@ -435,13 +435,13 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
     const getHeaderStyles = (status) => {
         switch (status) {
             case 'PENDING':
-                return 'text-amber-700 dark:text-amber-400';
+                return 'text-black dark:text-orange-400';
             case 'IN_PROGRESS':
-                return 'text-blue-700 dark:text-blue-400';
+                return 'text-black dark:text-blue-400';
             case 'COMPLETED':
-                return 'text-green-800 dark:text-green-400';
+                return 'text-black dark:text-green-400';
             default:
-                return 'text-gray-700 dark:text-gray-400';
+                return 'text-black dark:text-gray-400';
         }
     };
 
@@ -526,10 +526,10 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="font-medium text-base md:text-lg text-card-foreground">
+                                        <p className="font-medium text-base md:text-lg text-black dark:text-card-foreground">
                                             No tasks here
                                         </p>
-                                        <p className="text-sm md:text-base text-muted-foreground mt-2">
+                                        <p className="text-sm md:text-base text-black/70 dark:text-muted-foreground mt-2">
                                             {status === 'PENDING' ? 'Create new tasks ' :
                                                 status === 'IN_PROGRESS' ? 'Drag tasks from "Pending" to start' :
                                                     status === 'COMPLETED' ? 'Completed tasks will appear here' :
@@ -552,6 +552,7 @@ const TaskRow = ({ title, tasks, isAdmin, currentUserId, status, allMembers = []
                                     sprints={sprints}
                                     onDeleteTask={onDeleteTask}
                                     onUpdateTask={onUpdateTask}
+                                    onTaskUpdate={onTaskUpdate}
                                     onViewTask={onViewTask}
                                     projectId={projectId}
                                     refreshTasks={refreshTasks}
@@ -1012,9 +1013,9 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
 
             setShowEditTaskModal(false);
             setTaskToEdit(null);
-            toast.success('Task updated successfully! ');
+            toast.success('Task updated successfully!');
         } catch (error) {
-            toast.error('Error updating task ');
+            toast.error('Error updating task');
         } finally {
             setIsSubmitting(false);
         }
@@ -1264,6 +1265,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 sprints={sprints}
                                                 onDeleteTask={handleDeleteTask}
                                                 onUpdateTask={handleOpenEditTask}
+                                                onTaskUpdate={onTaskUpdate}
                                                 onViewTask={handleViewTask}
                                                 projectId={projectId}
                                                 refreshTasks={refreshTasks}
@@ -1282,6 +1284,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 sprints={sprints}
                                                 onDeleteTask={handleDeleteTask}
                                                 onUpdateTask={handleOpenEditTask}
+                                                onTaskUpdate={onTaskUpdate}
                                                 onViewTask={handleViewTask}
                                                 projectId={projectId}
                                                 refreshTasks={refreshTasks}
@@ -1300,6 +1303,7 @@ const TaskBoard = ({ projectId, initialTasks, isAdmin, currentUserId, onTaskUpda
                                                 sprints={sprints}
                                                 onDeleteTask={handleDeleteTask}
                                                 onUpdateTask={handleOpenEditTask}
+                                                onTaskUpdate={onTaskUpdate}
                                                 onViewTask={handleViewTask}
                                                 projectId={projectId}
                                                 refreshTasks={refreshTasks}
