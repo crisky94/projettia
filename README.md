@@ -15,7 +15,6 @@
 </div>
 
 ---
-
 ## 📋 Overview
 
 **Projettia** is a comprehensive project management platform designed for modern agile teams. It combines the power of Kanban boards, sprint planning, and real-time collaboration to streamline team workflows and boost productivity.
